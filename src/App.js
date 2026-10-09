@@ -82,8 +82,8 @@ function Hero() {
           <span className="live-dot" /> {profile.role} · Unity · Unreal Engine
         </p>
         <h1>
-          I build and ship <span className="accent">mobile games</span> people
-          actually play.
+          I make mobile games that run{" "}
+          <span className="accent">smooth on every phone.</span>
         </h1>
         <p className="lead">
           I'm {profile.name}, a game developer at Terafort with 4+ years
