@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   FaGithub,
   FaLinkedinIn,
@@ -6,7 +6,14 @@ import {
   FaApple,
   FaAndroid,
 } from "react-icons/fa";
-import { FiArrowUpRight, FiDownload, FiMail, FiPhone } from "react-icons/fi";
+import {
+  FiArrowUpRight,
+  FiChevronLeft,
+  FiChevronRight,
+  FiDownload,
+  FiMail,
+  FiPhone,
+} from "react-icons/fi";
 import resume from "./Assets/Resume.pdf";
 import {
   profile,
@@ -20,6 +27,8 @@ import {
 import "./App.css";
 
 const featured = games.find((g) => g.title === featuredTitle) || games[0];
+// Featured game leads the hero slideshow, followed by the rest
+const slides = [featured, ...games.filter((g) => g !== featured)];
 
 function Platforms({ game }) {
   return (
@@ -108,30 +117,116 @@ function Hero() {
         </div>
       </div>
 
-      <a
-        href={featured.playStore}
-        target="_blank"
-        rel="noreferrer"
-        className="featured"
-      >
-        <img src={featured.image} alt={`${featured.title} gameplay`} />
-        <div className="featured-overlay">
-          <span className="tag tag-accent">
-            Featured{featured.badge && ` · ${featured.badge}`}
-          </span>
-          <div>
-            <h3>{featured.title}</h3>
-            <p>{featured.description}</p>
-            <span className="featured-foot">
-              <span className="store-link">
-                <FaGooglePlay /> Google Play <FiArrowUpRight />
-              </span>
-              <Platforms game={featured} />
-            </span>
-          </div>
-        </div>
-      </a>
+      <Slideshow />
     </section>
+  );
+}
+
+const SLIDE_MS = 5000;
+
+function Slideshow() {
+  const [index, setIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const touchX = useRef(null);
+  const count = slides.length;
+
+  const go = useCallback((i) => setIndex((i + count) % count), [count]);
+
+  useEffect(() => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (paused || reduceMotion) return undefined;
+    const id = setTimeout(() => go(index + 1), SLIDE_MS);
+    return () => clearTimeout(id);
+  }, [index, paused, go]);
+
+  const onTouchStart = (e) => {
+    touchX.current = e.touches[0].clientX;
+  };
+
+  const onTouchEnd = (e) => {
+    if (touchX.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchX.current;
+    if (Math.abs(dx) > 40) go(index + (dx < 0 ? 1 : -1));
+    touchX.current = null;
+  };
+
+  return (
+    <div
+      className="featured"
+      role="region"
+      aria-roledescription="carousel"
+      aria-label="Games I've worked on"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocus={() => setPaused(true)}
+      onBlur={() => setPaused(false)}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
+      {slides.map((game, i) => (
+        <a
+          key={game.title}
+          href={game.playStore}
+          target="_blank"
+          rel="noreferrer"
+          className={`slide${i === index ? " is-active" : ""}`}
+          aria-hidden={i !== index}
+          tabIndex={i === index ? 0 : -1}
+        >
+          <img
+            src={game.image}
+            alt={`${game.title} gameplay`}
+            loading={i === 0 ? "eager" : "lazy"}
+          />
+          <div className="featured-overlay">
+            <span className="tag tag-accent">
+              {game === featured ? "Featured" : game.genre}
+              {game.badge && ` · ${game.badge}`}
+            </span>
+            <div>
+              <h3>{game.title}</h3>
+              <p>{game.description}</p>
+              <span className="featured-foot">
+                <span className="store-link">
+                  <FaGooglePlay /> Google Play <FiArrowUpRight />
+                </span>
+                <Platforms game={game} />
+              </span>
+            </div>
+          </div>
+        </a>
+      ))}
+
+      <button
+        type="button"
+        className="slide-arrow slide-prev"
+        onClick={() => go(index - 1)}
+        aria-label="Previous game"
+      >
+        <FiChevronLeft />
+      </button>
+      <button
+        type="button"
+        className="slide-arrow slide-next"
+        onClick={() => go(index + 1)}
+        aria-label="Next game"
+      >
+        <FiChevronRight />
+      </button>
+
+      <div className="slide-dots">
+        {slides.map((game, i) => (
+          <button
+            type="button"
+            key={game.title}
+            className={i === index ? "is-active" : ""}
+            onClick={() => go(i)}
+            aria-label={`Show ${game.title}`}
+            aria-current={i === index}
+          />
+        ))}
+      </div>
+    </div>
   );
 }
 
