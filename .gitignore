@@ -1,3 +1,8 @@
 # PHPStorm
 .idea
+
+# Dependencies
 node_modules
+
+# Production build (deployed to gh-pages via `npm run deploy`)
+build
