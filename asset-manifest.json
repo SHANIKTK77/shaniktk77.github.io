@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.3aa24da2.css",
-    "main.js": "/static/js/main.8243892f.js",
+    "main.js": "/static/js/main.586ee1e7.js",
     "static/js/787.1ed0c42c.chunk.js": "/static/js/787.1ed0c42c.chunk.js",
     "static/media/prado.jpg": "/static/media/prado.6e6cb7b94a59be466c93.jpg",
     "static/media/motomax.jpg": "/static/media/motomax.5579b58cef3f3bdf38f9.jpg",
@@ -14,11 +14,11 @@
     "static/media/Resume.pdf": "/static/media/Resume.321ccbc234700d64d640.pdf",
     "index.html": "/index.html",
     "main.3aa24da2.css.map": "/static/css/main.3aa24da2.css.map",
-    "main.8243892f.js.map": "/static/js/main.8243892f.js.map",
+    "main.586ee1e7.js.map": "/static/js/main.586ee1e7.js.map",
     "787.1ed0c42c.chunk.js.map": "/static/js/787.1ed0c42c.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.3aa24da2.css",
-    "static/js/main.8243892f.js"
+    "static/js/main.586ee1e7.js"
   ]
 }
