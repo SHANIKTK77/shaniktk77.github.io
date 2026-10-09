@@ -1,11 +1,57 @@
 import React from "react";
-import { FaGithub, FaLinkedinIn, FaGooglePlay } from "react-icons/fa";
-import { FiArrowUpRight, FiDownload } from "react-icons/fi";
+import {
+  FaGithub,
+  FaLinkedinIn,
+  FaGooglePlay,
+  FaApple,
+  FaAndroid,
+} from "react-icons/fa";
+import { FiArrowUpRight, FiDownload, FiMail } from "react-icons/fi";
 import resume from "./Assets/Resume.pdf";
-import { profile, stats, games, experience, skills } from "./data";
+import {
+  profile,
+  stats,
+  featuredTitle,
+  games,
+  experience,
+  education,
+  skills,
+} from "./data";
 import "./App.css";
 
-const featured = games[0];
+const featured = games.find((g) => g.title === featuredTitle) || games[0];
+
+function Platforms({ game }) {
+  return (
+    <span className="platforms">
+      {game.platforms.includes("Android") && (
+        <span title="Android">
+          <FaAndroid /> Android
+        </span>
+      )}
+      {game.platforms.includes("iOS") && (
+        <span title="iOS">
+          <FaApple /> iOS
+        </span>
+      )}
+    </span>
+  );
+}
+
+function StoreLinks({ game }) {
+  return (
+    <div className="store-links">
+      <a href={game.playStore} target="_blank" rel="noreferrer" className="store-link">
+        <FaGooglePlay /> Google Play <FiArrowUpRight />
+      </a>
+      {game.appStore && (
+        <a href={game.appStore} target="_blank" rel="noreferrer" className="store-link">
+          <FaApple /> App Store <FiArrowUpRight />
+        </a>
+      )}
+    </div>
+  );
+}
 
 function Nav() {
   return (
@@ -33,16 +79,16 @@ function Hero() {
     <section className="hero container" id="top">
       <div className="hero-text">
         <p className="eyebrow">
-          <span className="live-dot" /> {profile.role} · Unity · Android
+          <span className="live-dot" /> {profile.role} · Android · iOS
         </p>
         <h1>
           I build and ship <span className="accent">mobile games</span> people
           actually play.
         </h1>
         <p className="lead">
-          I'm {profile.name}, a game developer at Terafort. I prototype
-          mechanics, ship racing, shooter and simulation titles to Google Play,
-          and keep them fast and stable in production.
+          I'm {profile.name}, a Unity developer at Terafort with 4+ years
+          shipping mobile games. I specialize in performance optimization,
+          end-to-end iOS porting and multiplayer systems.
         </p>
         <div className="hero-actions">
           <a href="#games" className="btn btn-primary">
@@ -52,22 +98,34 @@ function Hero() {
             <FiDownload /> Download resume
           </a>
         </div>
+        <div className="focus">
+          {profile.focus.map((f) => (
+            <span className="chip" key={f}>
+              {f}
+            </span>
+          ))}
+        </div>
       </div>
 
       <a
-        href={featured.link}
+        href={featured.playStore}
         target="_blank"
         rel="noreferrer"
         className="featured"
       >
         <img src={featured.image} alt={`${featured.title} gameplay`} />
         <div className="featured-overlay">
-          <span className="tag tag-accent">Featured</span>
+          <span className="tag tag-accent">
+            Featured{featured.badge && ` · ${featured.badge}`}
+          </span>
           <div>
             <h3>{featured.title}</h3>
             <p>{featured.description}</p>
-            <span className="store-link">
-              <FaGooglePlay /> Google Play <FiArrowUpRight />
+            <span className="featured-foot">
+              <span className="store-link">
+                <FaGooglePlay /> Google Play <FiArrowUpRight />
+              </span>
+              <Platforms game={featured} />
             </span>
           </div>
         </div>
@@ -91,19 +149,19 @@ function Stats() {
 
 function GameCard({ game }) {
   return (
-    <a href={game.link} target="_blank" rel="noreferrer" className="game-card">
-      <div className="game-thumb">
+    <article className="game-card">
+      <a href={game.playStore} target="_blank" rel="noreferrer" className="game-thumb">
         <img src={game.image} alt={`${game.title} screenshot`} loading="lazy" />
         <span className="tag">{game.genre}</span>
-      </div>
+        {game.badge && <span className="tag tag-accent tag-badge">{game.badge}</span>}
+      </a>
       <div className="game-body">
         <h3>{game.title}</h3>
+        <Platforms game={game} />
         <p>{game.description}</p>
-        <span className="store-link">
-          <FaGooglePlay /> Google Play <FiArrowUpRight />
-        </span>
+        <StoreLinks game={game} />
       </div>
-    </a>
+    </article>
   );
 }
 
@@ -146,6 +204,15 @@ function Experience() {
             </ul>
           </div>
         ))}
+        <div className="job">
+          <div className="job-meta">
+            <h3>{education.degree}</h3>
+            <p>
+              {education.school} · {education.period}
+            </p>
+          </div>
+          <p className="job-note">Education</p>
+        </div>
       </div>
     </section>
   );
@@ -181,12 +248,15 @@ function Contact() {
     <section className="container section contact" id="contact">
       <h2>Let's build your next game.</h2>
       <p className="lead">
-        Open to game development roles and collaborations. The fastest way to
-        reach me is LinkedIn.
+        Open to Unity game development roles and collaborations. Email me or
+        reach out on LinkedIn.
       </p>
       <div className="hero-actions">
-        <a href={profile.linkedin} target="_blank" rel="noreferrer" className="btn btn-primary">
-          <FaLinkedinIn /> Message on LinkedIn
+        <a href={`mailto:${profile.email}`} className="btn btn-primary">
+          <FiMail /> {profile.email}
+        </a>
+        <a href={profile.linkedin} target="_blank" rel="noreferrer" className="btn">
+          <FaLinkedinIn /> LinkedIn
         </a>
         <a href={profile.github} target="_blank" rel="noreferrer" className="btn">
           <FaGithub /> GitHub

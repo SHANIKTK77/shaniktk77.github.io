@@ -12,27 +12,54 @@ const playStore = (id) =>
 
 export const profile = {
   name: "Shadman Khan Khattak",
-  role: "Game Developer",
+  role: "Unity Game Developer",
+  focus: ["Performance optimization", "iOS porting", "Multiplayer"],
   location: "Nowshera, Pakistan",
+  email: "shani.ktk77@gmail.com",
   github: "https://github.com/shaniktk77",
   linkedin: "https://www.linkedin.com/in/shadman-khan-khattak-b6b834163/",
 };
 
 export const stats = [
-  { value: "3+", label: "Years shipping games" },
-  { value: "8", label: "Games on Google Play" },
-  { value: "<0.45%", label: "ANR rate achieved" },
-  { value: "<1%", label: "Crash rate achieved" },
+  { value: "4+", label: "Years building in Unity" },
+  { value: "50M+", label: "Downloads on Prado Parking" },
+  { value: "0.24%", label: "ANR rate, down from 0.45%" },
+  { value: "~5x", label: "Fewer draw calls (450 → 90)" },
 ];
 
+// The game shown large at the top of the page
+export const featuredTitle = "Commando Shooting Stars";
+
+// Add an `appStore` URL to any game to turn its iOS badge into a link
 export const games = [
+  {
+    title: "Commando Shooting Stars",
+    genre: "FPS",
+    badge: "Original · Solo-built",
+    image: csm,
+    description:
+      "Solo-built and shipped an original FPS: combat, upgrades and loot end to end, backed by a Firebase backend for player data and live config.",
+    platforms: ["Android", "iOS"],
+    playStore: playStore("com.fg.fps.commando.shooting.game.action.games"),
+  },
+  {
+    title: "Prado Car Parking",
+    genre: "Simulation",
+    badge: "50M+ downloads",
+    image: pradoParking,
+    description:
+      "Optimized runtime performance, cut ANR to ~0.24% and improved retention through gameplay polish and stability fixes.",
+    platforms: ["Android", "iOS"],
+    playStore: playStore("com.ghive.jeep.parking.car.free.game.master.apps"),
+  },
   {
     title: "Rider 3D",
     genre: "Racing",
     image: rider3D,
     description:
-      "Highway bike racing built around speed, traffic dodging and tight controls.",
-    link: playStore(
+      "Engineered UI systems, upgrade mechanics and an offline economy, keeping crash rate below 1% across releases.",
+    platforms: ["Android", "iOS"],
+    playStore: playStore(
       "com.ffgames.motoercycle.traffic.racer.bikegames.rider.motobikeracing3d"
     ),
   },
@@ -42,17 +69,10 @@ export const games = [
     image: motoMax,
     description:
       "High-speed circuits and sharp turns in an adrenaline-fuelled bike racer.",
-    link: playStore(
+    platforms: ["Android", "iOS"],
+    playStore: playStore(
       "com.offline.racing.motorcyclegame.motomax.bikerace.bike.games"
     ),
-  },
-  {
-    title: "Commando Shooting Stars",
-    genre: "FPS",
-    image: csm,
-    description:
-      "Counter-terrorism missions that test aim and marksmanship across hostile maps.",
-    link: playStore("com.fg.fps.commando.shooting.game.action.games"),
   },
   {
     title: "Mini Car Rush",
@@ -60,7 +80,8 @@ export const games = [
     image: mcr,
     description:
       "Offline chase racing with upgradeable turbo cars, boosters and obstacles.",
-    link: playStore("com.tb.minicar.rush.racing.drivinggames"),
+    platforms: ["Android", "iOS"],
+    playStore: playStore("com.tb.minicar.rush.racing.drivinggames"),
   },
   {
     title: "Kung Fu Fighting",
@@ -68,23 +89,16 @@ export const games = [
     image: kungFu,
     description:
       "3D martial arts brawler with non-stop action and arena progression.",
-    link: playStore("com.gzl.superhero.karatefighting.game"),
-  },
-  {
-    title: "Prado Car Parking",
-    genre: "Simulation",
-    image: pradoParking,
-    description:
-      "Parking missions and driving challenges with daily achievement rewards.",
-    link: playStore("com.ghive.jeep.parking.car.free.game.master.apps"),
+    platforms: ["Android", "iOS"],
+    playStore: playStore("com.gzl.superhero.karatefighting.game"),
   },
   {
     title: "GT Car Stunt",
     genre: "Stunt racing",
     image: rampStunt,
-    description:
-      "Ramp stunts with smooth, realistic car handling on mobile.",
-    link: playStore("com.car.stunt.driving.cargames.offline.ramp.racing"),
+    description: "Ramp stunts with smooth, realistic car handling on mobile.",
+    platforms: ["Android"],
+    playStore: playStore("com.car.stunt.driving.cargames.offline.ramp.racing"),
   },
   {
     title: "Off Road Jeep Parking",
@@ -92,47 +106,81 @@ export const games = [
     image: offroadJeep,
     description:
       "4x4 off-road driving, parking and cargo transport across mountain tracks.",
-    link: playStore("com.doit.fun.games.offroad.rally.truck.apps"),
+    platforms: ["Android"],
+    playStore: playStore("com.doit.fun.games.offroad.rally.truck.apps"),
   },
 ];
 
 export const experience = [
   {
-    role: "Game Developer",
+    role: "Unity Game Developer",
     company: "Terafort",
-    period: "3+ years · Current",
+    period: "2021 – Present",
     points: [
-      "Build scalable prototypes and gameplay mechanics across FPS, TPS and simulation genres.",
-      "Fix critical crashes and ANRs, keeping ANR rates below 0.45% and crash rates below 1%.",
-      "Integrate ad mediation, analytics and backend services into live games.",
+      "Built a Unity MCP integration connecting the live project to AI agents for editor automation (asset ops, scene edits, scripted tasks), cutting repetitive manual dev work.",
+      "Cut draw calls from ~450 to ~200 across titles (as low as ~90 on some) by combining meshes, atlasing textures and tuning the far clip plane, profiled on-device with Graphy.",
+      "Reduced memory on low-end Android (2–3 GB) through asset and texture compression, eliminating OOM crashes.",
+      "Engineered Photon PUN multiplayer: matchmaking, room creation and RPC-based state sync.",
+      "Ported multiple Android titles to iOS end to end, from platform-specific fixes and code signing to App Store submission and release.",
+      "Cut ANR from ~0.45% to ~0.24% (crash rate under 1%) by moving ad and scene loading off the main thread and pooling objects; integrated AdMob, Unity Ads and AppLovin.",
     ],
   },
   {
     role: "System Engineer",
-    company: "ZMectr SMC Pvt Ltd",
-    period: "1 year",
+    company: "ZMectr",
+    period: "2020 – 2021",
     points: [
-      "Designed IoT hardware systems for home automation, wearables and environmental monitoring.",
+      "Designed and deployed IoT systems at 99% uptime, cutting production incidents 25% through proactive monitoring and root-cause analysis.",
     ],
   },
 ];
 
+export const education = {
+  degree: "B.Sc. Computer Science",
+  school: "Northern University Nowshera",
+  period: "2017 – 2021",
+};
+
 export const skills = [
-  { group: "Engines", items: ["Unity", "Unreal Engine"] },
-  { group: "Languages", items: ["C#", "C++", "Java", "JavaScript", "Python"] },
   {
-    group: "SDKs",
+    group: "Core",
     items: [
-      "Google AdMob",
-      "AppLovin MAX",
-      "Unity Ads",
-      "Chartboost",
+      "Unity (C#)",
+      "C++",
+      "JavaScript",
+      "Python",
+      "Performance optimization",
+      "Photon",
+      "PlayFab",
+    ],
+  },
+  {
+    group: "Technical",
+    items: [
       "Firebase",
-      "AWS + Laravel APIs",
+      "iOS porting",
+      "App Store release",
+      "AdMob",
+      "Unity Ads",
+      "AppLovin",
+    ],
+  },
+  {
+    group: "Platforms",
+    items: [
+      "Android",
+      "iOS",
+      "tvOS",
+      "Android TV",
+      "Playable ads (Unity Playworks)",
     ],
   },
   {
     group: "Tools",
-    items: ["Git", "Visual Studio", "VS Code", "Postman", "Jira", "Trello", "ClickUp"],
+    items: ["Git", "Bitbucket", "Agile", "Unity Profiler", "Graphy", "Xcode"],
+  },
+  {
+    group: "AI-assisted",
+    items: ["Unity MCP + AI agents", "Cursor", "Claude", "ChatGPT"],
   },
 ];

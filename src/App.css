@@ -210,6 +210,11 @@ h3 {
   background: linear-gradient(180deg, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.9));
 }
 
+.featured-overlay h3,
+.featured-overlay p {
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+}
+
 .featured-overlay h3 {
   font-size: 28px;
   margin-bottom: 6px;
@@ -514,4 +519,67 @@ h3 {
   * {
     transition: none !important;
   }
+}
+
+/* Platforms, badges and education */
+.focus {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.platforms {
+  display: inline-flex;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.platforms span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.featured-foot {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.featured-foot .platforms {
+  color: #d6d9e2;
+}
+
+.game-thumb {
+  display: block;
+}
+
+.game-thumb .tag-badge {
+  left: auto;
+  right: 12px;
+}
+
+.game-body .platforms {
+  margin-bottom: 10px;
+}
+
+.store-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.store-link:hover {
+  text-decoration: underline;
+}
+
+.job-note {
+  margin: 0;
+  color: var(--muted);
+}
+
+.skill-grid .skill-group:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
 }
