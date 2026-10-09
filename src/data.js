@@ -12,7 +12,7 @@ const playStore = (id) =>
 
 export const profile = {
   name: "Shadman Khan Khattak",
-  role: "Unity Game Developer",
+  role: "Game Developer",
   focus: ["Performance optimization", "iOS porting", "Multiplayer"],
   location: "Nowshera, Pakistan",
   email: "shani.ktk77@gmail.com",
@@ -22,7 +22,7 @@ export const profile = {
 };
 
 export const stats = [
-  { value: "4+", label: "Years building in Unity" },
+  { value: "4+", label: "Years in game development" },
   { value: "50M+", label: "Downloads on Prado Parking" },
   { value: "0.24%", label: "ANR rate, down from 0.45%" },
   { value: "~5x", label: "Fewer draw calls (450 → 90)" },
@@ -147,6 +147,7 @@ export const skills = [
     group: "Core",
     items: [
       "Unity (C#)",
+      "Unreal Engine",
       "C++",
       "JavaScript",
       "Python",

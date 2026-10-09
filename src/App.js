@@ -79,16 +79,17 @@ function Hero() {
     <section className="hero container" id="top">
       <div className="hero-text">
         <p className="eyebrow">
-          <span className="live-dot" /> {profile.role} · Android · iOS
+          <span className="live-dot" /> {profile.role} · Unity · Unreal Engine
         </p>
         <h1>
           I build and ship <span className="accent">mobile games</span> people
           actually play.
         </h1>
         <p className="lead">
-          I'm {profile.name}, a Unity developer at Terafort with 4+ years
-          shipping mobile games. I specialize in performance optimization,
-          end-to-end iOS porting and multiplayer systems.
+          I'm {profile.name}, a game developer at Terafort with 4+ years
+          shipping mobile games in Unity, plus hands-on Unreal Engine
+          experience. I specialize in performance optimization, end-to-end iOS
+          porting and multiplayer systems.
         </p>
         <div className="hero-actions">
           <a href="#games" className="btn btn-primary">
