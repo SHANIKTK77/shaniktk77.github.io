@@ -6,7 +6,7 @@ import {
   FaApple,
   FaAndroid,
 } from "react-icons/fa";
-import { FiArrowUpRight, FiDownload, FiMail } from "react-icons/fi";
+import { FiArrowUpRight, FiDownload, FiMail, FiPhone } from "react-icons/fi";
 import resume from "./Assets/Resume.pdf";
 import {
   profile,
@@ -248,12 +248,15 @@ function Contact() {
     <section className="container section contact" id="contact">
       <h2>Let's build your next game.</h2>
       <p className="lead">
-        Open to Unity game development roles and collaborations. Email me or
+        Open to Unity game development roles and collaborations. Email, call or
         reach out on LinkedIn.
       </p>
       <div className="hero-actions">
         <a href={`mailto:${profile.email}`} className="btn btn-primary">
           <FiMail /> {profile.email}
+        </a>
+        <a href={`tel:${profile.phone.replace(/-/g, "")}`} className="btn">
+          <FiPhone /> {profile.phone}
         </a>
         <a href={profile.linkedin} target="_blank" rel="noreferrer" className="btn">
           <FaLinkedinIn /> LinkedIn
