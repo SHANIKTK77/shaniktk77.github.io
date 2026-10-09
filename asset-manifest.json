@@ -1,9 +1,8 @@
 {
   "files": {
-    "main.css": "/static/css/main.69e20a30.css",
-    "main.js": "/static/js/main.8980dfa3.js",
+    "main.css": "/static/css/main.6d1599dd.css",
+    "main.js": "/static/js/main.6b5ce424.js",
     "static/js/787.1ed0c42c.chunk.js": "/static/js/787.1ed0c42c.chunk.js",
-    "static/media/Resume.pdf": "/static/media/Resume.51e7274a204c58dfc06e.pdf",
     "static/media/prado.jpg": "/static/media/prado.6e6cb7b94a59be466c93.jpg",
     "static/media/motomax.jpg": "/static/media/motomax.5579b58cef3f3bdf38f9.jpg",
     "static/media/csm.jpg": "/static/media/csm.d33b37814dd5082cba35.jpg",
@@ -12,13 +11,14 @@
     "static/media/Rider.jpg": "/static/media/Rider.6b7ceca523fb59878a43.jpg",
     "static/media/Kung FU.jpg": "/static/media/Kung FU.a0fc79616216d75d5155.jpg",
     "static/media/MCR.jpg": "/static/media/MCR.db51ff074f2fe4a5443b.jpg",
+    "static/media/Resume.pdf": "/static/media/Resume.321ccbc234700d64d640.pdf",
     "index.html": "/index.html",
-    "main.69e20a30.css.map": "/static/css/main.69e20a30.css.map",
-    "main.8980dfa3.js.map": "/static/js/main.8980dfa3.js.map",
+    "main.6d1599dd.css.map": "/static/css/main.6d1599dd.css.map",
+    "main.6b5ce424.js.map": "/static/js/main.6b5ce424.js.map",
     "787.1ed0c42c.chunk.js.map": "/static/js/787.1ed0c42c.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.69e20a30.css",
-    "static/js/main.8980dfa3.js"
+    "static/css/main.6d1599dd.css",
+    "static/js/main.6b5ce424.js"
   ]
 }
