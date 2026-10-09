@@ -92,8 +92,7 @@ export const games = [
     image: offroadJeep,
     description:
       "4x4 off-road driving, parking and cargo transport across mountain tracks.",
-    // TODO: this is the same link as GT Car Stunt — replace with the real one
-    link: playStore("com.car.stunt.driving.cargames.offline.ramp.racing"),
+    link: playStore("com.doit.fun.games.offroad.rally.truck.apps"),
   },
 ];
 
