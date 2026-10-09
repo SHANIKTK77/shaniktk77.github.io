@@ -82,14 +82,14 @@ function Hero() {
           <span className="live-dot" /> {profile.role} · Unity · Unreal Engine
         </p>
         <h1>
-          I make mobile games that run{" "}
-          <span className="accent">smooth on every phone.</span>
+          I make games that run{" "}
+          <span className="accent">smooth on every platform.</span>
         </h1>
         <p className="lead">
           I'm {profile.name}, a game developer at Terafort with 4+ years
-          shipping mobile games in Unity, plus hands-on Unreal Engine
-          experience. I specialize in performance optimization, end-to-end iOS
-          porting and multiplayer systems.
+          shipping games in Unity, plus hands-on Unreal Engine experience. I
+          build for Android, iOS, tvOS and Android TV, and specialize in
+          performance optimization, cross-platform porting and multiplayer.
         </p>
         <div className="hero-actions">
           <a href="#games" className="btn btn-primary">
@@ -257,7 +257,7 @@ function Contact() {
     <section className="container section contact" id="contact">
       <h2>Let's build your next game.</h2>
       <p className="lead">
-        Open to Unity game development roles and collaborations. Email, call or
+        Open to game development roles and collaborations. Email, call or
         reach out on LinkedIn.
       </p>
       <div className="hero-actions">

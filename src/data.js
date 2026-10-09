@@ -13,7 +13,7 @@ const playStore = (id) =>
 export const profile = {
   name: "Shadman Khan Khattak",
   role: "Game Developer",
-  focus: ["Performance optimization", "iOS porting", "Multiplayer"],
+  focus: ["Performance optimization", "Cross-platform porting", "Multiplayer"],
   location: "Nowshera, Pakistan",
   email: "shani.ktk77@gmail.com",
   phone: "+92-311-9029334",
@@ -118,7 +118,7 @@ export const experience = [
     company: "Terafort",
     period: "2021 – Present",
     summary:
-      "I take mobile games from prototype to store release, then make sure they run smoothly on every phone, including the low-end ones most players actually own.",
+      "I take games from prototype to release on every platform they ship to, then make sure they run smoothly everywhere, right down to low-end devices.",
     highlights: [
       {
         title: "Making games run fast",
@@ -133,8 +133,8 @@ export const experience = [
         text: "Moved ad and scene loading off the main thread and pooled objects, taking ANR from 0.45% to 0.24% with crashes under 1%.",
       },
       {
-        title: "Bringing games to iPhone",
-        text: "Ported several Android titles to iOS myself, from platform bugs and code signing all the way to App Store release.",
+        title: "Porting across platforms",
+        text: "Ported several Android titles to iOS end to end, from platform bugs and code signing to App Store release, and build for tvOS and Android TV too.",
       },
       {
         title: "Multiplayer",
@@ -170,8 +170,9 @@ export const skills = [
     group: "What I specialize in",
     items: [
       "Performance optimization",
-      "iOS porting and App Store release",
+      "Cross-platform porting",
       "Multiplayer (Photon, PlayFab)",
+      "App Store and Play Store release",
     ],
   },
   {
