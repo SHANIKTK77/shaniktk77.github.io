@@ -580,6 +580,52 @@ h3 {
   color: var(--muted);
 }
 
-.skill-grid .skill-group:last-child:nth-child(odd) {
-  grid-column: 1 / -1;
+.job-summary {
+  margin: 0;
+  color: #c9cdd8;
+  font-size: 17px;
+}
+
+.highlights {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.highlight {
+  padding: 16px 18px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.highlight h4 {
+  margin: 0 0 6px;
+  font-family: var(--font-display);
+  font-size: 15px;
+  color: var(--accent);
+}
+
+.highlight p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.skill-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 900px) {
+  .highlights,
+  .skill-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .job {
+    padding: 20px;
+  }
 }

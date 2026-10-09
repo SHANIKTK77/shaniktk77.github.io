@@ -22,7 +22,7 @@ export const profile = {
 };
 
 export const stats = [
-  { value: "4+", label: "Years in game development" },
+  { value: "4+", label: "Years making games" },
   { value: "50M+", label: "Downloads on Prado Parking" },
   { value: "0.24%", label: "ANR rate, down from 0.45%" },
   { value: "~5x", label: "Fewer draw calls (450 → 90)" },
@@ -39,7 +39,7 @@ export const games = [
     badge: "Original · Solo-built",
     image: csm,
     description:
-      "Solo-built and shipped an original FPS: combat, upgrades and loot end to end, backed by a Firebase backend for player data and live config.",
+      "My own game, built solo from the ground up. I made the shooting, upgrades and loot, plus the Firebase backend behind player data and live config.",
     platforms: ["Android", "iOS"],
     playStore: playStore("com.fg.fps.commando.shooting.game.action.games"),
   },
@@ -49,7 +49,7 @@ export const games = [
     badge: "50M+ downloads",
     image: pradoParking,
     description:
-      "Optimized runtime performance, cut ANR to ~0.24% and improved retention through gameplay polish and stability fixes.",
+      "A 50M+ download hit. I tuned its performance, brought ANR down to 0.24% and polished the gameplay to keep players coming back.",
     platforms: ["Android", "iOS"],
     playStore: playStore("com.ghive.jeep.parking.car.free.game.master.apps"),
   },
@@ -58,7 +58,7 @@ export const games = [
     genre: "Racing",
     image: rider3D,
     description:
-      "Engineered UI systems, upgrade mechanics and an offline economy, keeping crash rate below 1% across releases.",
+      "I built the UI, the upgrade system and the offline economy, and kept crashes under 1% across every release.",
     platforms: ["Android", "iOS"],
     playStore: playStore(
       "com.ffgames.motoercycle.traffic.racer.bikegames.rider.motobikeracing3d"
@@ -69,7 +69,7 @@ export const games = [
     genre: "Racing",
     image: motoMax,
     description:
-      "High-speed circuits and sharp turns in an adrenaline-fuelled bike racer.",
+      "Fast circuits, sharp turns and a lot of leaning into corners.",
     platforms: ["Android", "iOS"],
     playStore: playStore(
       "com.offline.racing.motorcyclegame.motomax.bikerace.bike.games"
@@ -80,7 +80,7 @@ export const games = [
     genre: "Endless runner",
     image: mcr,
     description:
-      "Offline chase racing with upgradeable turbo cars, boosters and obstacles.",
+      "Offline chase racing with turbo cars, boosters and plenty of obstacles.",
     platforms: ["Android", "iOS"],
     playStore: playStore("com.tb.minicar.rush.racing.drivinggames"),
   },
@@ -117,22 +117,41 @@ export const experience = [
     role: "Senior Game Developer",
     company: "Terafort",
     period: "2021 – Present",
-    points: [
-      "Built a Unity MCP integration connecting the live project to AI agents for editor automation (asset ops, scene edits, scripted tasks), cutting repetitive manual dev work.",
-      "Cut draw calls from ~450 to ~200 across titles (as low as ~90 on some) by combining meshes, atlasing textures and tuning the far clip plane, profiled on-device with Graphy.",
-      "Reduced memory on low-end Android (2–3 GB) through asset and texture compression, eliminating OOM crashes.",
-      "Engineered Photon PUN multiplayer: matchmaking, room creation and RPC-based state sync.",
-      "Ported multiple Android titles to iOS end to end, from platform-specific fixes and code signing to App Store submission and release.",
-      "Cut ANR from ~0.45% to ~0.24% (crash rate under 1%) by moving ad and scene loading off the main thread and pooling objects; integrated AdMob, Unity Ads and AppLovin.",
+    summary:
+      "I take mobile games from prototype to store release, then make sure they run smoothly on every phone, including the low-end ones most players actually own.",
+    highlights: [
+      {
+        title: "Making games run fast",
+        text: "Profiled on-device and cut draw calls from ~450 to ~200, down to ~90 on some titles, by combining meshes, atlasing textures and tuning the far clip plane.",
+      },
+      {
+        title: "Fitting on low-end phones",
+        text: "Compressed assets and textures so games run on 2–3 GB Android devices without out-of-memory crashes.",
+      },
+      {
+        title: "Keeping games stable",
+        text: "Moved ad and scene loading off the main thread and pooled objects, taking ANR from 0.45% to 0.24% with crashes under 1%.",
+      },
+      {
+        title: "Bringing games to iPhone",
+        text: "Ported several Android titles to iOS myself, from platform bugs and code signing all the way to App Store release.",
+      },
+      {
+        title: "Multiplayer",
+        text: "Built matchmaking, rooms and real-time state sync with Photon PUN so players stay in step across devices.",
+      },
+      {
+        title: "AI in the editor",
+        text: "Connected our Unity project to AI agents through Unity MCP, automating asset work, scene edits and other repetitive tasks.",
+      },
     ],
   },
   {
     role: "System Engineer",
     company: "ZMectr",
     period: "2020 – 2021",
-    points: [
-      "Designed and deployed IoT systems at 99% uptime, cutting production incidents 25% through proactive monitoring and root-cause analysis.",
-    ],
+    summary:
+      "Before games, I designed and ran IoT systems. I kept them up 99% of the time and cut production incidents by 25% by catching problems early and fixing their root causes.",
   },
 ];
 
@@ -144,28 +163,20 @@ export const education = {
 
 export const skills = [
   {
-    group: "Core",
+    group: "Engines and languages",
+    items: ["Unity (C#)", "Unreal Engine", "C++", "JavaScript", "Python"],
+  },
+  {
+    group: "What I specialize in",
     items: [
-      "Unity (C#)",
-      "Unreal Engine",
-      "C++",
-      "JavaScript",
-      "Python",
       "Performance optimization",
-      "Photon",
-      "PlayFab",
+      "iOS porting and App Store release",
+      "Multiplayer (Photon, PlayFab)",
     ],
   },
   {
-    group: "Technical",
-    items: [
-      "Firebase",
-      "iOS porting",
-      "App Store release",
-      "AdMob",
-      "Unity Ads",
-      "AppLovin",
-    ],
+    group: "Backend and monetization",
+    items: ["Firebase", "AdMob", "Unity Ads", "AppLovin"],
   },
   {
     group: "Platforms",
@@ -179,10 +190,10 @@ export const skills = [
   },
   {
     group: "Tools",
-    items: ["Git", "Bitbucket", "Agile", "Unity Profiler", "Graphy", "Xcode"],
+    items: ["Unity Profiler", "Graphy", "Xcode", "Git", "Bitbucket", "Agile"],
   },
   {
-    group: "AI-assisted",
+    group: "AI in my workflow",
     items: ["Unity MCP + AI agents", "Cursor", "Claude", "ChatGPT"],
   },
 ];

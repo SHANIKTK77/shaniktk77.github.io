@@ -186,8 +186,8 @@ function Experience() {
   return (
     <section className="container section" id="experience">
       <div className="section-head">
-        <p className="eyebrow">Career</p>
-        <h2>Experience</h2>
+        <p className="eyebrow">Experience</p>
+        <h2>Where I've worked</h2>
       </div>
       <div className="timeline">
         {experience.map((job) => (
@@ -198,11 +198,19 @@ function Experience() {
                 {job.company} · {job.period}
               </p>
             </div>
-            <ul>
-              {job.points.map((p) => (
-                <li key={p}>{p}</li>
-              ))}
-            </ul>
+            <div>
+              <p className="job-summary">{job.summary}</p>
+              {job.highlights && (
+                <div className="highlights">
+                  {job.highlights.map((h) => (
+                    <div className="highlight" key={h.title}>
+                      <h4>{h.title}</h4>
+                      <p>{h.text}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         ))}
         <div className="job">
@@ -212,7 +220,7 @@ function Experience() {
               {education.school} · {education.period}
             </p>
           </div>
-          <p className="job-note">Education</p>
+          <p className="job-summary">Where I learned the fundamentals before getting into games.</p>
         </div>
       </div>
     </section>
@@ -223,8 +231,8 @@ function Skills() {
   return (
     <section className="container section" id="skills">
       <div className="section-head">
-        <p className="eyebrow">Toolkit</p>
-        <h2>Skills and SDKs</h2>
+        <p className="eyebrow">Skills</p>
+        <h2>What I work with</h2>
       </div>
       <div className="skill-grid">
         {skills.map((s) => (
