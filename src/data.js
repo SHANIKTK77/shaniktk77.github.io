@@ -114,7 +114,7 @@ export const games = [
 
 export const experience = [
   {
-    role: "Unity Game Developer",
+    role: "Senior Game Developer",
     company: "Terafort",
     period: "2021 – Present",
     points: [
