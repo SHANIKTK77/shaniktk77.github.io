@@ -6,12 +6,12 @@ const CAR_W = 0.5; // car width as a fraction of lane width
 const CAR_H = 70;
 const BEST_KEY = "sk-lane-dodger-best";
 const COLORS = {
-  road: "#14161f",
-  edge: "#ff6b35",
+  road: "#0f141d",
+  edge: "#ff4655",
   dash: "rgba(236, 238, 244, 0.35)",
-  player: "#22d3ee",
-  enemy: ["#ff3d7f", "#a78bfa", "#facc15", "#f97316"],
-  coin: "#facc15",
+  player: "#3ce0ff",
+  enemy: ["#ff4655", "#b48cff", "#ffc24d", "#ff8a3d"],
+  coin: "#ffc24d",
 };
 
 function readBest() {
@@ -99,7 +99,7 @@ export default function MiniGame() {
     ctx.clearRect(0, 0, w, h);
 
     // Off-road grid that scrolls with the road
-    ctx.strokeStyle = "rgba(34, 211, 238, 0.08)";
+    ctx.strokeStyle = "rgba(60, 224, 255, 0.07)";
     ctx.lineWidth = 1;
     const cell = 32;
     const off = s.dashOffset % cell;

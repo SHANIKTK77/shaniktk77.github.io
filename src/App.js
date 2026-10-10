@@ -1,12 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import {
-  FaGithub,
-  FaLinkedinIn,
-  FaGooglePlay,
-  FaApple,
-  FaAndroid,
-  FaTrophy,
-} from "react-icons/fa";
+import { FaGithub, FaLinkedinIn, FaGooglePlay, FaApple, FaAndroid, FaTrophy } from "react-icons/fa";
 import {
   FiArrowUpRight,
   FiChevronLeft,
@@ -21,17 +14,20 @@ import {
   FiUsers,
   FiTerminal,
   FiPlay,
+  FiClock,
+  FiActivity,
+  FiLayers,
+  FiCode,
+  FiTarget,
+  FiDollarSign,
+  FiMonitor,
+  FiTool,
+  FiMenu,
+  FiX,
+  FiCheck,
 } from "react-icons/fi";
 import resume from "./Assets/Resume.pdf";
-import {
-  profile,
-  stats,
-  featuredTitle,
-  games,
-  experience,
-  education,
-  skills,
-} from "./data";
+import { profile, stats, featuredTitle, games, experience, education, skills } from "./data";
 import MiniGame from "./MiniGame";
 import "./App.css";
 
@@ -41,12 +37,49 @@ const slides = [featured, ...games.filter((g) => g !== featured)];
 
 // Icons for the experience highlight cards, in the order they appear in data.js
 const HIGHLIGHT_ICONS = [FiZap, FiCpu, FiShield, FiSmartphone, FiUsers, FiTerminal];
+// Icon and rarity for each stat, in the order they appear in data.js
+const STAT_META = [
+  { icon: FiClock, rarity: "Veteran" },
+  { icon: FiDownload, rarity: "Legendary" },
+  { icon: FiActivity, rarity: "Epic" },
+  { icon: FiLayers, rarity: "Rare" },
+];
+// Icons for the skill groups, in the order they appear in data.js
+const SKILL_ICONS = [FiCode, FiTarget, FiDollarSign, FiMonitor, FiTool, FiCpu];
+
+const TICKER = [
+  "Unity",
+  "Unreal Engine",
+  "C#",
+  "C++",
+  "Photon PUN",
+  "PlayFab",
+  "Firebase",
+  "Android",
+  "iOS",
+  "tvOS",
+  "Android TV",
+  "Performance",
+  "Porting",
+  "Multiplayer",
+];
+
+const NAV = [
+  { id: "games", label: "Games" },
+  { id: "experience", label: "Career" },
+  { id: "skills", label: "Loadout" },
+  { id: "play", label: "Arcade" },
+  { id: "contact", label: "Contact" },
+];
+const NAV_IDS = NAV.map((n) => n.id);
+
+const RESUME_NAME = "Shadman-Khan-Khattak-Resume.pdf";
+const BOOT_KEY = "sk-booted";
 
 const pad = (n) => String(n).padStart(2, "0");
 
 const prefersReducedMotion = () =>
-  typeof window !== "undefined" &&
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 // Fades elements marked with data-reveal in as they scroll into view
 function useReveal() {
@@ -65,11 +98,33 @@ function useReveal() {
           }
         });
       },
-      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" },
     );
     els.forEach((el) => io.observe(el));
     return () => io.disconnect();
   }, []);
+}
+
+// Tracks which section is in the middle of the viewport
+function useActiveSection(ids) {
+  const [active, setActive] = useState(null);
+  useEffect(() => {
+    if (!("IntersectionObserver" in window)) return undefined;
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) setActive(e.target.id);
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px" },
+    );
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) io.observe(el);
+    });
+    return () => io.disconnect();
+  }, [ids]);
+  return active;
 }
 
 // ↑ ↑ ↓ ↓ ← → ← → B A
@@ -100,6 +155,75 @@ function useKonami(onUnlock) {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [onUnlock]);
+}
+
+function shouldBoot() {
+  if (prefersReducedMotion()) return false;
+  try {
+    return !sessionStorage.getItem(BOOT_KEY);
+  } catch (e) {
+    return false;
+  }
+}
+
+const BOOT_MS = 2600;
+const BOOT_LINES = ["Loading shaders", "Streaming assets", "Syncing save data", "Ready"];
+
+// Short, skippable loading screen shown once per browser session
+function Boot({ onDone }) {
+  const [progress, setProgress] = useState(0);
+  const [leaving, setLeaving] = useState(false);
+
+  const finish = useCallback(() => setLeaving(true), []);
+
+  useEffect(() => {
+    let raf = 0;
+    const start = performance.now();
+    const tick = (now) => {
+      const t = Math.min(1, (now - start) / BOOT_MS);
+      setProgress(t);
+      if (t < 1) raf = requestAnimationFrame(tick);
+      else finish();
+    };
+    raf = requestAnimationFrame(tick);
+    window.addEventListener("keydown", finish);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("keydown", finish);
+    };
+  }, [finish]);
+
+  useEffect(() => {
+    if (!leaving) return undefined;
+    try {
+      sessionStorage.setItem(BOOT_KEY, "1");
+    } catch (e) {
+      // Without storage the boot screen just shows again next visit
+    }
+    const id = setTimeout(onDone, 450);
+    return () => clearTimeout(id);
+  }, [leaving, onDone]);
+
+  const line =
+    BOOT_LINES[Math.min(BOOT_LINES.length - 1, Math.floor(progress * BOOT_LINES.length))];
+
+  return (
+    <div className={`boot${leaving ? " is-leaving" : ""}`} onClick={finish} aria-hidden="true">
+      <div className="boot-inner">
+        <span className="boot-logo">SK</span>
+        <p className="boot-name">{profile.name}</p>
+        <p className="mono boot-role">Game Developer · Unity / Unreal</p>
+        <div className="boot-bar">
+          <span style={{ transform: `scaleX(${progress})` }} />
+        </div>
+        <p className="mono boot-status">
+          <span>{line}…</span>
+          <span>{Math.round(progress * 100)}%</span>
+        </p>
+      </div>
+      <p className="mono boot-skip">Press any key to skip</p>
+    </div>
+  );
 }
 
 function Platforms({ game }) {
@@ -134,13 +258,16 @@ function StoreLinks({ game }) {
   );
 }
 
-function SectionHead({ stage, eyebrow, title, children }) {
+function SectionHead({ index, kicker, title, children }) {
   return (
     <div className="section-head" data-reveal>
-      <p className="stage">
-        <span className="stage-num">STAGE {pad(stage)}</span>
-        <span className="stage-line" />
-        <span className="stage-name">{eyebrow}</span>
+      <span className="section-index" aria-hidden="true">
+        {pad(index)}
+      </span>
+      <p className="kicker mono">
+        <span className="kicker-num">{pad(index)}</span>
+        <span className="kicker-line" />
+        {kicker}
       </p>
       <h2>{title}</h2>
       {children}
@@ -150,6 +277,8 @@ function SectionHead({ stage, eyebrow, title, children }) {
 
 function Nav() {
   const [progress, setProgress] = useState(0);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const active = useActiveSection(NAV_IDS);
 
   useEffect(() => {
     let frame = 0;
@@ -171,101 +300,173 @@ function Nav() {
     };
   }, []);
 
-  return (
-    <header className="nav">
-      <div className="container nav-inner">
-        <a href="#top" className="nav-logo" aria-label="Back to top">
-          <span className="logo-box">SK</span>
-          <span className="logo-p1">P1</span>
-        </a>
-        <nav className="nav-links">
-          <a href="#games">Games</a>
-          <a href="#experience">Experience</a>
-          <a href="#skills">Skills</a>
-          <a href="#play">Play</a>
-          <a href="#contact">Contact</a>
-        </nav>
-        <a href={resume} download="Shadman-Khan-Khattak-Resume.pdf" className="btn btn-small">
-          <FiDownload /> Resume
-        </a>
-      </div>
-      <div className="xp" aria-hidden="true">
-        <div className="xp-fill" style={{ transform: `scaleX(${progress})` }} />
-        <span className="xp-label">XP {Math.round(progress * 100)}%</span>
-      </div>
-    </header>
-  );
-}
+  useEffect(() => {
+    if (!menuOpen) return undefined;
+    const onKey = (e) => e.key === "Escape" && setMenuOpen(false);
+    window.addEventListener("keydown", onKey);
+    document.body.classList.add("no-scroll");
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.classList.remove("no-scroll");
+    };
+  }, [menuOpen]);
 
-function Hero() {
-  return (
-    <section className="hero-wrap" id="top">
-      <div className="hero-bg" aria-hidden="true">
-        <div className="hero-sun" />
-        <div className="hero-grid" />
-        <div className="hero-stars" />
-      </div>
+  const close = () => setMenuOpen(false);
 
-      <div className="hero container">
-        <div className="hero-text">
-          <p className="eyebrow hud-label">
-            <span className="live-dot" /> PLAYER 1 · {profile.role.toUpperCase()}
-          </p>
-          <h1>
-            I make games that run{" "}
-            <span className="accent glitch" data-text="smooth on every platform.">
-              smooth on every platform.
+  return (
+    <>
+      <header className="nav">
+        <div className="container nav-inner">
+          <a href="#top" className="nav-logo" aria-label="Back to top">
+            <span className="logo-mark">SK</span>
+            <span className="logo-text">
+              <strong>Shadman Khan</strong>
+              <span className="mono">Game Developer</span>
             </span>
-          </h1>
-          <p className="lead">
-            I'm {profile.name}, a game developer at Terafort with 4+ years
-            shipping games in Unity, plus hands-on Unreal Engine experience. I
-            build for Android, iOS, tvOS and Android TV, and specialize in
-            performance optimization, cross-platform porting and multiplayer.
-          </p>
-          <div className="hero-actions">
-            <a href="#games" className="btn btn-primary btn-start">
-              <FiPlay /> Press start
-            </a>
-            <a href={resume} download="Shadman-Khan-Khattak-Resume.pdf" className="btn">
-              <FiDownload /> Download resume
-            </a>
-          </div>
-          <div className="focus">
-            {profile.focus.map((f) => (
-              <span className="chip chip-perk" key={f}>
-                {f}
-              </span>
+          </a>
+          <nav className="nav-links" aria-label="Sections">
+            {NAV.map((item, i) => (
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                className={active === item.id ? "is-active" : ""}
+                aria-current={active === item.id ? "true" : undefined}
+              >
+                <span className="mono">{pad(i + 1)}</span>
+                {item.label}
+              </a>
             ))}
+          </nav>
+          <div className="nav-actions">
+            <a
+              href={resume}
+              download={RESUME_NAME}
+              className="btn btn-small btn-primary nav-resume"
+            >
+              <FiDownload /> Resume
+            </a>
+            <button
+              type="button"
+              className="menu-btn"
+              onClick={() => setMenuOpen(true)}
+              aria-label="Open menu"
+              aria-expanded={menuOpen}
+            >
+              <FiMenu />
+            </button>
           </div>
         </div>
+        <div className="xp" aria-hidden="true">
+          <div className="xp-fill" style={{ transform: `scaleX(${progress})` }} />
+        </div>
+      </header>
 
-        <Slideshow />
+      <div className={`pause${menuOpen ? " is-open" : ""}`} aria-hidden={!menuOpen}>
+        <div className="pause-head">
+          <span className="mono">{"// Paused"}</span>
+          <button
+            type="button"
+            className="menu-btn"
+            onClick={close}
+            aria-label="Close menu"
+            tabIndex={menuOpen ? 0 : -1}
+          >
+            <FiX />
+          </button>
+        </div>
+        <nav className="pause-links" aria-label="Menu">
+          <a href="#top" onClick={close} tabIndex={menuOpen ? 0 : -1}>
+            <span className="mono">00</span> Resume game
+          </a>
+          {NAV.map((item, i) => (
+            <a key={item.id} href={`#${item.id}`} onClick={close} tabIndex={menuOpen ? 0 : -1}>
+              <span className="mono">{pad(i + 1)}</span> {item.label}
+            </a>
+          ))}
+        </nav>
+        <a
+          href={resume}
+          download={RESUME_NAME}
+          className="btn btn-primary"
+          tabIndex={menuOpen ? 0 : -1}
+        >
+          <FiDownload /> Download resume
+        </a>
       </div>
-
-      <a href="#achievements" className="scroll-hint" aria-label="Scroll down">
-        <span>SCROLL</span>
-        <i />
-      </a>
-    </section>
+    </>
   );
 }
 
 const SLIDE_MS = 5000;
 
-function Slideshow() {
+function Hero() {
   const [index, setIndex] = useState(0);
+  const game = slides[index];
+
+  return (
+    <section className="hero-wrap" id="top">
+      <div className="hero-bg" aria-hidden="true">
+        <img key={game.title} src={game.image} alt="" className="hero-backdrop" />
+        <div className="hero-shade" />
+        <div className="hero-grid" />
+      </div>
+
+      <div className="hero container">
+        <div className="hero-text">
+          <p className="hero-tag mono">
+            <span className="live-dot" /> Player 01 · {profile.role} @ Terafort
+          </p>
+          <h1>
+            I make games that run <span className="accent">smooth on every platform.</span>
+          </h1>
+          <p className="lead">
+            I'm {profile.name}, a game developer with 4+ years shipping games in Unity, plus
+            hands-on Unreal Engine experience. I build for Android, iOS, tvOS and Android TV, and
+            specialize in performance optimization, cross-platform porting and multiplayer.
+          </p>
+          <div className="hero-actions">
+            <a href="#games" className="btn btn-primary btn-lg">
+              <FiPlay /> View my games
+            </a>
+            <a href={resume} download={RESUME_NAME} className="btn btn-ghost btn-lg">
+              <FiDownload /> Download resume
+            </a>
+          </div>
+          <dl className="hero-meta">
+            <div>
+              <dt className="mono">Class</dt>
+              <dd>Senior Game Dev</dd>
+            </div>
+            <div>
+              <dt className="mono">Engines</dt>
+              <dd>Unity · Unreal</dd>
+            </div>
+            <div>
+              <dt className="mono">Specialty</dt>
+              <dd>{profile.focus[0]}</dd>
+            </div>
+          </dl>
+        </div>
+
+        <Slideshow index={index} setIndex={setIndex} />
+      </div>
+    </section>
+  );
+}
+
+function Slideshow({ index, setIndex }) {
   const [paused, setPaused] = useState(false);
   const touchX = useRef(null);
   const count = slides.length;
+  const animate = !paused && !prefersReducedMotion();
 
-  const go = useCallback((i) => setIndex((i + count) % count), [count]);
+  const go = useCallback((i) => setIndex((i + count) % count), [count, setIndex]);
 
   useEffect(() => {
-    if (paused || prefersReducedMotion()) return undefined;
+    if (!animate) return undefined;
     const id = setTimeout(() => go(index + 1), SLIDE_MS);
     return () => clearTimeout(id);
-  }, [index, paused, go]);
+  }, [index, animate, go]);
 
   const onTouchStart = (e) => {
     touchX.current = e.touches[0].clientX;
@@ -279,17 +480,19 @@ function Slideshow() {
   };
 
   return (
-    <div className="hud-frame">
-      <span className="corner tl" />
-      <span className="corner tr" />
-      <span className="corner bl" />
-      <span className="corner br" />
-      <div className="hud-bar">
+    <div
+      className="showcase"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocus={() => setPaused(true)}
+      onBlur={() => setPaused(false)}
+    >
+      <div className="showcase-bar mono">
         <span>
-          <span className="rec" /> NOW PLAYING
+          <span className="rec" /> {index === 0 ? "Featured title" : "Now showing"}
         </span>
         <span>
-          {pad(index + 1)}/{pad(count)}
+          {pad(index + 1)} / {pad(count)}
         </span>
       </div>
       <div
@@ -297,10 +500,6 @@ function Slideshow() {
         role="region"
         aria-roledescription="carousel"
         aria-label="Games I've worked on"
-        onMouseEnter={() => setPaused(true)}
-        onMouseLeave={() => setPaused(false)}
-        onFocus={() => setPaused(true)}
-        onBlur={() => setPaused(false)}
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >
@@ -320,10 +519,12 @@ function Slideshow() {
               loading={i === 0 ? "eager" : "lazy"}
             />
             <div className="featured-overlay">
-              <span className="tag tag-accent">
-                {game === featured ? "Featured" : game.genre}
-                {game.badge && ` · ${game.badge}`}
-              </span>
+              <div className="featured-tags">
+                <span className="tag tag-accent">
+                  {game === featured ? "Featured" : game.genre}
+                </span>
+                {game.badge && <span className="tag">{game.badge}</span>}
+              </div>
               <div>
                 <h3>{game.title}</h3>
                 <p>{game.description}</p>
@@ -337,10 +538,6 @@ function Slideshow() {
             </div>
           </a>
         ))}
-        <div className="scanlines" aria-hidden="true" />
-        {!paused && !prefersReducedMotion() && (
-          <div className="slide-timer" key={index} aria-hidden="true" />
-        )}
 
         <button
           type="button"
@@ -358,19 +555,40 @@ function Slideshow() {
         >
           <FiChevronRight />
         </button>
+      </div>
 
-        <div className="slide-dots">
-          {slides.map((game, i) => (
-            <button
-              type="button"
-              key={game.title}
-              className={i === index ? "is-active" : ""}
-              onClick={() => go(i)}
-              aria-label={`Show ${game.title}`}
-              aria-current={i === index}
+      <div className="slide-steps">
+        {slides.map((game, i) => (
+          <button
+            type="button"
+            key={game.title}
+            className={`${i === index ? "is-active" : ""}${i < index ? " is-done" : ""}`}
+            onClick={() => go(i)}
+            aria-label={`Show ${game.title}`}
+            aria-current={i === index}
+          >
+            <span
+              key={i === index ? `run-${index}` : "idle"}
+              className={i === index && animate ? "is-running" : ""}
             />
-          ))}
-        </div>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function Ticker() {
+  const items = [...TICKER, ...TICKER];
+  return (
+    <div className="ticker" aria-hidden="true">
+      <div className="ticker-track">
+        {items.map((t, i) => (
+          <span key={i}>
+            {t}
+            <i />
+          </span>
+        ))}
       </div>
     </div>
   );
@@ -425,27 +643,37 @@ function CountUp({ value }) {
 
 function Stats() {
   return (
-    <section className="container stats-wrap" id="achievements">
-      <p className="hud-label stats-title">
-        <FaTrophy /> ACHIEVEMENTS UNLOCKED · {stats.length}/{stats.length}
+    <section className="container stats-wrap" id="achievements" aria-label="Career stats">
+      <p className="kicker mono stats-title">
+        <FaTrophy /> Achievements unlocked
+        <span className="stats-count">
+          {stats.length}/{stats.length}
+        </span>
       </p>
       <div className="stats">
-        {stats.map((s, i) => (
-          <div
-            className="stat"
-            key={s.label}
-            data-reveal
-            style={{ transitionDelay: `${i * 80}ms` }}
-          >
-            <div className="stat-value">
-              <CountUp value={s.value} />
+        {stats.map((s, i) => {
+          const meta = STAT_META[i % STAT_META.length];
+          const Icon = meta.icon;
+          return (
+            <div
+              className={`stat panel rarity-${meta.rarity.toLowerCase()}`}
+              key={s.label}
+              data-reveal
+              style={{ transitionDelay: `${i * 80}ms` }}
+            >
+              <div className="stat-top">
+                <span className="stat-icon">
+                  <Icon />
+                </span>
+                <span className="mono stat-rarity">{meta.rarity}</span>
+              </div>
+              <div className="stat-value">
+                <CountUp value={s.value} />
+              </div>
+              <div className="stat-label">{s.label}</div>
             </div>
-            <div className="stat-label">{s.label}</div>
-            <div className="stat-bar">
-              <span />
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );
@@ -460,8 +688,8 @@ function useTilt() {
     const r = el.getBoundingClientRect();
     const x = (e.clientX - r.left) / r.width;
     const y = (e.clientY - r.top) / r.height;
-    el.style.setProperty("--rx", `${(0.5 - y) * 8}deg`);
-    el.style.setProperty("--ry", `${(x - 0.5) * 10}deg`);
+    el.style.setProperty("--rx", `${(0.5 - y) * 6}deg`);
+    el.style.setProperty("--ry", `${(x - 0.5) * 8}deg`);
     el.style.setProperty("--gx", `${x * 100}%`);
     el.style.setProperty("--gy", `${y * 100}%`);
   };
@@ -477,20 +705,22 @@ function useTilt() {
 function GameCard({ game, number }) {
   const tilt = useTilt();
   return (
-    <article className="game-card" {...tilt}>
+    <article className="game-card panel" {...tilt}>
       <a href={game.playStore} target="_blank" rel="noreferrer" className="game-thumb">
         <img src={game.image} alt={`${game.title} screenshot`} loading="lazy" />
         <span className="tag">{game.genre}</span>
         {game.badge && <span className="tag tag-accent tag-badge">{game.badge}</span>}
         <span className="play-overlay" aria-hidden="true">
           <span>
-            <FiPlay /> PLAY
+            <FiPlay /> View on store
           </span>
         </span>
       </a>
       <div className="game-body">
-        <span className="game-num">#{pad(number)}</span>
-        <h3>{game.title}</h3>
+        <div className="game-head">
+          <h3>{game.title}</h3>
+          <span className="mono game-num">#{pad(number)}</span>
+        </div>
         <Platforms game={game} />
         <p>{game.description}</p>
         <StoreLinks game={game} />
@@ -509,7 +739,7 @@ function Games() {
 
   return (
     <section className="container section" id="games">
-      <SectionHead stage={1} eyebrow="Shipped titles" title="Games I've worked on">
+      <SectionHead index={1} kicker="Game library" title="Games I've worked on">
         <div className="mode-select" role="group" aria-label="Filter by genre">
           {genres.map((g) => (
             <button
@@ -520,6 +750,9 @@ function Games() {
               onClick={() => setGenre(g)}
             >
               {g}
+              <span className="mono">
+                {g === ALL ? games.length : games.filter((x) => x.genre === g).length}
+              </span>
             </button>
           ))}
         </div>
@@ -537,52 +770,74 @@ function Experience() {
   const levels = experience.length + 1;
   return (
     <section className="container section" id="experience">
-      <SectionHead stage={2} eyebrow="Quest log" title="Where I've worked" />
+      <SectionHead index={2} kicker="Career mode" title="Where I've worked" />
       <div className="timeline">
         {experience.map((job, i) => (
-          <div className="job" key={job.company} data-reveal>
+          <div className="job-row" key={job.company} data-reveal>
             <span className="job-node" aria-hidden="true" />
-            <div className="job-meta">
-              <span className="level">LVL {levels - i}</span>
-              <h3>{job.role}</h3>
-              <p>
-                {job.company} · {job.period}
-              </p>
-              {i === 0 && <span className="status-tag">● IN PROGRESS</span>}
-            </div>
-            <div>
-              <p className="job-summary">{job.summary}</p>
-              {job.highlights && (
-                <div className="highlights">
-                  {job.highlights.map((h, j) => {
-                    const Icon = HIGHLIGHT_ICONS[j % HIGHLIGHT_ICONS.length];
-                    return (
-                      <div className="highlight" key={h.title}>
-                        <span className="highlight-icon">
-                          <Icon />
-                        </span>
-                        <div>
-                          <h4>{h.title}</h4>
-                          <p>{h.text}</p>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
+            <div className="job panel">
+              <div className="job-meta">
+                <span className="level mono">Lvl {levels - i}</span>
+                <h3>{job.role}</h3>
+                <p>
+                  {job.company} · {job.period}
+                </p>
+                {i === 0 ? (
+                  <span className="status-tag mono">
+                    <span className="live-dot" /> Active mission
+                  </span>
+                ) : (
+                  <span className="status-tag is-done mono">
+                    <FiCheck /> Mission complete
+                  </span>
+                )}
+              </div>
+              <div>
+                <p className="job-summary">{job.summary}</p>
+                {job.highlights && (
+                  <>
+                    <p className="objectives-title mono">
+                      Objectives completed · {job.highlights.length}
+                    </p>
+                    <div className="highlights">
+                      {job.highlights.map((h, j) => {
+                        const Icon = HIGHLIGHT_ICONS[j % HIGHLIGHT_ICONS.length];
+                        return (
+                          <div className="highlight" key={h.title}>
+                            <span className="highlight-icon">
+                              <Icon />
+                            </span>
+                            <div>
+                              <h4>{h.title}</h4>
+                              <p>{h.text}</p>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         ))}
-        <div className="job" data-reveal>
+        <div className="job-row" data-reveal>
           <span className="job-node" aria-hidden="true" />
-          <div className="job-meta">
-            <span className="level">LVL 1 · TUTORIAL</span>
-            <h3>{education.degree}</h3>
-            <p>
-              {education.school} · {education.period}
+          <div className="job panel">
+            <div className="job-meta">
+              <span className="level mono">Lvl 1 · Tutorial</span>
+              <h3>{education.degree}</h3>
+              <p>
+                {education.school} · {education.period}
+              </p>
+              <span className="status-tag is-done mono">
+                <FiCheck /> Complete
+              </span>
+            </div>
+            <p className="job-summary">
+              Where I learned the fundamentals before getting into games.
             </p>
           </div>
-          <p className="job-summary">Where I learned the fundamentals before getting into games.</p>
         </div>
       </div>
     </section>
@@ -592,28 +847,34 @@ function Experience() {
 function Skills() {
   return (
     <section className="container section" id="skills">
-      <SectionHead stage={3} eyebrow="Loadout" title="What I work with" />
+      <SectionHead index={3} kicker="Loadout" title="What I work with" />
       <div className="skill-grid">
-        {skills.map((s, i) => (
-          <div
-            className="skill-group"
-            key={s.group}
-            data-reveal
-            style={{ transitionDelay: `${(i % 3) * 80}ms` }}
-          >
-            <h3>
-              <span className="slot-key">{i + 1}</span>
-              {s.group}
-            </h3>
-            <div className="chips">
-              {s.items.map((item) => (
-                <span className="chip chip-slot" key={item}>
-                  {item}
+        {skills.map((s, i) => {
+          const Icon = SKILL_ICONS[i % SKILL_ICONS.length];
+          return (
+            <div
+              className="skill-group panel"
+              key={s.group}
+              data-reveal
+              style={{ transitionDelay: `${(i % 3) * 80}ms` }}
+            >
+              <div className="skill-head">
+                <span className="skill-icon">
+                  <Icon />
                 </span>
-              ))}
+                <span className="mono slot-key">Slot {i + 1}</span>
+              </div>
+              <h3>{s.group}</h3>
+              <div className="chips">
+                {s.items.map((item) => (
+                  <span className="chip" key={item}>
+                    {item}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );
@@ -622,10 +883,10 @@ function Skills() {
 function Play() {
   return (
     <section className="container section" id="play">
-      <SectionHead stage={4} eyebrow="Bonus stage" title="Take a quick break.">
+      <SectionHead index={4} kicker="Bonus stage" title="Take a quick break">
         <p className="lead">
-          A tiny lane-dodger I built for this page. Dodge the traffic, grab the
-          coins and see how far you get.
+          A tiny lane-dodger I built for this page. Dodge the traffic, grab the coins and see how
+          far you get.
         </p>
       </SectionHead>
       <div data-reveal>
@@ -637,30 +898,53 @@ function Play() {
 
 function Contact() {
   return (
-    <section className="container section contact" id="contact">
-      <p className="hud-label continue">
-        CONTINUE? <span className="blink">▮</span>
-      </p>
-      <h2>
-        Ready for <span className="accent">player two?</span>
-      </h2>
-      <p className="lead">
-        Open to game development roles and collaborations. Email, call or
-        reach out on LinkedIn.
-      </p>
-      <div className="hero-actions">
-        <a href={`mailto:${profile.email}`} className="btn btn-primary">
-          <FiMail /> {profile.email}
-        </a>
-        <a href={`tel:${profile.phone.replace(/-/g, "")}`} className="btn">
-          <FiPhone /> {profile.phone}
-        </a>
-        <a href={profile.linkedin} target="_blank" rel="noreferrer" className="btn">
-          <FaLinkedinIn /> LinkedIn
-        </a>
-        <a href={profile.github} target="_blank" rel="noreferrer" className="btn">
-          <FaGithub /> GitHub
-        </a>
+    <section className="container section" id="contact">
+      <div className="contact panel" data-reveal>
+        <div className="contact-text">
+          <p className="kicker mono">
+            <span className="live-dot" /> Lobby open · Looking for party
+          </p>
+          <h2>
+            Ready for <span className="accent">player two?</span>
+          </h2>
+          <p className="lead">
+            Open to game development roles and collaborations. Email, call or reach out on LinkedIn.
+          </p>
+        </div>
+        <div className="contact-links">
+          <a href={`mailto:${profile.email}`} className="contact-link is-primary">
+            <FiMail />
+            <span>
+              <small className="mono">Email</small>
+              {profile.email}
+            </span>
+            <FiArrowUpRight />
+          </a>
+          <a href={`tel:${profile.phone.replace(/-/g, "")}`} className="contact-link">
+            <FiPhone />
+            <span>
+              <small className="mono">Phone</small>
+              {profile.phone}
+            </span>
+            <FiArrowUpRight />
+          </a>
+          <a href={profile.linkedin} target="_blank" rel="noreferrer" className="contact-link">
+            <FaLinkedinIn />
+            <span>
+              <small className="mono">LinkedIn</small>
+              Shadman Khan Khattak
+            </span>
+            <FiArrowUpRight />
+          </a>
+          <a href={profile.github} target="_blank" rel="noreferrer" className="contact-link">
+            <FaGithub />
+            <span>
+              <small className="mono">GitHub</small>
+              @shaniktk77
+            </span>
+            <FiArrowUpRight />
+          </a>
+        </div>
       </div>
     </section>
   );
@@ -686,6 +970,7 @@ function Toast({ show, retro }) {
 }
 
 function App() {
+  const [booting, setBooting] = useState(shouldBoot);
   const [retro, setRetro] = useState(false);
   const [toast, setToast] = useState(false);
 
@@ -696,6 +981,8 @@ function App() {
     setToast(true);
   }, []);
   useKonami(unlock);
+
+  const endBoot = useCallback(() => setBooting(false), []);
 
   useEffect(() => {
     document.body.classList.toggle("retro", retro);
@@ -709,10 +996,12 @@ function App() {
 
   return (
     <>
-      <div className="noise" aria-hidden="true" />
+      {booting && <Boot onDone={endBoot} />}
+      <div className="bg-fx" aria-hidden="true" />
       <Nav />
       <main>
         <Hero />
+        <Ticker />
         <Stats />
         <Games />
         <Experience />
@@ -722,12 +1011,12 @@ function App() {
       </main>
       <footer className="footer container">
         <span>
-          © {new Date().getFullYear()} {profile.name} · Thanks for playing
+          © {new Date().getFullYear()} {profile.name}
         </span>
-        <span className="cheat" title="Try it">
+        <span className="cheat mono" title="Try it">
           ↑ ↑ ↓ ↓ ← → ← → B A
         </span>
-        <span>{profile.location}</span>
+        <span className="mono">{profile.location} · Thanks for playing</span>
       </footer>
       <Toast show={toast} retro={retro} />
     </>
