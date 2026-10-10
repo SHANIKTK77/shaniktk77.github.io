@@ -18,7 +18,7 @@ export const profile = {
   email: "shani.ktk77@gmail.com",
   phone: "+92-311-9029334",
   github: "https://github.com/shaniktk77",
-  linkedin: "https://www.linkedin.com/in/shadman-khan-khattak",
+  linkedin: "https://www.linkedin.com/in/shadman-khan-khattak-b6b834163/",
 };
 
 export const stats = [
