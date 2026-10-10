@@ -10,7 +10,12 @@ A single-page game developer portfolio styled like a AAA game's title screen: th
 ## Features
 
 - **Studio splash:** a loading screen with a drawn-in crest and a random tip, shown once per browser session. Press any key or click to skip it.
-- **Title screen hero:** full-screen game art that cross-fades between my games, a real-time WebGL layer of smoke and embers, mouse parallax, HUD framing and a game-style main menu.
+- **Drivable 3D title screen:** the hero is a real-time three.js world. A demo car laps a neon ring road in attract mode behind the title; press Enter (or **Take the wheel**) to drive it yourself.
+  - Billboards around the track show each of my games, with a Google Play link when you drive past.
+  - Glowing light beams are mission markers: drive into one and press E to jump to that section of the page.
+  - Side quests with achievements: a bowling-pin cone strike, a stunt ramp, a parking challenge (a nod to Prado Car Parking) and a drift score to beat 9,000.
+  - Arcade car physics with drifting, nitro, glowing drift trails, sparks, a minimap, an engine sound and on-screen touch controls on phones.
+  - A live readout of FPS, draw calls and triangles. The whole world draws in about 50 calls thanks to instancing and no real-time shadows, and it lowers its own resolution if the frame rate drops.
 - **Character select:** a player card, an attribute radar chart and achievement tiles that count up when you scroll to them.
 - **Game library:** a store-style grid with a big tile for the featured game; filter by genre, hover for details and store links.
 - **Campaign:** my work history as chapters with completed objectives, on a timeline that fills as you scroll.
@@ -18,16 +23,17 @@ A single-page game developer portfolio styled like a AAA game's title screen: th
 - **Arcade:** Lane Dodger, a small canvas mini-game you can play on the page.
 - **Lobby:** contact links styled as a multiplayer party screen.
 - **Extras:** a crosshair cursor that locks on to links, optional synthesized UI sounds (toggle in the top bar), film grain, and a full-screen pause menu on phones.
-- **Easter egg:** enter the Konami code (↑ ↑ ↓ ↓ ← → ← → B A) to turn on retro mode.
+- **Easter eggs:** enter the Konami code (↑ ↑ ↓ ↓ ← → ← → B A) to turn on retro mode, or type `IDDQD` for god mode: a gold theme, a golden car with an aura and infinite nitro.
 
-The page also respects `prefers-reduced-motion`: animations, the WebGL effect, the slideshow autoplay, the custom cursor and the splash screen are turned off for visitors who ask for reduced motion.
+The page also respects `prefers-reduced-motion`: animations, the WebGL effects, the slideshow autoplay, the custom cursor and the splash screen are turned off for visitors who ask for reduced motion. Those visitors, and browsers without WebGL, get the classic title screen instead of the 3D world: game art that cross-fades between my games with a smoke-and-embers shader on top.
 
 ## Built With
 
 - React
 - CSS3 (no UI framework)
 - [react-icons](https://react-icons.github.io/react-icons/)
-- WebGL (hand-written shader, no 3D library) and the Web Audio API
+- [three.js](https://threejs.org/) for the drivable world (loaded on demand, no physics library)
+- WebGL (a hand-written shader for the fallback hero) and the Web Audio API
 - Google Fonts: Barlow Condensed, Inter, JetBrains Mono and Press Start 2P (retro mode only)
 - GitHub Pages
 
@@ -57,7 +63,10 @@ The app runs at [http://localhost:3000](http://localhost:3000) and reloads as yo
 | Styles, colors and fonts | `src/App.css` (colors are CSS variables at the top) |
 | Boot screen length | `BOOT_MS` in `src/App.js` |
 | Mini-game | `src/MiniGame.js` |
-| Hero smoke and embers shader | `src/HeroFX.js` |
+| 3D world: layout, car physics, objectives | `src/driveEngine.js` (tuning constants at the top) |
+| 3D world HUD, objectives copy and touch controls | `src/DriveWorld.js` |
+| Mission markers (labels, colors) | `NAV` in `src/App.js` |
+| Fallback hero smoke and embers shader | `src/HeroFX.js` |
 | UI sounds | `src/sfx.js` |
 
 ## Deploying

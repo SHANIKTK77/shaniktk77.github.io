@@ -44,6 +44,9 @@ export const tips = [
   "Moving ad and scene loading off the main thread cut ANR from 0.45% to 0.24%.",
   "Prado Car Parking passed 50 million downloads on Google Play.",
   "Enter ↑ ↑ ↓ ↓ ← → ← → B A anywhere on the page for a surprise.",
+  "Press Enter on the title screen to drive through the portfolio in real-time 3D.",
+  "Type IDDQD anywhere for god mode.",
+  "Hit the stunt ramp with nitro for big air.",
   "Turn on sound in the top bar for UI effects.",
 ];
 

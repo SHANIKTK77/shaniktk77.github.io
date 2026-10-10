@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { Suspense, lazy, useCallback, useEffect, useRef, useState } from "react";
 import { FaGithub, FaLinkedinIn, FaGooglePlay, FaApple, FaAndroid, FaTrophy } from "react-icons/fa";
 import {
   FiArrowUpRight,
@@ -28,6 +28,7 @@ import {
   FiVolumeX,
   FiMapPin,
 } from "react-icons/fi";
+import { GiSteeringWheel } from "react-icons/gi";
 import resume from "./Assets/Resume.pdf";
 import {
   profile,
@@ -42,8 +43,11 @@ import {
 } from "./data";
 import MiniGame from "./MiniGame";
 import HeroFX from "./HeroFX";
-import { play, savedSound, setSound, unlockAudio } from "./sfx";
+import { chime, play, savedSound, setSound, unlockAudio } from "./sfx";
 import "./App.css";
+
+// The 3D world is code-split so three.js only loads for visitors who get it
+const DriveWorld = lazy(() => import("./DriveWorld"));
 
 const featured = games.find((g) => g.title === featuredTitle) || games[0];
 // Featured game leads the hero reel, followed by the rest
@@ -68,6 +72,8 @@ const SKILL_META = [
   { icon: FiCpu, slot: "Ultimate" },
 ];
 
+const pad = (n) => String(n).padStart(2, "0");
+
 const TICKER = [
   "Unity",
   "Unreal Engine",
@@ -86,14 +92,16 @@ const TICKER = [
 ];
 
 const NAV = [
-  { id: "profile", label: "Profile" },
-  { id: "games", label: "Library" },
-  { id: "experience", label: "Campaign" },
-  { id: "skills", label: "Loadout" },
-  { id: "play", label: "Arcade" },
-  { id: "contact", label: "Lobby" },
+  { id: "profile", label: "Profile", hint: "Character select", color: "#4fd8ff" },
+  { id: "games", label: "Library", hint: "Games I've shipped", color: "#ff5a1f" },
+  { id: "experience", label: "Campaign", hint: "Career mode", color: "#ffc35a" },
+  { id: "skills", label: "Loadout", hint: "Skills and tools", color: "#b07cff" },
+  { id: "play", label: "Arcade", hint: "Lane Dodger", color: "#ff2d6b" },
+  { id: "contact", label: "Lobby", hint: "Get in touch", color: "#46e08c" },
 ];
 const NAV_IDS = NAV.map((n) => n.id);
+// Each section is also a mission marker in the 3D world
+const ZONES = NAV.map((n, i) => ({ ...n, num: pad(i + 1) }));
 
 // The title-screen menu in the hero
 const MENU = [
@@ -107,10 +115,17 @@ const MENU = [
 const RESUME_NAME = "Shadman-Khan-Khattak-Resume.pdf";
 const BOOT_KEY = "sk-booted";
 
-const pad = (n) => String(n).padStart(2, "0");
-
 const prefersReducedMotion = () =>
   typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function hasWebGL() {
+  try {
+    const c = document.createElement("canvas");
+    return !!(c.getContext("webgl2") || c.getContext("webgl"));
+  } catch (e) {
+    return false;
+  }
+}
 
 // Fades elements marked with data-reveal in as they scroll into view
 function useReveal() {
@@ -233,6 +248,23 @@ function useKonami(onUnlock) {
   }, [onUnlock]);
 }
 
+// Fires when a word is typed anywhere on the page (letters only, any case)
+function useTypedCode(code, onMatch) {
+  useEffect(() => {
+    let typed = "";
+    const onKey = (e) => {
+      if (e.key.length !== 1 || e.metaKey || e.ctrlKey) return;
+      typed = (typed + e.key.toLowerCase()).slice(-code.length);
+      if (typed === code) {
+        typed = "";
+        onMatch();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [code, onMatch]);
+}
+
 function shouldBoot() {
   if (prefersReducedMotion()) return false;
   try {
@@ -348,7 +380,7 @@ function Reticle() {
       x = e.clientX;
       y = e.clientY;
       el.classList.add("is-on");
-      const target = e.target.closest && e.target.closest("a, button, canvas");
+      const target = e.target.closest && e.target.closest("a, button, .cabinet canvas");
       el.classList.toggle("is-lock", !!target);
     };
     const onLeave = () => el.classList.remove("is-on");
@@ -546,32 +578,10 @@ function Nav({ sound, onToggleSound }) {
 
 const SLIDE_MS = 6000;
 
-function Hero() {
-  const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const heroRef = useRef(null);
-  const game = slides[index];
-  const count = slides.length;
-  const animate = !paused && !prefersReducedMotion();
-
-  const go = useCallback((i) => setIndex((i + count) % count), [count]);
-
-  useEffect(() => {
-    if (!animate) return undefined;
-    const id = setTimeout(() => go(index + 1), SLIDE_MS);
-    return () => clearTimeout(id);
-  }, [index, animate, go]);
-
-  // Mouse parallax: layers read --mx / --my (-1 to 1) from the hero
-  const onPointerMove = (e) => {
-    if (e.pointerType !== "mouse" || prefersReducedMotion()) return;
-    const el = heroRef.current;
-    el.style.setProperty("--mx", ((e.clientX / window.innerWidth) * 2 - 1).toFixed(3));
-    el.style.setProperty("--my", ((e.clientY / window.innerHeight) * 2 - 1).toFixed(3));
-  };
-
+// Fallback hero art: cross-fading game screenshots with the smoke shader on top
+function HeroSlides({ index }) {
   return (
-    <section className="hero" id="top" ref={heroRef} onPointerMove={onPointerMove}>
+    <>
       <div className="hero-art" aria-hidden="true">
         {slides.map((g, i) => (
           <img
@@ -584,6 +594,114 @@ function Hero() {
         ))}
       </div>
       <HeroFX className="hero-fx" />
+    </>
+  );
+}
+
+function Hero({ god, onToast }) {
+  const [world, setWorld] = useState(() => !prefersReducedMotion() && hasWebGL());
+  const [driving, setDriving] = useState(false);
+  const [index, setIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const heroRef = useRef(null);
+  const game = slides[index];
+  const count = slides.length;
+  const animate = !world && !paused && !prefersReducedMotion();
+
+  const go = useCallback((i) => setIndex((i + count) % count), [count]);
+
+  useEffect(() => {
+    if (!animate) return undefined;
+    const id = setTimeout(() => go(index + 1), SLIDE_MS);
+    return () => clearTimeout(id);
+  }, [index, animate, go]);
+
+  const startDrive = useCallback(() => {
+    // Jump (not smooth-scroll) back to the top so leaving the car lands on the title screen
+    const root = document.documentElement;
+    root.style.scrollBehavior = "auto";
+    window.scrollTo(0, 0);
+    root.style.scrollBehavior = "";
+    unlockAudio();
+    play("power");
+    setDriving(true);
+  }, []);
+  const exitDrive = useCallback(() => setDriving(false), []);
+  // Driving into a mission marker leaves the car and scrolls to that section
+  const pendingZone = useRef(null);
+  const enterZone = useCallback((id) => {
+    pendingZone.current = id;
+    setDriving(false);
+  }, []);
+  const failWorld = useCallback(() => {
+    setDriving(false);
+    setWorld(false);
+  }, []);
+
+  useEffect(() => {
+    document.body.classList.toggle("is-driving", driving);
+    // Scroll only once the page is unlocked again
+    const id = !driving && pendingZone.current;
+    pendingZone.current = null;
+    const el = id && document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+    return () => document.body.classList.remove("is-driving");
+  }, [driving]);
+
+  // Enter on the title screen takes the wheel
+  useEffect(() => {
+    if (!world || driving) return undefined;
+    const onKey = (e) => {
+      if (e.key !== "Enter" || document.body.classList.contains("is-booting")) return;
+      const a = document.activeElement;
+      if (a && a !== document.body) return;
+      if (window.scrollY > window.innerHeight * 0.5) return;
+      e.preventDefault();
+      startDrive();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [world, driving, startDrive]);
+
+  // Mouse parallax: layers read --mx / --my (-1 to 1) from the hero
+  const onPointerMove = (e) => {
+    if (e.pointerType !== "mouse" || prefersReducedMotion() || driving) return;
+    const el = heroRef.current;
+    el.style.setProperty("--mx", ((e.clientX / window.innerWidth) * 2 - 1).toFixed(3));
+    el.style.setProperty("--my", ((e.clientY / window.innerHeight) * 2 - 1).toFixed(3));
+  };
+
+  const tab = driving ? -1 : 0;
+
+  return (
+    <section
+      className={`hero${world ? " is-world" : ""}${driving ? " is-driving" : ""}`}
+      id="top"
+      ref={heroRef}
+      onPointerMove={onPointerMove}
+    >
+      {world ? (
+        <Suspense
+          fallback={
+            <div className="hero-art" aria-hidden="true">
+              <img src={featured.image} alt="" className="is-active" />
+            </div>
+          }
+        >
+          <DriveWorld
+            games={games}
+            zones={ZONES}
+            driving={driving}
+            god={god}
+            onExit={exitDrive}
+            onEnterZone={enterZone}
+            onToast={onToast}
+            onFail={failWorld}
+          />
+        </Suspense>
+      ) : (
+        <HeroSlides index={index} />
+      )}
       <div className="hero-shade" aria-hidden="true" />
       <div className="hero-hud" aria-hidden="true">
         <span className="hud-corner tl" />
@@ -591,12 +709,20 @@ function Hero() {
         <span className="hud-corner bl" />
         <span className="hud-corner br" />
         <span className="hud-readout mono">
-          REC <i /> {pad(index + 1)}/{pad(count)}
+          {world ? (
+            <>
+              LIVE <i /> Free roam · Attract mode
+            </>
+          ) : (
+            <>
+              REC <i /> {pad(index + 1)}/{pad(count)}
+            </>
+          )}
         </span>
-        <span className="hud-build mono">Build 4.0 · {profile.location}</span>
+        {!world && <span className="hud-build mono">Build 4.0 · {profile.location}</span>}
       </div>
 
-      <div className="container hero-inner">
+      <div className="container hero-inner" aria-hidden={driving || undefined}>
         <div className="hero-main">
           <p className="hero-tag mono">
             <span className="live-dot" /> Player 01 · Senior {profile.role} @ Terafort
@@ -616,19 +742,37 @@ function Hero() {
             cross-platform porting and multiplayer.
           </p>
           <div className="hero-actions">
-            <a href="#games" className="btn btn-primary btn-lg">
-              <FiPlay /> View my games
-            </a>
-            <a href={resume} download={RESUME_NAME} className="btn btn-ghost btn-lg">
-              <FiDownload /> Download resume
-            </a>
+            {world ? (
+              <>
+                <button
+                  type="button"
+                  className="btn btn-primary btn-lg"
+                  onClick={startDrive}
+                  tabIndex={tab}
+                >
+                  <GiSteeringWheel /> Take the wheel
+                </button>
+                <a href="#games" className="btn btn-ghost btn-lg" tabIndex={tab}>
+                  <FiPlay /> View my games
+                </a>
+              </>
+            ) : (
+              <>
+                <a href="#games" className="btn btn-primary btn-lg">
+                  <FiPlay /> View my games
+                </a>
+                <a href={resume} download={RESUME_NAME} className="btn btn-ghost btn-lg">
+                  <FiDownload /> Download resume
+                </a>
+              </>
+            )}
           </div>
         </div>
 
         <nav className="title-menu" aria-label="Main menu">
           <p className="mono title-menu-head">Main menu</p>
           {MENU.map((m, i) => (
-            <a href={m.href} key={m.href}>
+            <a href={m.href} key={m.href} tabIndex={tab}>
               <span className="tm-key mono">{pad(i + 1)}</span>
               <span className="tm-label">{m.label}</span>
               <span className="tm-hint mono">{m.hint}</span>
@@ -637,53 +781,76 @@ function Hero() {
         </nav>
       </div>
 
-      <div
-        className="container hero-dock"
-        onMouseEnter={() => setPaused(true)}
-        onMouseLeave={() => setPaused(false)}
-        onFocus={() => setPaused(true)}
-        onBlur={() => setPaused(false)}
-      >
-        <a
-          key={game.title}
-          href={game.playStore}
-          target="_blank"
-          rel="noreferrer"
-          className="now-showing"
-        >
-          <span className="mono now-label">
-            <span className="rec" /> {game === featured ? "Featured title" : "Now showing"}
-          </span>
-          <strong>{game.title}</strong>
-          <span className="now-meta">
-            <span className="tag tag-accent">{game.genre}</span>
-            {game.badge && <span className="tag">{game.badge}</span>}
-            <span className="now-store">
-              <FaGooglePlay /> Google Play <FiArrowUpRight />
+      {world ? (
+        <div className="container hero-dock is-world" aria-hidden={driving || undefined}>
+          <button type="button" className="press-start" onClick={startDrive} tabIndex={tab}>
+            <span className="press-key mono">Enter</span>
+            <span className="press-text">
+              <strong>Press start</strong>
+              <small className="mono">Drive through my portfolio in real-time 3D</small>
             </span>
-          </span>
-        </a>
-        <div className="reel" role="group" aria-label="Choose a game to show">
-          {slides.map((g, i) => (
-            <button
-              type="button"
-              key={g.title}
-              className={`reel-item${i === index ? " is-active" : ""}`}
-              onClick={() => go(i)}
-              aria-label={`Show ${g.title}`}
-              aria-pressed={i === index}
-            >
-              <img src={g.image} alt="" loading="lazy" />
-              <span className="reel-bar">
-                <span
-                  key={i === index ? `run-${index}` : "idle"}
-                  className={i === index && animate ? "is-running" : i === index ? "is-full" : ""}
-                />
-              </span>
-            </button>
-          ))}
+          </button>
+          <ul className="press-legend mono">
+            <li>
+              <span>Billboards</span> My games
+            </li>
+            <li>
+              <span>Light beams</span> Page sections
+            </li>
+            <li>
+              <span>Side quests</span> Ramp · Parking · Drift · Cones
+            </li>
+          </ul>
         </div>
-      </div>
+      ) : (
+        <div
+          className="container hero-dock"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+          onFocus={() => setPaused(true)}
+          onBlur={() => setPaused(false)}
+        >
+          <a
+            key={game.title}
+            href={game.playStore}
+            target="_blank"
+            rel="noreferrer"
+            className="now-showing"
+          >
+            <span className="mono now-label">
+              <span className="rec" /> {game === featured ? "Featured title" : "Now showing"}
+            </span>
+            <strong>{game.title}</strong>
+            <span className="now-meta">
+              <span className="tag tag-accent">{game.genre}</span>
+              {game.badge && <span className="tag">{game.badge}</span>}
+              <span className="now-store">
+                <FaGooglePlay /> Google Play <FiArrowUpRight />
+              </span>
+            </span>
+          </a>
+          <div className="reel" role="group" aria-label="Choose a game to show">
+            {slides.map((g, i) => (
+              <button
+                type="button"
+                key={g.title}
+                className={`reel-item${i === index ? " is-active" : ""}`}
+                onClick={() => go(i)}
+                aria-label={`Show ${g.title}`}
+                aria-pressed={i === index}
+              >
+                <img src={g.image} alt="" loading="lazy" />
+                <span className="reel-bar">
+                  <span
+                    key={i === index ? `run-${index}` : "idle"}
+                    className={i === index && animate ? "is-running" : i === index ? "is-full" : ""}
+                  />
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       <a href="#profile" className="scroll-cue mono" aria-label="Scroll to profile">
         <span>Scroll</span>
@@ -1252,8 +1419,8 @@ function Footer() {
           <p className="mono">Directed, designed and developed by</p>
           <strong>{profile.name}</strong>
         </div>
-        <span className="cheat mono" title="Try it">
-          ↑ ↑ ↓ ↓ ← → ← → B A
+        <span className="cheat mono" title="Try them">
+          ↑ ↑ ↓ ↓ ← → ← → B A <span className="cheat-sep">·</span> IDDQD
         </span>
         <div className="footer-end">
           <span className="mono">
@@ -1292,6 +1459,7 @@ function App() {
   const [retro, setRetro] = useState(false);
   const [sound, setSoundState] = useState(savedSound);
   const [toast, setToast] = useState(null);
+  const [god, setGod] = useState(false);
 
   useReveal();
   useUISounds();
@@ -1320,11 +1488,28 @@ function App() {
   }, [retro]);
   useKonami(unlock);
 
+  // Classic Doom cheat: gold theme, golden car with an aura and infinite nitro
+  const godMode = useCallback(() => {
+    chime();
+    setGod(!god);
+    setToast({
+      title: god ? "God mode off" : "God mode on",
+      text: god
+        ? "Back to mortal mode."
+        : "Power level: over 9000. Gold paint, aura and infinite nitro unlocked.",
+    });
+  }, [god]);
+  useTypedCode("iddqd", godMode);
+
   const endBoot = useCallback(() => setBooting(false), []);
 
   useEffect(() => {
     document.body.classList.toggle("retro", retro);
   }, [retro]);
+
+  useEffect(() => {
+    document.body.classList.toggle("god", god);
+  }, [god]);
 
   useEffect(() => {
     document.body.classList.toggle("is-booting", booting);
@@ -1343,7 +1528,7 @@ function App() {
       <Reticle />
       <Nav sound={sound} onToggleSound={toggleSound} />
       <main>
-        <Hero />
+        <Hero god={god} onToast={setToast} />
         <Ticker />
         <Profile />
         <Games />

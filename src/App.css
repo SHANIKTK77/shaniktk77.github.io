@@ -2868,6 +2868,964 @@ body.is-booting .hero-dock {
 }
 
 /* =========================================================
+   Drivable 3D world (hero)
+   ========================================================= */
+.world {
+  position: absolute;
+  inset: 0;
+}
+
+.world-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: -3;
+  display: block;
+  width: 100%;
+  height: 100%;
+  animation: world-in 1.8s var(--ease) both;
+}
+
+.world-canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes world-in {
+  from {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+}
+
+body.is-booting .world-canvas {
+  animation-play-state: paused;
+}
+
+/* Lighter shade than the photo hero: the world is already dark */
+.hero.is-world .hero-shade {
+  background:
+    linear-gradient(90deg, rgba(5, 6, 8, 0.92) 0%, rgba(5, 6, 8, 0.7) 28%, rgba(5, 6, 8, 0) 55%),
+    linear-gradient(0deg, var(--bg) 0%, rgba(5, 6, 8, 0.4) 14%, rgba(5, 6, 8, 0) 30%),
+    linear-gradient(180deg, rgba(5, 6, 8, 0.7) 0%, rgba(5, 6, 8, 0) 18%);
+  transition: opacity 0.6s var(--ease);
+}
+
+.hero.is-world .hero-inner,
+.hero.is-world .hero-dock,
+.hero.is-world .hero-hud,
+.hero.is-world .scroll-cue {
+  transition: opacity 0.5s var(--ease) 0.15s, visibility 0s;
+}
+
+.hero.is-driving .hero-shade {
+  opacity: 0;
+}
+
+.hero.is-driving .hero-inner,
+.hero.is-driving .hero-dock,
+.hero.is-driving .hero-hud,
+.hero.is-driving .scroll-cue {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.35s var(--ease), visibility 0s 0.35s;
+}
+
+body.is-driving {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+/* While driving, the world is a full-screen game layer above the page */
+.hero.is-driving {
+  z-index: 60;
+}
+
+.hero.is-driving .world {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  height: 100vh;
+  height: 100dvh;
+}
+
+body.is-driving .nav {
+  transform: translateY(-110%);
+}
+
+body.is-driving .reticle,
+body.is-driving .grain {
+  display: none;
+}
+
+body.is-driving .hero {
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.nav {
+  transition: background 0.35s, border-color 0.35s, transform 0.45s var(--ease);
+}
+
+/* Live performance readout: a nod to the optimization work */
+.world-perf {
+  position: absolute;
+  top: calc(var(--nav-h) + 22px);
+  right: 62px;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  pointer-events: none;
+  transition: top 0.5s var(--ease), right 0.5s var(--ease);
+}
+
+.world-perf .live-dot {
+  transform: scale(0.8);
+}
+
+.hero.is-driving .world-perf {
+  top: 196px;
+  right: 22px;
+}
+
+/* Title-screen "press start" */
+.hero-dock.is-world {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+}
+
+.press-start {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 22px 12px 12px;
+  border: 1px solid var(--line-2);
+  border-left: 3px solid var(--accent);
+  background: rgba(5, 6, 8, 0.6);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.2s, transform 0.25s var(--ease);
+}
+
+.press-start:hover {
+  background: rgba(5, 6, 8, 0.85);
+  transform: translateY(-2px);
+}
+
+.press-key {
+  padding: 10px 12px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--on-accent);
+  background: var(--accent);
+  box-shadow: 0 4px 0 #9c2f08, 0 0 24px rgba(255, 90, 31, 0.45);
+  animation: press 1.4s steps(1) infinite;
+}
+
+@keyframes press {
+  50% {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 #9c2f08, 0 0 10px rgba(255, 90, 31, 0.3);
+  }
+}
+
+.press-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.press-text strong {
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  animation: blink-soft 1.4s ease-in-out infinite;
+}
+
+@keyframes blink-soft {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+.press-text small {
+  font-size: 0.64rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.press-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px 22px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.64rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.press-legend span {
+  margin-right: 6px;
+  color: var(--gold);
+}
+
+/* In-game HUD */
+.world-hud {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s, visibility 0s 0.35s;
+}
+
+.hero.is-driving .world-hud {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.5s var(--ease) 0.2s, visibility 0s;
+}
+
+.world-hud button,
+.world-hud a {
+  pointer-events: auto;
+}
+
+.world-hud kbd,
+.hud-keys kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--line-2);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+}
+
+.hud-label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.hud-objectives {
+  position: absolute;
+  top: 22px;
+  left: 22px;
+  width: 280px;
+  padding: 14px 16px;
+  background: rgba(5, 6, 8, 0.66);
+  border: 1px solid var(--line-2);
+  border-left: 3px solid var(--gold);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.hud-objectives ul {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hud-objectives li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.82rem;
+  color: var(--text);
+  transition: color 0.3s;
+}
+
+.hud-check {
+  display: grid;
+  place-items: center;
+  flex: 0 0 16px;
+  height: 16px;
+  font-size: 0.7rem;
+  border: 1px solid var(--line-2);
+  transform: rotate(45deg);
+  transition: all 0.3s var(--ease);
+}
+
+.hud-check svg {
+  transform: rotate(-45deg);
+}
+
+.hud-objectives li.is-done {
+  color: var(--dim);
+  text-decoration: line-through;
+  text-decoration-color: rgba(255, 255, 255, 0.25);
+}
+
+.hud-objectives li.is-done .hud-check {
+  color: var(--bg);
+  background: var(--green);
+  border-color: var(--green);
+  box-shadow: 0 0 12px rgba(70, 224, 140, 0.6);
+}
+
+.hud-exit {
+  position: absolute;
+  top: 22px;
+  left: 50%;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px 8px 14px;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text);
+  background: rgba(5, 6, 8, 0.66);
+  border: 1px solid var(--line-2);
+  transform: translateX(-50%);
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  transition: border-color 0.2s;
+}
+
+.hud-exit:hover {
+  border-color: var(--accent);
+}
+
+.hud-map {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px var(--line-2), 0 0 40px rgba(0, 0, 0, 0.6);
+  transition: transform 0.35s var(--ease), opacity 0.35s;
+}
+
+.hud-map canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.hud-map-toggle {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  color: var(--text);
+  background: rgba(5, 6, 8, 0.9);
+  border: 1px solid var(--line-2);
+  border-radius: 50%;
+}
+
+.hud-map.is-closed {
+  transform: scale(0.24);
+  transform-origin: top right;
+}
+
+.hud-map.is-closed canvas {
+  opacity: 0;
+}
+
+.hud-map.is-closed .hud-map-toggle {
+  transform: scale(4.2);
+  transform-origin: bottom right;
+}
+
+/* Card for the billboard you're driving past */
+.board-card {
+  position: absolute;
+  left: 22px;
+  bottom: 150px;
+  display: flex;
+  gap: 14px;
+  width: 360px;
+  padding: 12px;
+  background: rgba(5, 6, 8, 0.78);
+  border: 1px solid var(--line-2);
+  border-left: 3px solid var(--accent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  animation: now-in 0.45s var(--ease);
+}
+
+.board-card img {
+  flex: 0 0 110px;
+  height: 74px;
+  object-fit: cover;
+}
+
+.board-card strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.board-kicker,
+.board-meta {
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.board-kicker {
+  margin-bottom: 4px;
+  color: var(--gold);
+}
+
+.board-meta {
+  margin: 4px 0 8px;
+}
+
+.board-card a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.board-card a:hover {
+  color: var(--accent);
+}
+
+/* "Press E to enter" over a mission marker */
+.zone-prompt {
+  --zone: var(--accent);
+  position: absolute;
+  left: 50%;
+  bottom: 190px;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 22px 10px 10px;
+  color: var(--text);
+  text-align: left;
+  background: rgba(5, 6, 8, 0.8);
+  border: 1px solid var(--zone);
+  box-shadow: 0 0 40px -6px var(--zone);
+  transform: translateX(-50%);
+  cursor: pointer;
+  animation: prompt-in 0.35s var(--ease);
+}
+
+@keyframes prompt-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 12px);
+  }
+}
+
+.zone-prompt kbd {
+  min-width: 38px;
+  height: 38px;
+  font-size: 0.9rem;
+  color: var(--bg);
+  background: var(--zone);
+  border-color: var(--zone);
+}
+
+.zone-prompt small {
+  display: block;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--zone);
+}
+
+.zone-prompt span {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+/* Speedometer, nitro and drift combo */
+.hud-dash {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  transform: translateX(-50%);
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.8);
+}
+
+.hud-speed {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.hud-speed strong {
+  min-width: 2.2ch;
+  font-family: var(--font-display);
+  font-size: 4.2rem;
+  font-weight: 800;
+  line-height: 0.9;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.hud-speed span {
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.hud-boost {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+
+.hud-boost i {
+  display: block;
+  width: 170px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  transform: skewX(-20deg);
+  overflow: hidden;
+}
+
+.hud-boost b {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--cyan), #a6f0ff);
+  box-shadow: 0 0 12px var(--cyan);
+  transform-origin: left;
+}
+
+body.god .hud-boost {
+  color: var(--gold);
+}
+
+body.god .hud-boost b {
+  background: linear-gradient(90deg, var(--gold), #fff1c8);
+  box-shadow: 0 0 14px var(--gold);
+}
+
+.hud-score {
+  margin: 0;
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.hud-score strong {
+  margin-left: 6px;
+  font-size: 0.8rem;
+  color: var(--gold);
+}
+
+.hud-combo {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  opacity: 0;
+  transform: translateY(10px) scale(0.9);
+  transition: opacity 0.25s, transform 0.3s var(--ease);
+}
+
+.hud-combo.is-on {
+  opacity: 1;
+  transform: none;
+}
+
+.hud-combo strong {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--gold);
+  font-variant-numeric: tabular-nums;
+}
+
+.hud-combo span {
+  padding: 3px 7px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--on-accent);
+  background: var(--accent);
+}
+
+.hud-combo small {
+  font-size: 0.6rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.hud-combo.is-dropped {
+  animation: dropped 0.5s;
+}
+
+@keyframes dropped {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+    color: #ff2d55;
+    transform: translateX(-8px);
+  }
+  30% {
+    transform: translateX(8px);
+  }
+  50% {
+    transform: translateX(-4px);
+  }
+}
+
+.hud-air {
+  position: absolute;
+  bottom: 150px;
+  left: 50%;
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--cyan);
+  opacity: 0;
+  transform: translateX(-50%) scale(0.8);
+  transition: opacity 0.2s, transform 0.3s var(--ease);
+}
+
+.hud-air.is-on {
+  opacity: 1;
+  transform: translateX(-50%) scale(1.15);
+}
+
+.hud-keys {
+  position: absolute;
+  left: 22px;
+  bottom: 24px;
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.hud-keys li {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.hud-keys kbd:last-of-type {
+  margin-right: 6px;
+}
+
+/* Touch controls */
+.touch-pads {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 14px calc(14px + env(safe-area-inset-bottom));
+}
+
+.touch-steer,
+.touch-drive {
+  display: grid;
+  gap: 10px;
+}
+
+.touch-steer {
+  grid-template-columns: repeat(2, 68px);
+}
+
+.touch-drive {
+  grid-template-columns: repeat(2, 64px);
+}
+
+.pad {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  height: 64px;
+  padding: 0;
+  color: var(--text);
+  font-size: 1.6rem;
+  background: rgba(5, 6, 8, 0.55);
+  border: 1px solid var(--line-2);
+  border-radius: 14px;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  touch-action: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.1s, transform 0.1s;
+}
+
+.touch-steer .pad {
+  height: 76px;
+  font-size: 2.2rem;
+}
+
+.pad small {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.pad:active {
+  background: rgba(255, 255, 255, 0.18);
+  transform: scale(0.95);
+}
+
+.pad.is-gas {
+  background: rgba(70, 224, 140, 0.2);
+  border-color: rgba(70, 224, 140, 0.6);
+}
+
+.pad.is-brake {
+  background: rgba(255, 45, 85, 0.18);
+  border-color: rgba(255, 45, 85, 0.55);
+}
+
+.pad.is-nitro {
+  color: var(--cyan);
+  border-color: rgba(79, 216, 255, 0.55);
+}
+
+.pad.is-drift {
+  color: var(--gold);
+  border-color: rgba(255, 195, 90, 0.5);
+}
+
+.pad.is-nitro svg,
+.pad.is-drift svg {
+  font-size: 1.2rem;
+}
+
+/* Toasts move to the top while driving so they don't cover the controls */
+body.is-driving .toast {
+  top: 22px;
+  bottom: auto;
+  right: 50%;
+  transform: translate(50%, calc(-100% - 48px));
+}
+
+body.is-driving .toast.is-shown {
+  transform: translate(50%, 64px);
+}
+
+/* =========================================================
+   God mode (type IDDQD)
+   ========================================================= */
+body.god {
+  --accent: #ffc35a;
+  --accent-hi: #ffe2a0;
+  --accent-soft: rgba(255, 195, 90, 0.14);
+  --on-accent: #1a1000;
+}
+
+body.god .hero-first {
+  color: #fff4d6;
+  animation: aura 1.1s ease-in-out infinite alternate;
+}
+
+@keyframes aura {
+  from {
+    text-shadow: 0 0 20px rgba(255, 195, 90, 0.55), 0 0 60px rgba(255, 140, 40, 0.3);
+  }
+  to {
+    text-shadow: 0 0 34px rgba(255, 215, 120, 0.9), 0 0 110px rgba(255, 160, 50, 0.55);
+  }
+}
+
+body.god .press-key {
+  box-shadow: 0 4px 0 #9a6a10, 0 0 30px rgba(255, 195, 90, 0.6);
+}
+
+.cheat-sep {
+  margin: 0 8px;
+  opacity: 0.5;
+}
+
+/* World layout on smaller screens */
+@media (max-width: 960px) {
+  .hero-dock.is-world {
+    grid-template-columns: 1fr;
+  }
+
+  .press-legend {
+    justify-content: flex-start;
+  }
+
+  .board-card {
+    width: auto;
+    right: 22px;
+  }
+}
+
+@media (max-width: 640px) {
+  .world-perf {
+    display: none;
+  }
+
+  .hero.is-world .hero-shade {
+    background:
+      linear-gradient(180deg, rgba(5, 6, 8, 0.85) 0%, rgba(5, 6, 8, 0.72) 45%, rgba(5, 6, 8, 0.2) 75%, var(--bg) 100%);
+  }
+
+  /* Phones have no Enter key; the Take the wheel button covers it */
+  .hero-dock.is-world {
+    display: none;
+  }
+
+  .hud-objectives {
+    top: 12px;
+    left: 12px;
+    width: auto;
+    max-width: calc(100% - 150px);
+    padding: 10px 12px;
+  }
+
+  .hud-label {
+    margin-bottom: 6px;
+  }
+
+  /* Only show the next objective on phones */
+  .hud-objectives li.is-done,
+  .hud-objectives li:not(.is-done) ~ li:not(.is-done) {
+    display: none;
+  }
+
+  .hud-objectives li {
+    font-size: 0.74rem;
+  }
+
+  .hud-exit {
+    top: auto;
+    left: auto;
+    right: 12px;
+    top: 130px;
+    transform: none;
+  }
+
+  .hud-exit span {
+    display: none;
+  }
+
+  .hud-exit kbd {
+    display: none;
+  }
+
+  .hud-map {
+    top: 12px;
+    right: 12px;
+    width: 108px;
+    height: 108px;
+  }
+
+  .board-card {
+    left: 12px;
+    right: 12px;
+    top: 180px;
+    bottom: auto;
+    padding: 10px;
+  }
+
+  .board-card img {
+    flex-basis: 84px;
+    height: 58px;
+  }
+
+  .zone-prompt {
+    bottom: 290px;
+  }
+
+  .hud-dash {
+    bottom: calc(168px + env(safe-area-inset-bottom));
+  }
+
+  .hud-speed strong {
+    font-size: 2.8rem;
+  }
+
+  .hud-boost i {
+    width: 120px;
+  }
+
+  .hud-air {
+    bottom: 350px;
+  }
+
+  body.is-driving .toast {
+    left: 12px;
+    right: 12px;
+    transform: translateY(calc(-100% - 48px));
+  }
+
+  body.is-driving .toast.is-shown {
+    transform: translateY(0);
+  }
+}
+
+/* =========================================================
    Retro mode (Konami code)
    ========================================================= */
 body.retro {
