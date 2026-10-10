@@ -1,6 +1,6 @@
 # Shadman Khan Khattak — Portfolio
 
-My personal portfolio website, live at **[shaniktk77.github.io](https://shaniktk77.github.io)**.
+My personal portfolio website, live at **[shaniktk77.github.io](https://shaniktk77.github.io)** and **[shadmankhan.vercel.app](https://shadmankhan.vercel.app)**.
 
 A single-page game developer portfolio styled like a AAA game's title screen: the games I've shipped, my experience, my skills and my resume.
 
@@ -35,7 +35,7 @@ The page also respects `prefers-reduced-motion`: animations, the WebGL effects, 
 - [three.js](https://threejs.org/) for the drivable world (loaded on demand, no physics library)
 - WebGL (a hand-written shader for the fallback hero) and the Web Audio API
 - Google Fonts: Barlow Condensed, Inter, JetBrains Mono and Press Start 2P (retro mode only)
-- GitHub Pages
+- GitHub Pages and Vercel
 
 ## Running Locally
 
@@ -74,7 +74,7 @@ The app runs at [http://localhost:3000](http://localhost:3000) and reloads as yo
 Pushing to `main` deploys automatically:
 
 - **GitHub Pages:** the `Deploy to GitHub Pages` workflow (`.github/workflows/deploy-pages.yml`) builds the app and pushes `build/` to the `gh-pages` branch, which GitHub Pages serves.
-- **Vercel:** the Vercel project is linked to this repo and redeploys on every push.
+- **Vercel:** the Vercel project ([shadmankhan.vercel.app](https://shadmankhan.vercel.app)) is linked to this repo and redeploys on every push.
 
 To deploy to GitHub Pages by hand instead:
 
