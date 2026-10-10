@@ -71,11 +71,16 @@ The app runs at [http://localhost:3000](http://localhost:3000) and reloads as yo
 
 ## Deploying
 
+Pushing to `main` deploys automatically:
+
+- **GitHub Pages:** the `Deploy to GitHub Pages` workflow (`.github/workflows/deploy-pages.yml`) builds the app and pushes `build/` to the `gh-pages` branch, which GitHub Pages serves.
+- **Vercel:** the Vercel project is linked to this repo and redeploys on every push.
+
+To deploy to GitHub Pages by hand instead:
+
 ```bash
 npm run deploy
 ```
-
-This builds the app and pushes the `build/` output to the `gh-pages` branch, which GitHub Pages serves.
 
 ## Credits
 
