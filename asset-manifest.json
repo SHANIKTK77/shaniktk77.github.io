@@ -1,8 +1,10 @@
 {
   "files": {
-    "main.css": "/static/css/main.a3fc6488.css",
-    "main.js": "/static/js/main.93e69d43.js",
+    "main.css": "/static/css/main.8ec88a5e.css",
+    "main.js": "/static/js/main.ac46d851.js",
+    "static/js/467.61073e7c.chunk.js": "/static/js/467.61073e7c.chunk.js",
     "static/js/787.1ed0c42c.chunk.js": "/static/js/787.1ed0c42c.chunk.js",
+    "static/js/66.93992ddb.chunk.js": "/static/js/66.93992ddb.chunk.js",
     "static/media/prado.jpg": "/static/media/prado.6e6cb7b94a59be466c93.jpg",
     "static/media/motomax.jpg": "/static/media/motomax.5579b58cef3f3bdf38f9.jpg",
     "static/media/csm.jpg": "/static/media/csm.d33b37814dd5082cba35.jpg",
@@ -13,12 +15,14 @@
     "static/media/MCR.jpg": "/static/media/MCR.db51ff074f2fe4a5443b.jpg",
     "static/media/Resume.pdf": "/static/media/Resume.321ccbc234700d64d640.pdf",
     "index.html": "/index.html",
-    "main.a3fc6488.css.map": "/static/css/main.a3fc6488.css.map",
-    "main.93e69d43.js.map": "/static/js/main.93e69d43.js.map",
-    "787.1ed0c42c.chunk.js.map": "/static/js/787.1ed0c42c.chunk.js.map"
+    "main.8ec88a5e.css.map": "/static/css/main.8ec88a5e.css.map",
+    "main.ac46d851.js.map": "/static/js/main.ac46d851.js.map",
+    "467.61073e7c.chunk.js.map": "/static/js/467.61073e7c.chunk.js.map",
+    "787.1ed0c42c.chunk.js.map": "/static/js/787.1ed0c42c.chunk.js.map",
+    "66.93992ddb.chunk.js.map": "/static/js/66.93992ddb.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.a3fc6488.css",
-    "static/js/main.93e69d43.js"
+    "static/css/main.8ec88a5e.css",
+    "static/js/main.ac46d851.js"
   ]
 }
