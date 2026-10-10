@@ -28,6 +28,25 @@ export const stats = [
   { value: "~5x", label: "Fewer draw calls (450 → 90)" },
 ];
 
+// Character-sheet ratings (0–100) shown on the radar chart in the profile section
+export const attributes = [
+  { label: "Optimization", value: 96 },
+  { label: "Porting", value: 92 },
+  { label: "Gameplay", value: 88 },
+  { label: "Multiplayer", value: 84 },
+  { label: "Live ops", value: 82 },
+  { label: "UI systems", value: 86 },
+];
+
+// Shown at random on the loading screen
+export const tips = [
+  "Combining meshes and atlasing textures took draw calls from ~450 down to ~90.",
+  "Moving ad and scene loading off the main thread cut ANR from 0.45% to 0.24%.",
+  "Prado Car Parking passed 50 million downloads on Google Play.",
+  "Enter ↑ ↑ ↓ ↓ ← → ← → B A anywhere on the page for a surprise.",
+  "Turn on sound in the top bar for UI effects.",
+];
+
 // The game shown large at the top of the page
 export const featuredTitle = "Commando Shooting Stars";
 

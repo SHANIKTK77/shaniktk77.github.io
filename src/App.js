@@ -2,8 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FaGithub, FaLinkedinIn, FaGooglePlay, FaApple, FaAndroid, FaTrophy } from "react-icons/fa";
 import {
   FiArrowUpRight,
-  FiChevronLeft,
-  FiChevronRight,
+  FiArrowUp,
   FiDownload,
   FiMail,
   FiPhone,
@@ -25,17 +24,32 @@ import {
   FiMenu,
   FiX,
   FiCheck,
+  FiVolume2,
+  FiVolumeX,
+  FiMapPin,
 } from "react-icons/fi";
 import resume from "./Assets/Resume.pdf";
-import { profile, stats, featuredTitle, games, experience, education, skills } from "./data";
+import {
+  profile,
+  stats,
+  attributes,
+  tips,
+  featuredTitle,
+  games,
+  experience,
+  education,
+  skills,
+} from "./data";
 import MiniGame from "./MiniGame";
+import HeroFX from "./HeroFX";
+import { play, savedSound, setSound, unlockAudio } from "./sfx";
 import "./App.css";
 
 const featured = games.find((g) => g.title === featuredTitle) || games[0];
-// Featured game leads the hero slideshow, followed by the rest
+// Featured game leads the hero reel, followed by the rest
 const slides = [featured, ...games.filter((g) => g !== featured)];
 
-// Icons for the experience highlight cards, in the order they appear in data.js
+// Icons for the experience objectives, in the order they appear in data.js
 const HIGHLIGHT_ICONS = [FiZap, FiCpu, FiShield, FiSmartphone, FiUsers, FiTerminal];
 // Icon and rarity for each stat, in the order they appear in data.js
 const STAT_META = [
@@ -44,8 +58,15 @@ const STAT_META = [
   { icon: FiActivity, rarity: "Epic" },
   { icon: FiLayers, rarity: "Rare" },
 ];
-// Icons for the skill groups, in the order they appear in data.js
-const SKILL_ICONS = [FiCode, FiTarget, FiDollarSign, FiMonitor, FiTool, FiCpu];
+// Icon and loadout slot name for each skill group, in the order they appear in data.js
+const SKILL_META = [
+  { icon: FiCode, slot: "Primary" },
+  { icon: FiTarget, slot: "Specialty" },
+  { icon: FiDollarSign, slot: "Economy" },
+  { icon: FiMonitor, slot: "Deployment" },
+  { icon: FiTool, slot: "Utility" },
+  { icon: FiCpu, slot: "Ultimate" },
+];
 
 const TICKER = [
   "Unity",
@@ -65,13 +86,23 @@ const TICKER = [
 ];
 
 const NAV = [
-  { id: "games", label: "Games" },
-  { id: "experience", label: "Career" },
+  { id: "profile", label: "Profile" },
+  { id: "games", label: "Library" },
+  { id: "experience", label: "Campaign" },
   { id: "skills", label: "Loadout" },
   { id: "play", label: "Arcade" },
-  { id: "contact", label: "Contact" },
+  { id: "contact", label: "Lobby" },
 ];
 const NAV_IDS = NAV.map((n) => n.id);
+
+// The title-screen menu in the hero
+const MENU = [
+  { href: "#games", label: "Continue", hint: "Game library" },
+  { href: "#experience", label: "Campaign", hint: "Career" },
+  { href: "#skills", label: "Loadout", hint: "Skills and tools" },
+  { href: "#play", label: "Arcade", hint: "Play Lane Dodger" },
+  { href: "#contact", label: "Multiplayer", hint: "Get in touch" },
+];
 
 const RESUME_NAME = "Shadman-Khan-Khattak-Resume.pdf";
 const BOOT_KEY = "sk-booted";
@@ -98,7 +129,7 @@ function useReveal() {
           }
         });
       },
-      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" },
+      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" },
     );
     els.forEach((el) => io.observe(el));
     return () => io.disconnect();
@@ -125,6 +156,51 @@ function useActiveSection(ids) {
     return () => io.disconnect();
   }, [ids]);
   return active;
+}
+
+// Calls fn on scroll and resize, at most once per frame
+function useScrollFrame(fn) {
+  useEffect(() => {
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      fn();
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      cancelAnimationFrame(frame);
+    };
+  }, [fn]);
+}
+
+// Plays hover and click blips on every link and button
+function useUISounds() {
+  useEffect(() => {
+    let last = null;
+    const onOver = (e) => {
+      if (e.pointerType !== "mouse") return;
+      const el = e.target.closest && e.target.closest("a, button");
+      if (el && el !== last) play("hover");
+      last = el;
+    };
+    const onClick = (e) => {
+      unlockAudio();
+      if (e.target.closest && e.target.closest("a, button")) play("click");
+    };
+    document.addEventListener("pointerover", onOver);
+    document.addEventListener("click", onClick);
+    return () => {
+      document.removeEventListener("pointerover", onOver);
+      document.removeEventListener("click", onClick);
+    };
+  }, []);
 }
 
 // ↑ ↑ ↓ ↓ ← → ← → B A
@@ -166,13 +242,20 @@ function shouldBoot() {
   }
 }
 
-const BOOT_MS = 2600;
-const BOOT_LINES = ["Loading shaders", "Streaming assets", "Syncing save data", "Ready"];
+const BOOT_MS = 2800;
+const BOOT_LINES = [
+  "Compiling shaders",
+  "Streaming textures",
+  "Baking lightmaps",
+  "Syncing save data",
+  "Ready",
+];
 
-// Short, skippable loading screen shown once per browser session
+// Studio-style splash and loading screen, shown once per browser session
 function Boot({ onDone }) {
   const [progress, setProgress] = useState(0);
   const [leaving, setLeaving] = useState(false);
+  const [tip] = useState(() => tips[Math.floor(Math.random() * tips.length)]);
 
   const finish = useCallback(() => setLeaving(true), []);
 
@@ -181,7 +264,8 @@ function Boot({ onDone }) {
     const start = performance.now();
     const tick = (now) => {
       const t = Math.min(1, (now - start) / BOOT_MS);
-      setProgress(t);
+      // Ease out with a stall near the end, like a real loader
+      setProgress(t < 0.7 ? t * 1.15 : 0.805 + (t - 0.7) * 0.65);
       if (t < 1) raf = requestAnimationFrame(tick);
       else finish();
     };
@@ -200,28 +284,101 @@ function Boot({ onDone }) {
     } catch (e) {
       // Without storage the boot screen just shows again next visit
     }
-    const id = setTimeout(onDone, 450);
+    const id = setTimeout(onDone, 700);
     return () => clearTimeout(id);
   }, [leaving, onDone]);
 
-  const line =
-    BOOT_LINES[Math.min(BOOT_LINES.length - 1, Math.floor(progress * BOOT_LINES.length))];
+  const shown = leaving ? 1 : Math.min(1, progress);
+  const line = BOOT_LINES[Math.min(BOOT_LINES.length - 1, Math.floor(shown * BOOT_LINES.length))];
 
   return (
     <div className={`boot${leaving ? " is-leaving" : ""}`} onClick={finish} aria-hidden="true">
       <div className="boot-inner">
-        <span className="boot-logo">SK</span>
-        <p className="boot-name">{profile.name}</p>
-        <p className="mono boot-role">Game Developer · Unity / Unreal</p>
+        <Emblem className="boot-emblem" />
+        <p className="boot-presents mono">A Shadman Khan Khattak production</p>
         <div className="boot-bar">
-          <span style={{ transform: `scaleX(${progress})` }} />
+          <span style={{ transform: `scaleX(${shown})` }} />
         </div>
         <p className="mono boot-status">
           <span>{line}…</span>
-          <span>{Math.round(progress * 100)}%</span>
+          <span>{Math.round(shown * 100)}%</span>
         </p>
       </div>
+      <p className="boot-tip">
+        <span className="mono">Tip</span>
+        {tip}
+      </p>
       <p className="mono boot-skip">Press any key to skip</p>
+    </div>
+  );
+}
+
+// Hexagonal SK crest used on the splash screen and the profile card
+function Emblem({ className }) {
+  return (
+    <svg className={`emblem ${className || ""}`} viewBox="0 0 120 120" aria-hidden="true">
+      <polygon className="emblem-ring" points="60,4 108,32 108,88 60,116 12,88 12,32" />
+      <polygon className="emblem-inner" points="60,16 98,38 98,82 60,104 22,82 22,38" />
+      <text x="60" y="73" textAnchor="middle" className="emblem-text">
+        SK
+      </text>
+    </svg>
+  );
+}
+
+// Trailing crosshair that follows the mouse and locks on to links and buttons
+function Reticle() {
+  const ref = useRef(null);
+  const [enabled] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(pointer: fine)").matches &&
+      !prefersReducedMotion(),
+  );
+
+  useEffect(() => {
+    if (!enabled) return undefined;
+    const el = ref.current;
+    let x = -100;
+    let y = -100;
+    let cx = x;
+    let cy = y;
+    let raf = 0;
+    const onMove = (e) => {
+      x = e.clientX;
+      y = e.clientY;
+      el.classList.add("is-on");
+      const target = e.target.closest && e.target.closest("a, button, canvas");
+      el.classList.toggle("is-lock", !!target);
+    };
+    const onLeave = () => el.classList.remove("is-on");
+    const onDown = () => el.classList.add("is-down");
+    const onUp = () => el.classList.remove("is-down");
+    const tick = () => {
+      cx += (x - cx) * 0.25;
+      cy += (y - cy) * 0.25;
+      el.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    window.addEventListener("pointermove", onMove, { passive: true });
+    document.addEventListener("pointerleave", onLeave);
+    window.addEventListener("pointerdown", onDown);
+    window.addEventListener("pointerup", onUp);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("pointermove", onMove);
+      document.removeEventListener("pointerleave", onLeave);
+      window.removeEventListener("pointerdown", onDown);
+      window.removeEventListener("pointerup", onUp);
+    };
+  }, [enabled]);
+
+  if (!enabled) return null;
+  return (
+    <div className="reticle" ref={ref} aria-hidden="true">
+      <span className="reticle-ring" />
+      <span className="reticle-dot" />
     </div>
   );
 }
@@ -275,30 +432,18 @@ function SectionHead({ index, kicker, title, children }) {
   );
 }
 
-function Nav() {
+function Nav({ sound, onToggleSound }) {
   const [progress, setProgress] = useState(0);
+  const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const active = useActiveSection(NAV_IDS);
 
-  useEffect(() => {
-    let frame = 0;
-    const update = () => {
-      frame = 0;
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      setProgress(max > 0 ? Math.min(1, window.scrollY / max) : 0);
-    };
-    const onScroll = () => {
-      if (!frame) frame = requestAnimationFrame(update);
-    };
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      cancelAnimationFrame(frame);
-    };
+  const update = useCallback(() => {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    setProgress(max > 0 ? Math.min(1, window.scrollY / max) : 0);
+    setScrolled(window.scrollY > 40);
   }, []);
+  useScrollFrame(update);
 
   useEffect(() => {
     if (!menuOpen) return undefined;
@@ -312,10 +457,11 @@ function Nav() {
   }, [menuOpen]);
 
   const close = () => setMenuOpen(false);
+  const SoundIcon = sound ? FiVolume2 : FiVolumeX;
 
   return (
     <>
-      <header className="nav">
+      <header className={`nav${scrolled ? " is-scrolled" : ""}`}>
         <div className="container nav-inner">
           <a href="#top" className="nav-logo" aria-label="Back to top">
             <span className="logo-mark">SK</span>
@@ -338,16 +484,22 @@ function Nav() {
             ))}
           </nav>
           <div className="nav-actions">
-            <a
-              href={resume}
-              download={RESUME_NAME}
-              className="btn btn-small btn-primary nav-resume"
+            <button
+              type="button"
+              className={`icon-btn${sound ? " is-on" : ""}`}
+              onClick={onToggleSound}
+              aria-label={sound ? "Turn sound off" : "Turn sound on"}
+              aria-pressed={sound}
+              title={sound ? "Sound on" : "Sound off"}
             >
+              <SoundIcon />
+            </button>
+            <a href={resume} download={RESUME_NAME} className="btn btn-small btn-primary nav-resume">
               <FiDownload /> Resume
             </a>
             <button
               type="button"
-              className="menu-btn"
+              className="icon-btn menu-btn"
               onClick={() => setMenuOpen(true)}
               aria-label="Open menu"
               aria-expanded={menuOpen}
@@ -363,10 +515,10 @@ function Nav() {
 
       <div className={`pause${menuOpen ? " is-open" : ""}`} aria-hidden={!menuOpen}>
         <div className="pause-head">
-          <span className="mono">{"// Paused"}</span>
+          <span className="mono">{"// Game paused"}</span>
           <button
             type="button"
-            className="menu-btn"
+            className="icon-btn"
             onClick={close}
             aria-label="Close menu"
             tabIndex={menuOpen ? 0 : -1}
@@ -384,12 +536,7 @@ function Nav() {
             </a>
           ))}
         </nav>
-        <a
-          href={resume}
-          download={RESUME_NAME}
-          className="btn btn-primary"
-          tabIndex={menuOpen ? 0 : -1}
-        >
+        <a href={resume} download={RESUME_NAME} className="btn btn-primary" tabIndex={menuOpen ? 0 : -1}>
           <FiDownload /> Download resume
         </a>
       </div>
@@ -397,32 +544,76 @@ function Nav() {
   );
 }
 
-const SLIDE_MS = 5000;
+const SLIDE_MS = 6000;
 
 function Hero() {
   const [index, setIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const heroRef = useRef(null);
   const game = slides[index];
+  const count = slides.length;
+  const animate = !paused && !prefersReducedMotion();
+
+  const go = useCallback((i) => setIndex((i + count) % count), [count]);
+
+  useEffect(() => {
+    if (!animate) return undefined;
+    const id = setTimeout(() => go(index + 1), SLIDE_MS);
+    return () => clearTimeout(id);
+  }, [index, animate, go]);
+
+  // Mouse parallax: layers read --mx / --my (-1 to 1) from the hero
+  const onPointerMove = (e) => {
+    if (e.pointerType !== "mouse" || prefersReducedMotion()) return;
+    const el = heroRef.current;
+    el.style.setProperty("--mx", ((e.clientX / window.innerWidth) * 2 - 1).toFixed(3));
+    el.style.setProperty("--my", ((e.clientY / window.innerHeight) * 2 - 1).toFixed(3));
+  };
 
   return (
-    <section className="hero-wrap" id="top">
-      <div className="hero-bg" aria-hidden="true">
-        <img key={game.title} src={game.image} alt="" className="hero-backdrop" />
-        <div className="hero-shade" />
-        <div className="hero-grid" />
+    <section className="hero" id="top" ref={heroRef} onPointerMove={onPointerMove}>
+      <div className="hero-art" aria-hidden="true">
+        {slides.map((g, i) => (
+          <img
+            key={g.title}
+            src={g.image}
+            alt=""
+            className={i === index ? "is-active" : ""}
+            loading={i === 0 ? "eager" : "lazy"}
+          />
+        ))}
+      </div>
+      <HeroFX className="hero-fx" />
+      <div className="hero-shade" aria-hidden="true" />
+      <div className="hero-hud" aria-hidden="true">
+        <span className="hud-corner tl" />
+        <span className="hud-corner tr" />
+        <span className="hud-corner bl" />
+        <span className="hud-corner br" />
+        <span className="hud-readout mono">
+          REC <i /> {pad(index + 1)}/{pad(count)}
+        </span>
+        <span className="hud-build mono">Build 4.0 · {profile.location}</span>
       </div>
 
-      <div className="hero container">
-        <div className="hero-text">
+      <div className="container hero-inner">
+        <div className="hero-main">
           <p className="hero-tag mono">
-            <span className="live-dot" /> Player 01 · {profile.role} @ Terafort
+            <span className="live-dot" /> Player 01 · Senior {profile.role} @ Terafort
           </p>
-          <h1>
-            I make games that run <span className="accent">smooth on every platform.</span>
+          <h1 className="hero-title">
+            <span className="hero-first" data-text="Shadman">
+              Shadman
+            </span>
+            <span className="hero-last">Khan Khattak</span>
           </h1>
+          <p className="hero-sub">
+            I make games that run <em>smooth on every platform.</em>
+          </p>
           <p className="lead">
-            I'm {profile.name}, a game developer with 4+ years shipping games in Unity, plus
-            hands-on Unreal Engine experience. I build for Android, iOS, tvOS and Android TV, and
-            specialize in performance optimization, cross-platform porting and multiplayer.
+            Game developer with 4+ years shipping titles in Unity, plus hands-on Unreal Engine. I
+            build for Android, iOS, tvOS and Android TV, and specialize in performance optimization,
+            cross-platform porting and multiplayer.
           </p>
           <div className="hero-actions">
             <a href="#games" className="btn btn-primary btn-lg">
@@ -432,149 +623,73 @@ function Hero() {
               <FiDownload /> Download resume
             </a>
           </div>
-          <dl className="hero-meta">
-            <div>
-              <dt className="mono">Class</dt>
-              <dd>Senior Game Dev</dd>
-            </div>
-            <div>
-              <dt className="mono">Engines</dt>
-              <dd>Unity · Unreal</dd>
-            </div>
-            <div>
-              <dt className="mono">Specialty</dt>
-              <dd>{profile.focus[0]}</dd>
-            </div>
-          </dl>
         </div>
 
-        <Slideshow index={index} setIndex={setIndex} />
+        <nav className="title-menu" aria-label="Main menu">
+          <p className="mono title-menu-head">Main menu</p>
+          {MENU.map((m, i) => (
+            <a href={m.href} key={m.href}>
+              <span className="tm-key mono">{pad(i + 1)}</span>
+              <span className="tm-label">{m.label}</span>
+              <span className="tm-hint mono">{m.hint}</span>
+            </a>
+          ))}
+        </nav>
       </div>
-    </section>
-  );
-}
 
-function Slideshow({ index, setIndex }) {
-  const [paused, setPaused] = useState(false);
-  const touchX = useRef(null);
-  const count = slides.length;
-  const animate = !paused && !prefersReducedMotion();
-
-  const go = useCallback((i) => setIndex((i + count) % count), [count, setIndex]);
-
-  useEffect(() => {
-    if (!animate) return undefined;
-    const id = setTimeout(() => go(index + 1), SLIDE_MS);
-    return () => clearTimeout(id);
-  }, [index, animate, go]);
-
-  const onTouchStart = (e) => {
-    touchX.current = e.touches[0].clientX;
-  };
-
-  const onTouchEnd = (e) => {
-    if (touchX.current === null) return;
-    const dx = e.changedTouches[0].clientX - touchX.current;
-    if (Math.abs(dx) > 40) go(index + (dx < 0 ? 1 : -1));
-    touchX.current = null;
-  };
-
-  return (
-    <div
-      className="showcase"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocus={() => setPaused(true)}
-      onBlur={() => setPaused(false)}
-    >
-      <div className="showcase-bar mono">
-        <span>
-          <span className="rec" /> {index === 0 ? "Featured title" : "Now showing"}
-        </span>
-        <span>
-          {pad(index + 1)} / {pad(count)}
-        </span>
-      </div>
       <div
-        className="featured"
-        role="region"
-        aria-roledescription="carousel"
-        aria-label="Games I've worked on"
-        onTouchStart={onTouchStart}
-        onTouchEnd={onTouchEnd}
+        className="container hero-dock"
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        onFocus={() => setPaused(true)}
+        onBlur={() => setPaused(false)}
       >
-        {slides.map((game, i) => (
-          <a
-            key={game.title}
-            href={game.playStore}
-            target="_blank"
-            rel="noreferrer"
-            className={`slide${i === index ? " is-active" : ""}`}
-            aria-hidden={i !== index}
-            tabIndex={i === index ? 0 : -1}
-          >
-            <img
-              src={game.image}
-              alt={`${game.title} gameplay`}
-              loading={i === 0 ? "eager" : "lazy"}
-            />
-            <div className="featured-overlay">
-              <div className="featured-tags">
-                <span className="tag tag-accent">
-                  {game === featured ? "Featured" : game.genre}
-                </span>
-                {game.badge && <span className="tag">{game.badge}</span>}
-              </div>
-              <div>
-                <h3>{game.title}</h3>
-                <p>{game.description}</p>
-                <span className="featured-foot">
-                  <span className="store-link">
-                    <FaGooglePlay /> Google Play <FiArrowUpRight />
-                  </span>
-                  <Platforms game={game} />
-                </span>
-              </div>
-            </div>
-          </a>
-        ))}
-
-        <button
-          type="button"
-          className="slide-arrow slide-prev"
-          onClick={() => go(index - 1)}
-          aria-label="Previous game"
+        <a
+          key={game.title}
+          href={game.playStore}
+          target="_blank"
+          rel="noreferrer"
+          className="now-showing"
         >
-          <FiChevronLeft />
-        </button>
-        <button
-          type="button"
-          className="slide-arrow slide-next"
-          onClick={() => go(index + 1)}
-          aria-label="Next game"
-        >
-          <FiChevronRight />
-        </button>
+          <span className="mono now-label">
+            <span className="rec" /> {game === featured ? "Featured title" : "Now showing"}
+          </span>
+          <strong>{game.title}</strong>
+          <span className="now-meta">
+            <span className="tag tag-accent">{game.genre}</span>
+            {game.badge && <span className="tag">{game.badge}</span>}
+            <span className="now-store">
+              <FaGooglePlay /> Google Play <FiArrowUpRight />
+            </span>
+          </span>
+        </a>
+        <div className="reel" role="group" aria-label="Choose a game to show">
+          {slides.map((g, i) => (
+            <button
+              type="button"
+              key={g.title}
+              className={`reel-item${i === index ? " is-active" : ""}`}
+              onClick={() => go(i)}
+              aria-label={`Show ${g.title}`}
+              aria-pressed={i === index}
+            >
+              <img src={g.image} alt="" loading="lazy" />
+              <span className="reel-bar">
+                <span
+                  key={i === index ? `run-${index}` : "idle"}
+                  className={i === index && animate ? "is-running" : i === index ? "is-full" : ""}
+                />
+              </span>
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div className="slide-steps">
-        {slides.map((game, i) => (
-          <button
-            type="button"
-            key={game.title}
-            className={`${i === index ? "is-active" : ""}${i < index ? " is-done" : ""}`}
-            onClick={() => go(i)}
-            aria-label={`Show ${game.title}`}
-            aria-current={i === index}
-          >
-            <span
-              key={i === index ? `run-${index}` : "idle"}
-              className={i === index && animate ? "is-running" : ""}
-            />
-          </button>
-        ))}
-      </div>
-    </div>
+      <a href="#profile" className="scroll-cue mono" aria-label="Scroll to profile">
+        <span>Scroll</span>
+        <i />
+      </a>
+    </section>
   );
 }
 
@@ -616,8 +731,8 @@ function CountUp({ value }) {
       io.disconnect();
       const start = performance.now();
       const tick = (now) => {
-        const t = Math.min(1, (now - start) / 1400);
-        const eased = 1 - Math.pow(1 - t, 3);
+        const t = Math.min(1, (now - start) / 1600);
+        const eased = 1 - Math.pow(1 - t, 4);
         setShown(parsed.number * eased);
         if (t < 1) raf = requestAnimationFrame(tick);
       };
@@ -641,39 +756,167 @@ function CountUp({ value }) {
   );
 }
 
-function Stats() {
+const RADAR = { size: 340, r: 112 };
+
+// Hexagonal radar chart of the attributes in data.js
+function Radar() {
+  const c = RADAR.size / 2;
+  const n = attributes.length;
+  const point = (i, scale) => {
+    const a = (Math.PI * 2 * i) / n - Math.PI / 2;
+    return [c + Math.cos(a) * RADAR.r * scale, c + Math.sin(a) * RADAR.r * scale];
+  };
+  const ring = (scale) =>
+    attributes.map((_, i) => point(i, scale).map((v) => v.toFixed(1)).join(",")).join(" ");
+  const shape = attributes
+    .map((a, i) => point(i, a.value / 100).map((v) => v.toFixed(1)).join(","))
+    .join(" ");
+
   return (
-    <section className="container stats-wrap" id="achievements" aria-label="Career stats">
-      <p className="kicker mono stats-title">
-        <FaTrophy /> Achievements unlocked
-        <span className="stats-count">
-          {stats.length}/{stats.length}
-        </span>
-      </p>
-      <div className="stats">
-        {stats.map((s, i) => {
-          const meta = STAT_META[i % STAT_META.length];
-          const Icon = meta.icon;
-          return (
-            <div
-              className={`stat panel rarity-${meta.rarity.toLowerCase()}`}
-              key={s.label}
-              data-reveal
-              style={{ transitionDelay: `${i * 80}ms` }}
-            >
-              <div className="stat-top">
+    <svg
+      className="radar"
+      viewBox={`0 0 ${RADAR.size} ${RADAR.size}`}
+      role="img"
+      aria-label={`Attributes: ${attributes.map((a) => `${a.label} ${a.value}`).join(", ")}`}
+    >
+      {[0.25, 0.5, 0.75, 1].map((s) => (
+        <polygon key={s} points={ring(s)} className="radar-ring" />
+      ))}
+      {attributes.map((a, i) => {
+        const [x, y] = point(i, 1);
+        return <line key={a.label} x1={c} y1={c} x2={x} y2={y} className="radar-axis" />;
+      })}
+      <g className="radar-shape">
+        <polygon points={shape} />
+        {attributes.map((a, i) => {
+          const [x, y] = point(i, a.value / 100);
+          return <circle key={a.label} cx={x} cy={y} r="3.5" />;
+        })}
+      </g>
+      {attributes.map((a, i) => {
+        const [x, y] = point(i, 1.2);
+        return (
+          <text key={a.label} x={x} y={y} className="radar-label" textAnchor="middle">
+            <tspan x={x} dy="-0.2em">
+              {a.label}
+            </tspan>
+            <tspan x={x} dy="1.25em" className="radar-value">
+              {a.value}
+            </tspan>
+          </text>
+        );
+      })}
+    </svg>
+  );
+}
+
+function Profile() {
+  return (
+    <section className="container section" id="profile">
+      <SectionHead index={1} kicker="Player profile" title="Character select" />
+      <div className="profile">
+        <div className="char-card panel" data-reveal>
+          <div className="char-top">
+            <div className="char-emblem">
+              <Emblem />
+              <span className="char-orbit" />
+            </div>
+            <div className="char-id">
+              <span className="mono char-handle">Player 01 · @shaniktk77</span>
+              <h3>{profile.name}</h3>
+              <p>Senior {profile.role} · Terafort</p>
+            </div>
+          </div>
+          <dl className="char-meta">
+            <div>
+              <dt className="mono">Class</dt>
+              <dd>Game Developer</dd>
+            </div>
+            <div>
+              <dt className="mono">Engines</dt>
+              <dd>Unity · Unreal</dd>
+            </div>
+            <div>
+              <dt className="mono">Platforms</dt>
+              <dd>Android · iOS · tvOS · TV</dd>
+            </div>
+            <div>
+              <dt className="mono">Base</dt>
+              <dd>
+                <FiMapPin /> {profile.location}
+              </dd>
+            </div>
+          </dl>
+          <div className="char-perks">
+            <p className="mono">Signature perks</p>
+            <ul>
+              {profile.focus.map((f) => (
+                <li key={f}>
+                  <FiZap /> {f}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="char-rank">
+            <div className="mono">
+              <span>Rank · Senior</span>
+              <span>4+ yrs XP</span>
+            </div>
+            <span className="rank-bar">
+              <i />
+            </span>
+          </div>
+        </div>
+
+        <div className="char-stats panel" data-reveal style={{ transitionDelay: "100ms" }}>
+          <p className="mono panel-label">Attributes</p>
+          <Radar />
+          <ul className="attr-list">
+            {attributes.map((a) => (
+              <li key={a.label}>
+                <span>{a.label}</span>
+                <span className="attr-bar">
+                  <i style={{ "--v": a.value / 100 }} />
+                </span>
+                <span className="mono">{a.value}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <div className="stats-wrap" id="achievements" aria-label="Career stats">
+        <p className="kicker mono stats-title">
+          <FaTrophy /> Achievements unlocked
+          <span className="stats-count">
+            {stats.length}/{stats.length} · 100%
+          </span>
+        </p>
+        <div className="stats">
+          {stats.map((s, i) => {
+            const meta = STAT_META[i % STAT_META.length];
+            const Icon = meta.icon;
+            return (
+              <div
+                className={`stat rarity-${meta.rarity.toLowerCase()}`}
+                key={s.label}
+                data-reveal
+                style={{ transitionDelay: `${i * 90}ms` }}
+              >
                 <span className="stat-icon">
                   <Icon />
                 </span>
-                <span className="mono stat-rarity">{meta.rarity}</span>
+                <div className="stat-body">
+                  <span className="mono stat-rarity">{meta.rarity}</span>
+                  <div className="stat-value">
+                    <CountUp value={s.value} />
+                  </div>
+                  <div className="stat-label">{s.label}</div>
+                </div>
               </div>
-              <div className="stat-value">
-                <CountUp value={s.value} />
-              </div>
-              <div className="stat-label">{s.label}</div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </section>
   );
@@ -688,8 +931,8 @@ function useTilt() {
     const r = el.getBoundingClientRect();
     const x = (e.clientX - r.left) / r.width;
     const y = (e.clientY - r.top) / r.height;
-    el.style.setProperty("--rx", `${(0.5 - y) * 6}deg`);
-    el.style.setProperty("--ry", `${(x - 0.5) * 8}deg`);
+    el.style.setProperty("--rx", `${(0.5 - y) * 7}deg`);
+    el.style.setProperty("--ry", `${(x - 0.5) * 9}deg`);
     el.style.setProperty("--gx", `${x * 100}%`);
     el.style.setProperty("--gy", `${y * 100}%`);
   };
@@ -702,29 +945,31 @@ function useTilt() {
   return { ref, onPointerMove: onMove, onPointerLeave: onLeave };
 }
 
-function GameCard({ game, number }) {
+function GameCard({ game, number, size }) {
   const tilt = useTilt();
   return (
-    <article className="game-card panel" {...tilt}>
-      <a href={game.playStore} target="_blank" rel="noreferrer" className="game-thumb">
-        <img src={game.image} alt={`${game.title} screenshot`} loading="lazy" />
+    <article className={`game-card${size ? ` is-${size}` : ""}`} {...tilt}>
+      <img src={game.image} alt={`${game.title} screenshot`} loading="lazy" />
+      <span className="game-shade" aria-hidden="true" />
+      <div className="game-tags">
         <span className="tag">{game.genre}</span>
-        {game.badge && <span className="tag tag-accent tag-badge">{game.badge}</span>}
-        <span className="play-overlay" aria-hidden="true">
-          <span>
-            <FiPlay /> View on store
-          </span>
-        </span>
-      </a>
+        {game.badge && <span className="tag tag-accent">{game.badge}</span>}
+      </div>
+      <span className="mono game-num">#{pad(number)}</span>
       <div className="game-body">
-        <div className="game-head">
-          <h3>{game.title}</h3>
-          <span className="mono game-num">#{pad(number)}</span>
-        </div>
+        <h3>{game.title}</h3>
         <Platforms game={game} />
         <p>{game.description}</p>
         <StoreLinks game={game} />
       </div>
+      <a
+        href={game.playStore}
+        target="_blank"
+        rel="noreferrer"
+        className="game-hit"
+      >
+        <span className="sr-only">{game.title} on Google Play</span>
+      </a>
       <span className="glare" aria-hidden="true" />
     </article>
   );
@@ -735,11 +980,19 @@ const genres = [ALL, ...new Set(games.map((g) => g.genre))];
 
 function Games() {
   const [genre, setGenre] = useState(ALL);
-  const shown = genre === ALL ? games : games.filter((g) => g.genre === genre);
+  const all = genre === ALL;
+  const shown = all ? games : games.filter((g) => g.genre === genre);
+
+  // In the full library the featured game gets a big tile and other badged games a wide one
+  const sizeOf = (g) => {
+    if (!all) return null;
+    if (g === featured) return "spot";
+    return g.badge ? "wide" : null;
+  };
 
   return (
     <section className="container section" id="games">
-      <SectionHead index={1} kicker="Game library" title="Games I've worked on">
+      <SectionHead index={2} kicker="Game library" title="Games I've shipped">
         <div className="mode-select" role="group" aria-label="Filter by genre">
           {genres.map((g) => (
             <button
@@ -757,88 +1010,108 @@ function Games() {
           ))}
         </div>
       </SectionHead>
-      <div className="game-grid">
+      <div className={`game-grid${all ? " is-all" : ""}`}>
         {shown.map((g) => (
-          <GameCard game={g} number={games.indexOf(g) + 1} key={g.title} />
+          <GameCard game={g} number={games.indexOf(g) + 1} size={sizeOf(g)} key={g.title} />
         ))}
       </div>
     </section>
   );
 }
 
-function Experience() {
-  const levels = experience.length + 1;
+function Objectives({ items }) {
   return (
-    <section className="container section" id="experience">
-      <SectionHead index={2} kicker="Career mode" title="Where I've worked" />
-      <div className="timeline">
-        {experience.map((job, i) => (
-          <div className="job-row" key={job.company} data-reveal>
-            <span className="job-node" aria-hidden="true" />
-            <div className="job panel">
-              <div className="job-meta">
-                <span className="level mono">Lvl {levels - i}</span>
-                <h3>{job.role}</h3>
-                <p>
-                  {job.company} · {job.period}
-                </p>
-                {i === 0 ? (
-                  <span className="status-tag mono">
-                    <span className="live-dot" /> Active mission
-                  </span>
-                ) : (
-                  <span className="status-tag is-done mono">
-                    <FiCheck /> Mission complete
-                  </span>
-                )}
-              </div>
-              <div>
-                <p className="job-summary">{job.summary}</p>
-                {job.highlights && (
-                  <>
-                    <p className="objectives-title mono">
-                      Objectives completed · {job.highlights.length}
-                    </p>
-                    <div className="highlights">
-                      {job.highlights.map((h, j) => {
-                        const Icon = HIGHLIGHT_ICONS[j % HIGHLIGHT_ICONS.length];
-                        return (
-                          <div className="highlight" key={h.title}>
-                            <span className="highlight-icon">
-                              <Icon />
-                            </span>
-                            <div>
-                              <h4>{h.title}</h4>
-                              <p>{h.text}</p>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </>
-                )}
-              </div>
+    <div className="objectives">
+      {items.map((h, j) => {
+        const Icon = HIGHLIGHT_ICONS[j % HIGHLIGHT_ICONS.length];
+        return (
+          <div className="objective" key={h.title}>
+            <span className="objective-icon">
+              <Icon />
+            </span>
+            <div>
+              <h4>
+                {h.title}
+                <FiCheck className="objective-check" />
+              </h4>
+              <p>{h.text}</p>
             </div>
           </div>
-        ))}
-        <div className="job-row" data-reveal>
-          <span className="job-node" aria-hidden="true" />
-          <div className="job panel">
-            <div className="job-meta">
-              <span className="level mono">Lvl 1 · Tutorial</span>
-              <h3>{education.degree}</h3>
-              <p>
-                {education.school} · {education.period}
-              </p>
-              <span className="status-tag is-done mono">
-                <FiCheck /> Complete
-              </span>
+        );
+      })}
+    </div>
+  );
+}
+
+function Experience() {
+  const ref = useRef(null);
+  const chapters = experience.length + 1;
+
+  const update = useCallback(() => {
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const p = (window.innerHeight * 0.6 - r.top) / r.height;
+    el.style.setProperty("--fill", Math.min(1, Math.max(0, p)).toFixed(3));
+  }, []);
+  useScrollFrame(update);
+
+  return (
+    <section className="container section" id="experience">
+      <SectionHead index={3} kicker="Campaign" title="Career mode" />
+      <div className="campaign" ref={ref}>
+        <span className="campaign-line" aria-hidden="true" />
+        {experience.map((job, i) => (
+          <article className="chapter" key={job.company} data-reveal>
+            <span className={`chapter-node${i === 0 ? " is-live" : ""}`} aria-hidden="true" />
+            <div className="chapter-side">
+              <span className="mono chapter-num">Chapter {pad(chapters - i)}</span>
+              <span className="chapter-period">{job.period}</span>
+              {i === 0 ? (
+                <span className="status-tag mono">
+                  <span className="live-dot" /> Active mission
+                </span>
+              ) : (
+                <span className="status-tag is-done mono">
+                  <FiCheck /> Mission complete
+                </span>
+              )}
             </div>
-            <p className="job-summary">
+            <div className="chapter-main panel">
+              <h3>{job.role}</h3>
+              <p className="chapter-co mono">{job.company}</p>
+              <p className="chapter-summary">{job.summary}</p>
+              {job.highlights && (
+                <>
+                  <p className="objectives-title mono">
+                    <span>Objectives complete</span>
+                    <span>
+                      {job.highlights.length}/{job.highlights.length}
+                    </span>
+                  </p>
+                  <Objectives items={job.highlights} />
+                </>
+              )}
+            </div>
+          </article>
+        ))}
+        <article className="chapter" data-reveal>
+          <span className="chapter-node" aria-hidden="true" />
+          <div className="chapter-side">
+            <span className="mono chapter-num">Chapter 01 · Prologue</span>
+            <span className="chapter-period">{education.period}</span>
+            <span className="status-tag is-done mono">
+              <FiCheck /> Tutorial complete
+            </span>
+          </div>
+          <div className="chapter-main panel">
+            <h3>{education.degree}</h3>
+            <p className="chapter-co mono">{education.school}</p>
+            <p className="chapter-summary">
               Where I learned the fundamentals before getting into games.
             </p>
           </div>
-        </div>
+        </article>
       </div>
     </section>
   );
@@ -847,22 +1120,26 @@ function Experience() {
 function Skills() {
   return (
     <section className="container section" id="skills">
-      <SectionHead index={3} kicker="Loadout" title="What I work with" />
-      <div className="skill-grid">
+      <SectionHead index={4} kicker="Loadout" title="What I bring to the fight" />
+      <div className="loadout">
         {skills.map((s, i) => {
-          const Icon = SKILL_ICONS[i % SKILL_ICONS.length];
+          const meta = SKILL_META[i % SKILL_META.length];
+          const Icon = meta.icon;
           return (
             <div
-              className="skill-group panel"
+              className="slot"
               key={s.group}
               data-reveal
-              style={{ transitionDelay: `${(i % 3) * 80}ms` }}
+              style={{ transitionDelay: `${(i % 3) * 90}ms` }}
             >
-              <div className="skill-head">
-                <span className="skill-icon">
+              <span className="slot-num" aria-hidden="true">
+                {pad(i + 1)}
+              </span>
+              <div className="slot-head">
+                <span className="slot-icon">
                   <Icon />
                 </span>
-                <span className="mono slot-key">Slot {i + 1}</span>
+                <span className="mono slot-name">{meta.slot}</span>
               </div>
               <h3>{s.group}</h3>
               <div className="chips">
@@ -883,13 +1160,13 @@ function Skills() {
 function Play() {
   return (
     <section className="container section" id="play">
-      <SectionHead index={4} kicker="Bonus stage" title="Take a quick break">
+      <SectionHead index={5} kicker="Bonus stage" title="Take a quick break">
         <p className="lead">
           A tiny lane-dodger I built for this page. Dodge the traffic, grab the coins and see how
           far you get.
         </p>
       </SectionHead>
-      <div data-reveal>
+      <div className="cabinet" data-reveal>
         <MiniGame />
       </div>
     </section>
@@ -899,8 +1176,8 @@ function Play() {
 function Contact() {
   return (
     <section className="container section" id="contact">
-      <div className="contact panel" data-reveal>
-        <div className="contact-text">
+      <div className="lobby" data-reveal>
+        <div className="lobby-text">
           <p className="kicker mono">
             <span className="live-dot" /> Lobby open · Looking for party
           </p>
@@ -908,14 +1185,31 @@ function Contact() {
             Ready for <span className="accent">player two?</span>
           </h2>
           <p className="lead">
-            Open to game development roles and collaborations. Email, call or reach out on LinkedIn.
+            Open to game development roles and collaborations. Email, call or reach out on
+            LinkedIn.
           </p>
+          <div className="party" aria-hidden="true">
+            <div className="party-slot is-ready">
+              <span className="party-avatar">SK</span>
+              <span>
+                <strong>Shadman</strong>
+                <small className="mono">Ready</small>
+              </span>
+            </div>
+            <div className="party-slot is-waiting">
+              <span className="party-avatar">P2</span>
+              <span>
+                <strong>You?</strong>
+                <small className="mono">Waiting for player…</small>
+              </span>
+            </div>
+          </div>
         </div>
         <div className="contact-links">
           <a href={`mailto:${profile.email}`} className="contact-link is-primary">
             <FiMail />
             <span>
-              <small className="mono">Email</small>
+              <small className="mono">Email · Send invite</small>
               {profile.email}
             </span>
             <FiArrowUpRight />
@@ -923,7 +1217,7 @@ function Contact() {
           <a href={`tel:${profile.phone.replace(/-/g, "")}`} className="contact-link">
             <FiPhone />
             <span>
-              <small className="mono">Phone</small>
+              <small className="mono">Phone · Voice chat</small>
               {profile.phone}
             </span>
             <FiArrowUpRight />
@@ -950,18 +1244,42 @@ function Contact() {
   );
 }
 
-function Toast({ show, retro }) {
+function Footer() {
   return (
-    <div className={`toast${show ? " is-shown" : ""}`} role="status" aria-live="polite">
-      {show && (
+    <footer className="footer">
+      <div className="container footer-inner">
+        <div className="credits">
+          <p className="mono">Directed, designed and developed by</p>
+          <strong>{profile.name}</strong>
+        </div>
+        <span className="cheat mono" title="Try it">
+          ↑ ↑ ↓ ↓ ← → ← → B A
+        </span>
+        <div className="footer-end">
+          <span className="mono">
+            © {new Date().getFullYear()} · {profile.location} · Thanks for playing
+          </span>
+          <a href="#top" className="icon-btn" aria-label="Back to top">
+            <FiArrowUp />
+          </a>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+function Toast({ toast }) {
+  return (
+    <div className={`toast${toast ? " is-shown" : ""}`} role="status" aria-live="polite">
+      {toast && (
         <>
           <span className="toast-icon">
             <FaTrophy />
           </span>
           <span>
-            <strong>Achievement unlocked</strong>
+            <strong>{toast.title}</strong>
             <br />
-            Cheat code accepted. Retro mode {retro ? "on" : "off"}.
+            {toast.text}
           </span>
         </>
       )}
@@ -972,14 +1290,34 @@ function Toast({ show, retro }) {
 function App() {
   const [booting, setBooting] = useState(shouldBoot);
   const [retro, setRetro] = useState(false);
-  const [toast, setToast] = useState(false);
+  const [sound, setSoundState] = useState(savedSound);
+  const [toast, setToast] = useState(null);
 
   useReveal();
+  useUISounds();
+
+  useEffect(() => {
+    setSound(sound);
+  }, [sound]);
+
+  const toggleSound = useCallback(() => {
+    const next = !sound;
+    setSound(next);
+    if (next) {
+      unlockAudio();
+      play("power");
+    }
+    setSoundState(next);
+  }, [sound]);
 
   const unlock = useCallback(() => {
-    setRetro((r) => !r);
-    setToast(true);
-  }, []);
+    play("power");
+    setRetro(!retro);
+    setToast({
+      title: "Achievement unlocked",
+      text: `Cheat code accepted. Retro mode ${retro ? "off" : "on"}.`,
+    });
+  }, [retro]);
   useKonami(unlock);
 
   const endBoot = useCallback(() => setBooting(false), []);
@@ -989,36 +1327,33 @@ function App() {
   }, [retro]);
 
   useEffect(() => {
+    document.body.classList.toggle("is-booting", booting);
+  }, [booting]);
+
+  useEffect(() => {
     if (!toast) return undefined;
-    const id = setTimeout(() => setToast(false), 3500);
+    const id = setTimeout(() => setToast(null), 3500);
     return () => clearTimeout(id);
   }, [toast]);
 
   return (
     <>
       {booting && <Boot onDone={endBoot} />}
-      <div className="bg-fx" aria-hidden="true" />
-      <Nav />
+      <div className="grain" aria-hidden="true" />
+      <Reticle />
+      <Nav sound={sound} onToggleSound={toggleSound} />
       <main>
         <Hero />
         <Ticker />
-        <Stats />
+        <Profile />
         <Games />
         <Experience />
         <Skills />
         <Play />
         <Contact />
       </main>
-      <footer className="footer container">
-        <span>
-          © {new Date().getFullYear()} {profile.name}
-        </span>
-        <span className="cheat mono" title="Try it">
-          ↑ ↑ ↓ ↓ ← → ← → B A
-        </span>
-        <span className="mono">{profile.location} · Thanks for playing</span>
-      </footer>
-      <Toast show={toast} retro={retro} />
+      <Footer />
+      <Toast toast={toast} />
     </>
   );
 }
