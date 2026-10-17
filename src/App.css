@@ -2822,6 +2822,16 @@ body.is-booting .hero-dock {
   color: var(--dim);
 }
 
+.footer-link {
+  color: var(--muted);
+  transition: color 0.2s;
+}
+
+.footer-link:hover,
+.footer-link:focus-visible {
+  color: var(--accent-hi);
+}
+
 .toast {
   position: fixed;
   right: 24px;

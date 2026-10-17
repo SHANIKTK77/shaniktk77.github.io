@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#050608" />
+  <title>Privacy Policy | Sk_Tech Games</title>
+  <meta name="description" content="Privacy Policy for mobile games published by Sk_Tech, covering Google AdMob, Firebase Analytics and Firebase Crashlytics, children's privacy, your choices and how to contact us." />
+  <link rel="canonical" href="https://shadmankhan.vercel.app/privacy-policy" />
+  <link rel="icon" href="/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* Same tokens as src/App.css */
+    :root {
+      --bg: #050608;
+      --surface: #0e1117;
+      --line: rgba(255, 255, 255, 0.07);
+      --line-2: rgba(255, 255, 255, 0.14);
+      --text: #f2f3f6;
+      --muted: #b4b9c5;
+      --dim: #8a90a0;
+      --accent: #ff5a1f;
+      --accent-hi: #ff8048;
+      --on-accent: #140700;
+      --font: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+      --font-display: "Barlow Condensed", "Inter", sans-serif;
+      --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 1rem;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection {
+      background: var(--accent);
+      color: var(--on-accent);
+    }
+
+    a {
+      color: var(--accent-hi);
+      text-underline-offset: 3px;
+    }
+
+    a:hover {
+      color: var(--text);
+    }
+
+    a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    .skip {
+      position: absolute;
+      left: -9999px;
+    }
+
+    .skip:focus {
+      left: 16px;
+      top: 16px;
+      padding: 8px 14px;
+      background: var(--accent);
+      color: var(--on-accent);
+      z-index: 10;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .topbar {
+      border-bottom: 1px solid var(--line);
+      background: rgba(5, 6, 8, 0.9);
+    }
+
+    .topbar .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 64px;
+    }
+
+    .brand {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .back {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    main {
+      padding: 56px 0 72px;
+    }
+
+    .kicker {
+      margin: 0 0 8px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-family: var(--font-display);
+      font-size: clamp(2.6rem, 8vw, 4rem);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .meta {
+      margin: 0 0 32px;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--dim);
+    }
+
+    h2 {
+      margin: 48px 0 12px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    h3 {
+      margin: 28px 0 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    p,
+    li {
+      color: var(--muted);
+    }
+
+    strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    ul {
+      padding-left: 1.25rem;
+    }
+
+    li + li {
+      margin-top: 6px;
+    }
+
+    .summary {
+      margin: 0 0 8px;
+      padding: 20px 24px;
+      background: var(--surface);
+      border: 1px solid var(--line-2);
+      border-left: 3px solid var(--accent);
+    }
+
+    .summary p {
+      margin: 0;
+    }
+
+    .toc {
+      margin: 32px 0 0;
+      padding: 20px 24px;
+      border: 1px solid var(--line);
+    }
+
+    .toc h2 {
+      margin: 0 0 8px;
+      padding: 0;
+      border: 0;
+      font-size: 1.1rem;
+    }
+
+    .toc ol {
+      margin: 0;
+      padding-left: 1.25rem;
+      columns: 2;
+      column-gap: 32px;
+    }
+
+    .toc li {
+      margin: 0 0 4px;
+      break-inside: avoid;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin: 16px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+    }
+
+    th,
+    td {
+      padding: 12px 14px;
+      text-align: left;
+      vertical-align: top;
+      border: 1px solid var(--line-2);
+    }
+
+    th {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text);
+      background: var(--surface);
+    }
+
+    td {
+      color: var(--muted);
+    }
+
+    address {
+      font-style: normal;
+    }
+
+    footer {
+      padding: 32px 0;
+      border-top: 1px solid var(--line);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      color: var(--dim);
+    }
+
+    footer .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    @media (max-width: 640px) {
+      main {
+        padding: 36px 0 56px;
+      }
+
+      .toc ol {
+        columns: 1;
+      }
+
+      table,
+      thead,
+      tbody,
+      tr,
+      th,
+      td {
+        display: block;
+      }
+
+      thead {
+        position: absolute;
+        left: -9999px;
+      }
+
+      tr {
+        margin-bottom: 16px;
+        border: 1px solid var(--line-2);
+      }
+
+      td {
+        border: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      td:last-child {
+        border-bottom: 0;
+      }
+
+      td::before {
+        content: attr(data-label);
+        display: block;
+        margin-bottom: 4px;
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        color: #000;
+      }
+
+      p,
+      li,
+      td,
+      .meta,
+      footer {
+        color: #222;
+      }
+
+      a {
+        color: #000;
+      }
+
+      .topbar,
+      .toc {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#content">Skip to content</a>
+
+  <header class="topbar">
+    <div class="container">
+      <a class="brand" href="/">Sk_Tech</a>
+      <a class="back" href="/">&larr; Back to portfolio</a>
+    </div>
+  </header>
+
+  <main id="content">
+    <article class="container">
+      <p class="kicker">Sk_Tech &middot; Mobile games</p>
+      <h1>Privacy Policy</h1>
+      <p class="meta">Effective date: 17 October 2026 &middot; Last updated: 17 October 2026</p>
+
+      <div class="summary">
+        <p>
+          This Privacy Policy explains how mobile games published by <strong>Sk_Tech</strong> ("we", "us", "our")
+          may collect, use and share information when you play them. Our games may use
+          <strong>Google AdMob</strong> to show banner ads, <strong>Firebase Analytics</strong> to understand how the
+          games are played, and <strong>Firebase Crashlytics</strong> to find and fix crashes. These services can
+          process information about your device and how you use the game, including device identifiers. Questions?
+          Email <a href="mailto:shani.ktk77@gmail.com">shani.ktk77@gmail.com</a>.
+        </p>
+      </div>
+
+      <nav class="toc" aria-labelledby="toc-title">
+        <h2 id="toc-title">Contents</h2>
+        <ol>
+          <li><a href="#scope">Who we are and scope</a></li>
+          <li><a href="#information">Information we may process</a></li>
+          <li><a href="#services">Third-party services</a></li>
+          <li><a href="#purposes">How information is used</a></li>
+          <li><a href="#sharing">Sharing of information</a></li>
+          <li><a href="#retention">Data retention</a></li>
+          <li><a href="#security">Security</a></li>
+          <li><a href="#choices">Your choices</a></li>
+          <li><a href="#rights">Your privacy rights</a></li>
+          <li><a href="#children">Children's privacy</a></li>
+          <li><a href="#international">International transfers</a></li>
+          <li><a href="#changes">Changes to this policy</a></li>
+          <li><a href="#contact">Contact us</a></li>
+        </ol>
+      </nav>
+
+      <section aria-labelledby="scope">
+        <h2 id="scope">1. Who we are and scope</h2>
+        <p>
+          Sk_Tech is an independent game developer. This policy applies to the mobile games that Sk_Tech publishes
+          (for example on <a href="https://play.google.com/" rel="noopener">Google Play</a>) and that link to this page
+          from their store listing or from within the game (each a "Game").
+        </p>
+        <p>
+          Not every Game uses every service described below. A specific Game may use some, all or none of them,
+          depending on how that Game is built. Where a Game's store listing, data safety section or in-game notice
+          gives more specific information about that Game, that information applies in addition to this policy.
+        </p>
+        <p>
+          This policy does not cover the websites, apps or services of third parties, including advertisers whose ads
+          appear in our Games. Their own privacy policies apply when you interact with them.
+        </p>
+      </section>
+
+      <section aria-labelledby="information">
+        <h2 id="information">2. Information we may process</h2>
+
+        <h3>Information you give us directly</h3>
+        <p>
+          Our Games are not designed to require you to create an account or to enter your name, email address or
+          phone number in order to play. If you contact us by email, we will receive your email address and anything
+          you choose to include in your message, and we use it to respond to you.
+        </p>
+
+        <h3>Information collected automatically through third-party services</h3>
+        <p>
+          When a Game uses the services described in section 3, those services may automatically collect or process
+          the following categories of information:
+        </p>
+        <ul>
+          <li>
+            <strong>Device and app identifiers</strong>, such as the device's advertising ID (for example, the Android
+            advertising ID), app set ID, Firebase installation ID and app instance ID.
+          </li>
+          <li>
+            <strong>Device and technical information</strong>, such as device model, operating system and version,
+            language and region settings, screen size, app version, and network or carrier information.
+          </li>
+          <li>
+            <strong>Approximate location</strong>, which may be inferred from your IP address. Our Games do not
+            request access to your device's precise (GPS) location.
+          </li>
+          <li>
+            <strong>Usage and gameplay information</strong>, such as when the Game is opened, sessions and their
+            length, screens or levels visited, and in-game events.
+          </li>
+          <li>
+            <strong>Advertising information</strong>, such as ads shown, ad clicks and other interactions with ads.
+          </li>
+          <li>
+            <strong>Diagnostic and crash information</strong>, such as crash logs, stack traces, device state at the
+            time of a crash (for example, available memory and disk space, orientation and whether the device is
+            rooted) and performance data.
+          </li>
+          <li><strong>IP address</strong>, which is transmitted whenever a device connects to these services.</li>
+        </ul>
+        <p>
+          We do not sell this information, and we do not use these services to collect the content of your messages,
+          contacts, photos or files.
+        </p>
+      </section>
+
+      <section aria-labelledby="services">
+        <h2 id="services">3. Third-party services</h2>
+        <p>
+          The services below are provided by Google. When a Game uses them, Google processes information as
+          described here and in Google's own policies. We do not control how Google processes this information.
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <caption class="skip">Third-party services that our Games may use</caption>
+            <thead>
+              <tr>
+                <th scope="col">Service</th>
+                <th scope="col">What it does in our Games</th>
+                <th scope="col">Information it may process</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="Service"><strong>Google AdMob</strong></td>
+                <td data-label="What it does">Shows banner advertisements. We do not currently use ad mediation (other ad networks through AdMob).</td>
+                <td data-label="Information">Advertising ID and other device identifiers, IP address and approximate location, device and app information, ad interactions, and diagnostic information.</td>
+              </tr>
+              <tr>
+                <td data-label="Service"><strong>Firebase Analytics</strong> (Google Analytics for Firebase)</td>
+                <td data-label="What it does">Helps us understand how players use the Game so we can improve it.</td>
+                <td data-label="Information">App instance ID, advertising ID (where available), device and app information, approximate location, and usage and gameplay events.</td>
+              </tr>
+              <tr>
+                <td data-label="Service"><strong>Firebase Crashlytics</strong></td>
+                <td data-label="What it does">Reports crashes and errors so we can find and fix them.</td>
+                <td data-label="Information">Crash and error reports, stack traces, device state at the time of a crash, device and app information, and Crashlytics installation identifiers.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Advertising</h3>
+        <p>
+          Depending on your device settings, your location and how a Game is configured, the ads you see may be
+          personalized (based on information associated with your device's advertising ID) or non-personalized
+          (based on more limited context, such as the Game itself and your approximate location). Where the law
+          requires your consent before personalized ads are shown or certain data is used, consent will be requested
+          where required. Ads may link to third-party websites or apps that are outside our control.
+        </p>
+
+        <h3>Third-party privacy policies</h3>
+        <ul>
+          <li><a href="https://policies.google.com/privacy" rel="noopener">Google Privacy Policy</a></li>
+          <li><a href="https://policies.google.com/technologies/partner-sites" rel="noopener">How Google uses information from sites or apps that use its services</a></li>
+          <li><a href="https://policies.google.com/technologies/ads" rel="noopener">How Google uses information for advertising</a></li>
+          <li><a href="https://firebase.google.com/support/privacy" rel="noopener">Firebase Privacy and Security</a></li>
+          <li><a href="https://play.google.com/" rel="noopener">Google Play</a></li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="purposes">
+        <h2 id="purposes">4. How information is used</h2>
+        <p>Information processed through these services may be used to:</p>
+        <ul>
+          <li>show advertising in the Game, which helps keep our Games free to play;</li>
+          <li>measure ad delivery and performance, and detect and prevent ad fraud and abuse;</li>
+          <li>understand how players use the Game, for example which levels are played and where players stop;</li>
+          <li>detect, diagnose and fix crashes, errors and performance problems;</li>
+          <li>maintain, improve and develop our Games;</li>
+          <li>respond to messages you send us; and</li>
+          <li>comply with legal obligations and enforce our rights.</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="sharing">
+        <h2 id="sharing">5. Sharing of information</h2>
+        <p>We do not sell your personal information. Information may be shared:</p>
+        <ul>
+          <li>
+            <strong>with Google</strong>, as the provider of AdMob, Firebase Analytics and Firebase Crashlytics, when a
+            Game uses those services (see section 3);
+          </li>
+          <li>
+            <strong>when required by law</strong>, for example in response to a valid legal request, or to protect
+            the rights, safety or property of players, Sk_Tech or others; and
+          </li>
+          <li>
+            <strong>in a business transfer</strong>, if a Game is sold or transferred, in which case the new owner
+            would be bound to handle information consistently with this policy or to notify you of changes.
+          </li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="retention">
+        <h2 id="retention">6. Data retention</h2>
+        <p>
+          Information collected by AdMob, Firebase Analytics and Firebase Crashlytics is retained by Google for the
+          periods described in Google's and Firebase's documentation, and in some cases according to retention
+          settings available to us as the developer. See
+          <a href="https://firebase.google.com/support/privacy" rel="noopener">Firebase Privacy and Security</a> and the
+          <a href="https://policies.google.com/privacy" rel="noopener">Google Privacy Policy</a> for details.
+        </p>
+        <p>
+          We keep emails you send us only for as long as needed to respond to you and to keep a reasonable record of
+          our correspondence, unless a longer period is required by law. You can ask us to delete them at any time.
+        </p>
+      </section>
+
+      <section aria-labelledby="security">
+        <h2 id="security">7. Security</h2>
+        <p>
+          We rely on the security measures of our service providers, and we take reasonable steps to protect
+          information that we can access, such as limiting access to our developer accounts. However, no method of
+          transmission over the internet or of electronic storage is completely secure, and we cannot guarantee
+          absolute security.
+        </p>
+      </section>
+
+      <section aria-labelledby="choices">
+        <h2 id="choices">8. Your choices</h2>
+        <ul>
+          <li>
+            <strong>Ad personalization:</strong> on Android, you can delete or reset your advertising ID, or opt out of
+            personalized ads, in your device settings (usually under Settings &rarr; Privacy &rarr; Ads, or Settings
+            &rarr; Google &rarr; Ads, depending on your device). You can also manage ad settings at
+            <a href="https://myadcenter.google.com/" rel="noopener">My Ad Center</a>.
+          </li>
+          <li>
+            <strong>Consent choices:</strong> where a Game shows a consent or privacy-options message, you can use it to
+            make or change your choices.
+          </li>
+          <li>
+            <strong>Network access:</strong> playing a Game offline generally prevents these services from sending
+            data until the device reconnects.
+          </li>
+          <li>
+            <strong>Stop all collection:</strong> you can stop all further collection by a Game by uninstalling it.
+          </li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="rights">
+        <h2 id="rights">9. Your privacy rights</h2>
+        <p>
+          Depending on where you live (for example, in the European Economic Area, the United Kingdom or certain US
+          states), you may have the right to:
+        </p>
+        <ul>
+          <li>access the personal information held about you, and receive a copy of it;</li>
+          <li>correct inaccurate information;</li>
+          <li>request deletion of your information;</li>
+          <li>object to or restrict certain processing, including processing for personalized advertising;</li>
+          <li>withdraw consent, where processing is based on consent; and</li>
+          <li>complain to your local data protection authority.</li>
+        </ul>
+        <p>
+          To make a request, email <a href="mailto:shani.ktk77@gmail.com">shani.ktk77@gmail.com</a> and tell us which
+          Game your request is about. Because our Games do not ask for your name or email address, we may need
+          information from you, such as an identifier shown in the Game if one is available, to locate data related to
+          your device. Much of the information described in this policy is held by Google; where we cannot act on a
+          request ourselves, we will tell you and, where possible, explain how to make it through Google's tools. We
+          will not discriminate against you for exercising your rights.
+        </p>
+      </section>
+
+      <section aria-labelledby="children">
+        <h2 id="children">10. Children's privacy</h2>
+        <p>
+          Our Games may be played by people of all ages, including children. We do not knowingly ask children to
+          provide personal information such as their name, email address or phone number.
+        </p>
+        <p>
+          The third-party services described above may still process device identifiers, approximate location and
+          usage information when a child plays a Game. Where a Game is directed to children, or where a player is
+          known to be a child, our intention is to configure advertising and analytics in line with applicable
+          children's privacy laws (such as COPPA in the United States and the GDPR in the European Union) and Google
+          Play's Families policies, for example by requesting non-personalized, child-appropriate ads. How a specific
+          Game is configured may vary, and parents and guardians are encouraged to review a Game's store listing and
+          data safety section.
+        </p>
+        <p>
+          If you are a parent or guardian and believe your child has provided personal information to us, or you want
+          to ask about or request deletion of information related to your child, please contact us at
+          <a href="mailto:shani.ktk77@gmail.com">shani.ktk77@gmail.com</a>. We will respond and, where we are able,
+          delete the information or explain how to request deletion from the relevant service provider.
+        </p>
+      </section>
+
+      <section aria-labelledby="international">
+        <h2 id="international">11. International transfers</h2>
+        <p>
+          Google and its service providers may process information in countries other than the one where you live,
+          including the United States. Those countries may have data protection laws that differ from yours. Google
+          describes the safeguards it uses for these transfers in its own policies.
+        </p>
+      </section>
+
+      <section aria-labelledby="changes">
+        <h2 id="changes">12. Changes to this policy</h2>
+        <p>
+          We may update this Privacy Policy from time to time, for example when a Game starts or stops using a
+          service. When we do, we will update the "Last updated" date at the top of this page. If the changes are
+          significant, we will take reasonable steps to let you know, such as through the Game or its store listing.
+          Please review this page periodically.
+        </p>
+      </section>
+
+      <section aria-labelledby="contact">
+        <h2 id="contact">13. Contact us</h2>
+        <p>
+          If you have questions about this Privacy Policy, want to exercise your privacy rights, or are a parent or
+          guardian with a concern about your child's information, please contact:
+        </p>
+        <address>
+          <p>
+            <strong>Sk_Tech</strong><br />
+            Email: <a href="mailto:shani.ktk77@gmail.com">shani.ktk77@gmail.com</a><br />
+            Website: <a href="https://shadmankhan.vercel.app/">shadmankhan.vercel.app</a>
+          </p>
+        </address>
+        <p>Please include the name of the Game in your message so we can help you faster.</p>
+      </section>
+    </article>
+  </main>
+
+  <footer>
+    <div class="container">
+      <span>&copy; 2026 Sk_Tech</span>
+      <a href="/">Back to portfolio</a>
+    </div>
+  </footer>
+</body>
+</html>

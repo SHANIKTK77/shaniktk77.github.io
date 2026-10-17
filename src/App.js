@@ -1423,6 +1423,9 @@ function Footer() {
           ↑ ↑ ↓ ↓ ← → ← → B A <span className="cheat-sep">·</span> IDDQD
         </span>
         <div className="footer-end">
+          <a href="/privacy-policy" className="footer-link mono">
+            Privacy Policy
+          </a>
           <span className="mono">
             © {new Date().getFullYear()} · {profile.location} · Thanks for playing
           </span>
