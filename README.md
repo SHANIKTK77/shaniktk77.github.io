@@ -2,7 +2,7 @@
 
 My personal portfolio website, live at **[shaniktk77.github.io](https://shaniktk77.github.io)** and **[shadmankhan.vercel.app](https://shadmankhan.vercel.app)**.
 
-A single-page game developer portfolio styled like a AAA game's title screen: the games I've shipped, my experience, my skills and my resume.
+A single-page game developer portfolio styled like a AAA game's title screen: the games I've worked on, my experience, my skills and my resume.
 
 - GitHub: [@shaniktk77](https://github.com/shaniktk77)
 - LinkedIn: [Shadman Khan Khattak](https://www.linkedin.com/in/shadman-khan-khattak-b6b834163/)

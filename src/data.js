@@ -2,30 +2,35 @@ import rider3D from "./Assets/Projects/Rider.jpg";
 import csm from "./Assets/Projects/csm.jpg";
 import kungFu from "./Assets/Projects/Kung FU.jpg";
 import pradoParking from "./Assets/Projects/prado.jpg";
-import rampStunt from "./Assets/Projects/rampstunt.jpg";
 import mcr from "./Assets/Projects/MCR.jpg";
 import motoMax from "./Assets/Projects/motomax.jpg";
 import offroadJeep from "./Assets/Projects/offroadjeep.jpg";
+import gunGames from "./Assets/Projects/gungames.jpg";
+import bikeMaster from "./Assets/Projects/bikemaster.jpg";
+import crazyCar from "./Assets/Projects/crazycar.jpg";
+import carWash from "./Assets/Projects/carwash.jpg";
 
 const playStore = (id) =>
   `https://play.google.com/store/apps/details?id=${id}&hl=en`;
 
 export const profile = {
   name: "Shadman Khan Khattak",
-  role: "Game Developer",
+  role: "Senior Unity Developer",
   focus: ["Performance optimization", "Cross-platform porting", "Multiplayer"],
   location: "Nowshera, Pakistan",
   email: "shani.ktk77@gmail.com",
-  phone: "+92-311-9029334",
+  phone: "+92 311 9029334",
+  availability:
+    "Available for remote roles and contract work. Based in Pakistan (UTC+5), with good overlap with UK, EU and Gulf teams.",
   github: "https://github.com/shaniktk77",
   linkedin: "https://www.linkedin.com/in/shadman-khan-khattak-b6b834163/",
 };
 
 export const stats = [
-  { value: "4+", label: "Years making games" },
-  { value: "50M+", label: "Downloads on Prado Parking" },
+  { value: "325M+", label: "Combined downloads on games I've worked on" },
   { value: "0.24%", label: "ANR rate, down from 0.45%" },
   { value: "~5x", label: "Fewer draw calls (450 → 90)" },
+  { value: "5+", label: "Years making games" },
 ];
 
 // Character-sheet ratings (0–100) shown on the radar chart in the profile section
@@ -42,7 +47,8 @@ export const attributes = [
 export const tips = [
   "Combining meshes and atlasing textures took draw calls from ~450 down to ~90.",
   "Moving ad and scene loading off the main thread cut ANR from 0.45% to 0.24%.",
-  "Prado Car Parking passed 50 million downloads on Google Play.",
+  "The games I've worked on have 325M+ combined downloads on Google Play.",
+  "Prado Car Parking, one of the games I've worked on, has passed 100 million downloads.",
   "Enter ↑ ↑ ↓ ↓ ← → ← → B A anywhere on the page for a surprise.",
   "Press Enter on the title screen to drive through the portfolio in real-time 3D.",
   "Type IDDQD anywhere for god mode.",
@@ -51,96 +57,129 @@ export const tips = [
 ];
 
 // The game shown large at the top of the page
-export const featuredTitle = "Commando Shooting Stars";
+export const featuredTitle = "Prado Car Parking";
 
-// Add an `appStore` URL to any game to turn its iOS badge into a link
+// Ordered by Google Play downloads. Add an `appStore` URL to any game to turn its iOS badge
+// into a link; `wide` gives a game a double-width tile in the full library
 export const games = [
-  {
-    title: "Commando Shooting Stars",
-    genre: "FPS",
-    badge: "Original · Solo-built",
-    image: csm,
-    description:
-      "My own game, built solo from the ground up. I made the shooting, upgrades and loot, plus the Firebase backend behind player data and live config.",
-    platforms: ["Android", "iOS"],
-    playStore: playStore("com.fg.fps.commando.shooting.game.action.games"),
-  },
   {
     title: "Prado Car Parking",
     genre: "Simulation",
-    badge: "50M+ downloads",
+    badge: "100M+ downloads",
     image: pradoParking,
     description:
-      "A 50M+ download hit. I tuned its performance, brought ANR down to 0.24% and polished the gameplay to keep players coming back.",
+      "Listed on Google Play as Car Games - Car Parking Games. I tuned its performance, cut ANR from 0.45% to 0.24% and polished the core gameplay.",
     platforms: ["Android", "iOS"],
     playStore: playStore("com.ghive.jeep.parking.car.free.game.master.apps"),
   },
   {
-    title: "Rider 3D",
-    genre: "Racing",
-    image: rider3D,
-    description:
-      "I built the UI, the upgrade system and the offline economy, and kept crashes under 1% across every release.",
+    title: "Kung Fu Karate",
+    genre: "Fighting",
+    badge: "100M+ downloads",
+    image: kungFu,
+    description: "Worked on development as part of the Unity team.",
     platforms: ["Android", "iOS"],
-    playStore: playStore(
-      "com.ffgames.motoercycle.traffic.racer.bikegames.rider.motobikeracing3d"
-    ),
+    playStore: playStore("com.gzl.superhero.karatefighting.game"),
   },
   {
-    title: "Moto Max",
+    title: "Gun Games 3D",
+    genre: "Shooter",
+    badge: "50M+ downloads",
+    image: gunGames,
+    description: "Worked on development as part of the Unity team.",
+    platforms: ["Android"],
+    playStore: playStore("com.lf.frontline.elite.war.free.apps"),
+  },
+  {
+    title: "Crazy Car Racing",
     genre: "Racing",
+    badge: "50M+ downloads",
+    image: crazyCar,
+    description: "Worked on development as part of the Unity team.",
+    platforms: ["Android"],
+    playStore: playStore("com.fungames.highway.traffic.race"),
+  },
+  {
+    title: "MRM Bike Racing",
+    genre: "Racing",
+    badge: "10M+ downloads",
     image: motoMax,
     description:
-      "Fast circuits, sharp turns and a lot of leaning into corners.",
+      "Formerly Moto Max. Worked on development as part of the Unity team.",
     platforms: ["Android", "iOS"],
     playStore: playStore(
       "com.offline.racing.motorcyclegame.motomax.bikerace.bike.games"
     ),
   },
   {
-    title: "Mini Car Rush",
+    title: "Offroad Car Parking",
+    genre: "Simulation",
+    badge: "10M+ downloads",
+    image: offroadJeep,
+    description: "Worked on development as part of the Unity team.",
+    platforms: ["Android"],
+    playStore: playStore("com.doit.fun.games.offroad.rally.truck.apps"),
+  },
+  {
+    title: "Rider 3D",
+    genre: "Racing",
+    badge: "5M+ downloads",
+    image: rider3D,
+    description:
+      "I built the UI, the upgrade system and the offline economy, and kept crashes under 1% on every release.",
+    platforms: ["Android", "iOS"],
+    playStore: playStore(
+      "com.ffgames.motoercycle.traffic.racer.bikegames.rider.motobikeracing3d"
+    ),
+  },
+  {
+    title: "Mini Car Runner",
     genre: "Endless runner",
+    badge: "1M+ downloads",
     image: mcr,
     description:
-      "Offline chase racing with turbo cars, boosters and plenty of obstacles.",
+      "Formerly Mini Car Rush. Worked on development as part of the Unity team.",
     platforms: ["Android", "iOS"],
     playStore: playStore("com.tb.minicar.rush.racing.drivinggames"),
   },
   {
-    title: "Kung Fu Fighting",
-    genre: "Fighting",
-    image: kungFu,
-    description:
-      "3D martial arts brawler with non-stop action and arena progression.",
-    platforms: ["Android", "iOS"],
-    playStore: playStore("com.gzl.superhero.karatefighting.game"),
-  },
-  {
-    title: "GT Car Stunt",
-    genre: "Stunt racing",
-    image: rampStunt,
-    description: "Ramp stunts with smooth, realistic car handling on mobile.",
+    title: "Bike Racing Master",
+    genre: "Racing",
+    badge: "500K+ downloads",
+    image: bikeMaster,
+    description: "Worked on development as part of the Unity team.",
     platforms: ["Android"],
-    playStore: playStore("com.car.stunt.driving.cargames.offline.ramp.racing"),
+    playStore: playStore("com.tf.ride.master.bike.race.game"),
   },
   {
-    title: "Off Road Jeep Parking",
+    title: "Car Wash: Makeover ASMR",
     genre: "Simulation",
-    image: offroadJeep,
-    description:
-      "4x4 off-road driving, parking and cargo transport across mountain tracks.",
+    badge: "100K+ downloads",
+    image: carWash,
+    description: "Worked on development as part of the Unity team.",
     platforms: ["Android"],
-    playStore: playStore("com.doit.fun.games.offroad.rally.truck.apps"),
+    playStore: playStore("com.car.wash.asmr.makeover.game"),
+  },
+  {
+    title: "Commando Shooting Stars",
+    genre: "FPS",
+    badge: "Original · Solo-built",
+    wide: true,
+    image: csm,
+    description:
+      "My own personal project, built solo from the ground up. I made the shooting, weapon upgrades and loot, plus the Firebase backend behind player data and live config.",
+    platforms: ["Android", "iOS"],
+    playStore: playStore("com.fg.fps.commando.shooting.game.action.games"),
   },
 ];
 
 export const experience = [
   {
     role: "Senior Game Developer",
-    company: "Terafort",
-    period: "2021 – Present",
+    company: "Terafort · Remote",
+    period: "Oct 2022 – Present",
     summary:
-      "I take games from prototype to release on every platform they ship to, then make sure they run smoothly everywhere, right down to low-end devices.",
+      "I take games from prototype to release on every platform they ship to, then make sure they run smoothly everywhere, right down to low-end devices. Worked on titles with 325M+ combined downloads.",
     highlights: [
       {
         title: "Making games run fast",
@@ -167,6 +206,14 @@ export const experience = [
         text: "Connected our Unity project to AI agents through Unity MCP, automating asset work, scene edits and other repetitive tasks.",
       },
     ],
+  },
+  {
+    role: "Unity Developer",
+    company: "Spartans Global Pvt Ltd. · Islamabad",
+    period: "Jul 2021 – Oct 2022",
+    track: ["Intern", "Trainee", "Junior Unity Developer", "Unity Developer"],
+    summary:
+      "Where I went from intern to Unity Developer, building and shipping mobile games in Unity and C#.",
   },
   {
     role: "System Engineer",

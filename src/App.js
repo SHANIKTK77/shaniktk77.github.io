@@ -57,10 +57,10 @@ const slides = [featured, ...games.filter((g) => g !== featured)];
 const HIGHLIGHT_ICONS = [FiZap, FiCpu, FiShield, FiSmartphone, FiUsers, FiTerminal];
 // Icon and rarity for each stat, in the order they appear in data.js
 const STAT_META = [
-  { icon: FiClock, rarity: "Veteran" },
   { icon: FiDownload, rarity: "Legendary" },
   { icon: FiActivity, rarity: "Epic" },
   { icon: FiLayers, rarity: "Rare" },
+  { icon: FiClock, rarity: "Veteran" },
 ];
 // Icon and loadout slot name for each skill group, in the order they appear in data.js
 const SKILL_META = [
@@ -93,7 +93,7 @@ const TICKER = [
 
 const NAV = [
   { id: "profile", label: "Profile", hint: "Character select", color: "#4fd8ff" },
-  { id: "games", label: "Library", hint: "Games I've shipped", color: "#ff5a1f" },
+  { id: "games", label: "Library", hint: "Games I've worked on", color: "#ff5a1f" },
   { id: "experience", label: "Campaign", hint: "Career mode", color: "#ffc35a" },
   { id: "skills", label: "Loadout", hint: "Skills and tools", color: "#b07cff" },
   { id: "play", label: "Arcade", hint: "Lane Dodger", color: "#ff2d6b" },
@@ -719,13 +719,13 @@ function Hero({ god, onToast }) {
             </>
           )}
         </span>
-        {!world && <span className="hud-build mono">Build 4.0 · {profile.location}</span>}
+        {!world && <span className="hud-build mono">Build 5.0 · {profile.location}</span>}
       </div>
 
       <div className="container hero-inner" aria-hidden={driving || undefined}>
         <div className="hero-main">
           <p className="hero-tag mono">
-            <span className="live-dot" /> Player 01 · Senior {profile.role} @ Terafort
+            <span className="live-dot" /> Player 01 · {profile.role} · Remote
           </p>
           <h1 className="hero-title">
             <span className="hero-first" data-text="Shadman">
@@ -734,12 +734,13 @@ function Hero({ god, onToast }) {
             <span className="hero-last">Khan Khattak</span>
           </h1>
           <p className="hero-sub">
-            I make games that run <em>smooth on every platform.</em>
+            Worked on mobile games with <em>325M+ downloads.</em>
           </p>
           <p className="lead">
-            Game developer with 4+ years shipping titles in Unity, plus hands-on Unreal Engine. I
-            build for Android, iOS, tvOS and Android TV, and specialize in performance optimization,
-            cross-platform porting and multiplayer.
+            I make them run smooth on every device, down to low-end phones. Game developer with 5+
+            years shipping titles in Unity, plus hands-on Unreal Engine. I build for Android, iOS,
+            tvOS and Android TV, and specialize in performance optimization, cross-platform porting
+            and multiplayer.
           </p>
           <div className="hero-actions">
             {world ? (
@@ -755,11 +756,17 @@ function Hero({ god, onToast }) {
                 <a href="#games" className="btn btn-ghost btn-lg" tabIndex={tab}>
                   <FiPlay /> View my games
                 </a>
+                <a href={`mailto:${profile.email}`} className="btn btn-ghost btn-lg" tabIndex={tab}>
+                  <FiMail /> Hire me
+                </a>
               </>
             ) : (
               <>
                 <a href="#games" className="btn btn-primary btn-lg">
                   <FiPlay /> View my games
+                </a>
+                <a href={`mailto:${profile.email}`} className="btn btn-ghost btn-lg">
+                  <FiMail /> Hire me
                 </a>
                 <a href={resume} download={RESUME_NAME} className="btn btn-ghost btn-lg">
                   <FiDownload /> Download resume
@@ -887,10 +894,11 @@ function parseStat(value) {
 function CountUp({ value }) {
   const ref = useRef(null);
   const parsed = parseStat(value);
-  const [shown, setShown] = useState(parsed && !prefersReducedMotion() ? 0 : null);
+  // Starts as the real value so it reads right before (or without) the animation
+  const [shown, setShown] = useState(null);
 
   useEffect(() => {
-    if (!parsed || shown === null) return undefined;
+    if (!parsed || prefersReducedMotion() || !("IntersectionObserver" in window)) return undefined;
     const el = ref.current;
     let raf = 0;
     const io = new IntersectionObserver(([entry]) => {
@@ -991,13 +999,13 @@ function Profile() {
             <div className="char-id">
               <span className="mono char-handle">Player 01 · @shaniktk77</span>
               <h3>{profile.name}</h3>
-              <p>Senior {profile.role} · Terafort</p>
+              <p>Senior Game Developer · Terafort</p>
             </div>
           </div>
           <dl className="char-meta">
             <div>
               <dt className="mono">Class</dt>
-              <dd>Game Developer</dd>
+              <dd>Unity Generalist</dd>
             </div>
             <div>
               <dt className="mono">Engines</dt>
@@ -1010,7 +1018,7 @@ function Profile() {
             <div>
               <dt className="mono">Base</dt>
               <dd>
-                <FiMapPin /> {profile.location}
+                <FiMapPin /> {profile.location} · Remote
               </dd>
             </div>
           </dl>
@@ -1027,7 +1035,7 @@ function Profile() {
           <div className="char-rank">
             <div className="mono">
               <span>Rank · Senior</span>
-              <span>4+ yrs XP</span>
+              <span>5+ yrs XP</span>
             </div>
             <span className="rank-bar">
               <i />
@@ -1150,16 +1158,16 @@ function Games() {
   const all = genre === ALL;
   const shown = all ? games : games.filter((g) => g.genre === genre);
 
-  // In the full library the featured game gets a big tile and other badged games a wide one
+  // In the full library the featured game gets a big tile and games marked wide a wide one
   const sizeOf = (g) => {
     if (!all) return null;
     if (g === featured) return "spot";
-    return g.badge ? "wide" : null;
+    return g.wide ? "wide" : null;
   };
 
   return (
     <section className="container section" id="games">
-      <SectionHead index={2} kicker="Game library" title="Games I've shipped">
+      <SectionHead index={2} kicker="Game library" title="Games I've worked on">
         <div className="mode-select" role="group" aria-label="Filter by genre">
           {genres.map((g) => (
             <button
@@ -1247,6 +1255,7 @@ function Experience() {
             <div className="chapter-main panel">
               <h3>{job.role}</h3>
               <p className="chapter-co mono">{job.company}</p>
+              {job.track && <p className="chapter-track mono">{job.track.join(" → ")}</p>}
               <p className="chapter-summary">{job.summary}</p>
               {job.highlights && (
                 <>
@@ -1352,8 +1361,7 @@ function Contact() {
             Ready for <span className="accent">player two?</span>
           </h2>
           <p className="lead">
-            Open to game development roles and collaborations. Email, call or reach out on
-            LinkedIn.
+            {profile.availability} Email, call or reach out on LinkedIn.
           </p>
           <div className="party" aria-hidden="true">
             <div className="party-slot is-ready">
@@ -1381,7 +1389,7 @@ function Contact() {
             </span>
             <FiArrowUpRight />
           </a>
-          <a href={`tel:${profile.phone.replace(/-/g, "")}`} className="contact-link">
+          <a href={`tel:${profile.phone.replace(/[\s-]/g, "")}`} className="contact-link">
             <FiPhone />
             <span>
               <small className="mono">Phone · Voice chat</small>

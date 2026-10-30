@@ -381,7 +381,7 @@ export default class DriveEngine {
       g.font = `600 48px ${FONT_MONO}`;
       g.fillStyle = "#4fd8ff";
       g.globalAlpha = 0.8;
-      g.fillText("GAME DEVELOPER  ·  UNITY  ·  UNREAL ENGINE", w / 2, 600);
+      g.fillText("SENIOR UNITY DEVELOPER  ·  UNREAL ENGINE", w / 2, 600);
     });
     const plate = new THREE.Mesh(
       new THREE.PlaneGeometry(46, 15.3).rotateX(-Math.PI / 2),

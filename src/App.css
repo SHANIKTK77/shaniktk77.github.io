@@ -2270,6 +2270,14 @@ body.is-booting .hero-dock {
   color: var(--gold);
 }
 
+.chapter-track {
+  margin: -8px 0 16px;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
 .chapter-summary {
   max-width: 720px;
   color: var(--muted);

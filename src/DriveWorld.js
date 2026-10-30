@@ -32,13 +32,13 @@ const OBJECTIVES = [
     key: "jump",
     label: "Catch big air off the ramp",
     title: "Stunt driver",
-    text: "Big air. I built GT Car Stunt, so I approve.",
+    text: "Big air. Stunt driving approved.",
   },
   {
     key: "park",
     label: "Park in the glowing bay",
     title: "Parking pro",
-    text: "Clean park. Prado Car Parking has 50M+ downloads; I know parking.",
+    text: "Clean park. I worked on Prado Car Parking (100M+ downloads), so I know parking.",
   },
   {
     key: "drift",
