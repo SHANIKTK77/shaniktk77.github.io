@@ -1,28 +1,31 @@
 {
   "files": {
-    "main.css": "/static/css/main.c0872093.css",
-    "main.js": "/static/js/main.f2bd2b49.js",
-    "static/js/467.61073e7c.chunk.js": "/static/js/467.61073e7c.chunk.js",
+    "main.css": "/static/css/main.e2639a83.css",
+    "main.js": "/static/js/main.1c149226.js",
+    "static/js/467.dcaaed55.chunk.js": "/static/js/467.dcaaed55.chunk.js",
     "static/js/787.1ed0c42c.chunk.js": "/static/js/787.1ed0c42c.chunk.js",
     "static/js/66.93992ddb.chunk.js": "/static/js/66.93992ddb.chunk.js",
+    "static/media/MCR.jpg": "/static/media/MCR.6d7fd6904501446e5185.jpg",
+    "static/media/gungames.jpg": "/static/media/gungames.231b84c53bd87e848e4c.jpg",
+    "static/media/crazycar.jpg": "/static/media/crazycar.be772386dfd470fc9674.jpg",
     "static/media/prado.jpg": "/static/media/prado.6e6cb7b94a59be466c93.jpg",
     "static/media/motomax.jpg": "/static/media/motomax.5579b58cef3f3bdf38f9.jpg",
     "static/media/csm.jpg": "/static/media/csm.d33b37814dd5082cba35.jpg",
-    "static/media/rampstunt.jpg": "/static/media/rampstunt.81ee36deff89fb4c31c9.jpg",
     "static/media/offroadjeep.jpg": "/static/media/offroadjeep.7eeb5fd179cc4a8578c4.jpg",
     "static/media/Rider.jpg": "/static/media/Rider.6b7ceca523fb59878a43.jpg",
     "static/media/Kung FU.jpg": "/static/media/Kung FU.a0fc79616216d75d5155.jpg",
-    "static/media/MCR.jpg": "/static/media/MCR.db51ff074f2fe4a5443b.jpg",
+    "static/media/carwash.jpg": "/static/media/carwash.90a97ccdfb9749a9ae99.jpg",
+    "static/media/bikemaster.jpg": "/static/media/bikemaster.c6f5511f1b7e7c38605c.jpg",
     "static/media/Resume.pdf": "/static/media/Resume.321ccbc234700d64d640.pdf",
     "index.html": "/index.html",
-    "main.c0872093.css.map": "/static/css/main.c0872093.css.map",
-    "main.f2bd2b49.js.map": "/static/js/main.f2bd2b49.js.map",
-    "467.61073e7c.chunk.js.map": "/static/js/467.61073e7c.chunk.js.map",
+    "main.e2639a83.css.map": "/static/css/main.e2639a83.css.map",
+    "main.1c149226.js.map": "/static/js/main.1c149226.js.map",
+    "467.dcaaed55.chunk.js.map": "/static/js/467.dcaaed55.chunk.js.map",
     "787.1ed0c42c.chunk.js.map": "/static/js/787.1ed0c42c.chunk.js.map",
     "66.93992ddb.chunk.js.map": "/static/js/66.93992ddb.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.c0872093.css",
-    "static/js/main.f2bd2b49.js"
+    "static/css/main.e2639a83.css",
+    "static/js/main.1c149226.js"
   ]
 }
