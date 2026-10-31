@@ -2,7 +2,7 @@
 import "./styles/tokens.css";
 import "./styles/base.css";
 import resume from "./Assets/Resume.pdf";
-import { profile, stats, games, experience, education, skills } from "./data";
+import { profile, stats, games, experience, experienceIntro, education, skills } from "./data";
 import useReveal from "./hooks/useReveal";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
@@ -32,7 +32,7 @@ function App() {
           resumeName={RESUME_NAME}
         />
         <Work games={games} />
-        <Experience experience={experience} education={education} />
+        <Experience experience={experience} education={education} intro={experienceIntro} />
         <Skills skills={skills} />
         <Contact profile={profile} resume={resume} resumeName={RESUME_NAME} />
       </main>

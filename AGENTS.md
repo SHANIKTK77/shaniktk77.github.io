@@ -50,8 +50,8 @@ e2e/site.spec.js        Playwright tests
 - **Content is real. Never invent it.** No placeholder text, made-up metrics, testimonials,
   clients or download counts. Every number on the page must trace back to `src/data.js`.
   If a design needs data that doesn't exist, leave the element out.
-- **Change content in `src/data.js`, not in components.** The two intro paragraphs in
-  `components/Hero.js` are the only hand-written copy in components.
+- **Change content in `src/data.js`, not in components.** The headline and two intro
+  paragraphs in `components/Hero.js` are the only hand-written copy in components.
 - **Use tokens.** Components read `var(--…)` from `styles/tokens.css`; don't hard-code colors,
   fonts or durations. A new color means a new token with both light and dark values.
 - **Keep the static pages in step.** `public/privacy-policy/index.html` and `public/404.html`

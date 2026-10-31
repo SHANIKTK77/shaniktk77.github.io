@@ -23,6 +23,7 @@
   --inverse-ink: #ece8df;
   --inverse-ink-2: #a9a399;
   --inverse-rule: #34312d;
+  --inverse-signal: #ff6a2b;
 
   /* Type */
   --font-display: "Newsreader", Georgia, "Times New Roman", serif;
@@ -84,6 +85,7 @@
     --inverse-ink: #161513;
     --inverse-ink-2: #4f4b44;
     --inverse-rule: #cfcac0;
+    --inverse-signal: #b3390a;
     color-scheme: dark;
   }
 }
@@ -105,5 +107,6 @@
   --inverse-ink: #161513;
   --inverse-ink-2: #4f4b44;
   --inverse-rule: #cfcac0;
+  --inverse-signal: #b3390a;
   color-scheme: dark;
 }

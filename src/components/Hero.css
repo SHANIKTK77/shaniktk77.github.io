@@ -124,6 +124,14 @@
   margin-top: var(--space-4);
 }
 
+.readout__note {
+  grid-column: 1 / -1;
+  margin-top: var(--space-3) !important;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ink-3);
+}
+
 /* Install split */
 
 .split {

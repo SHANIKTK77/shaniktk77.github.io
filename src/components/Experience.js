@@ -30,12 +30,12 @@ function Entry({ period, title, place, children }) {
   );
 }
 
-export default function Experience({ experience, education }) {
+export default function Experience({ experience, education, intro }) {
   return (
     <section className="section experience" id="experience" aria-labelledby="experience-title">
       <div className="container">
         <SectionHead index={index} label={label} id="experience-title" title="Experience">
-          <p>Five years in games, after a year running IoT systems.</p>
+          <p>{intro}</p>
         </SectionHead>
 
         <ol className="timeline">

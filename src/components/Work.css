@@ -268,7 +268,7 @@
 }
 
 .solo__label {
-  color: var(--signal);
+  color: var(--inverse-signal);
   margin-bottom: var(--space-4);
 }
 
@@ -298,6 +298,10 @@
 .button--inverse {
   border-color: var(--inverse-ink);
   color: var(--inverse-ink);
+}
+
+.solo :focus-visible {
+  outline-color: var(--inverse-signal);
 }
 
 .button--inverse:hover {

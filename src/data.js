@@ -20,6 +20,7 @@ export const profile = {
   location: "Nowshera, Pakistan",
   timeZone: "Asia/Karachi",
   utcOffset: "UTC+5",
+  status: "Available for remote and contract work",
   email: "shani.ktk77@gmail.com",
   phone: "+92 311 9029334",
   availability:
@@ -32,7 +33,7 @@ export const profile = {
 export const stats = [
   { value: "325M+", label: "Combined downloads on games I've worked on" },
   { value: "0.24%", label: "ANR rate, down from 0.45%", name: "ANR rate", before: 0.45, after: 0.24, unit: "%" },
-  { value: "~5x", label: "Fewer draw calls (450 → 90)", name: "Draw calls", before: 450, after: 90, unit: "" },
+  { value: "~5x", label: "Fewer draw calls (450 → 90)", name: "Draw calls", before: 450, after: 90, unit: "", note: "Best case. Most titles went from ~450 to ~200." },
   { value: "5+", label: "Years making games" },
 ];
 
@@ -192,6 +193,9 @@ export const experience = [
       "Before games, I designed and ran IoT systems. I kept them up 99% of the time and cut production incidents by 25% by catching problems early and fixing their root causes.",
   },
 ];
+
+// One-line summary shown under the Experience heading
+export const experienceIntro = "Five years in games, after a year running IoT systems.";
 
 export const education = {
   degree: "B.Sc. Computer Science",

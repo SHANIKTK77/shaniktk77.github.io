@@ -93,6 +93,23 @@ test("mobile menu opens, closes on Escape and returns focus", () => {
   expect(toggle).toHaveFocus();
 });
 
+test("Tab stays inside the open menu, and picking a link focuses that section", () => {
+  render(<App />);
+  const toggle = screen.getByRole("button", { name: /menu/i });
+  fireEvent.click(toggle);
+
+  const menu = screen.getByRole("navigation", { name: "Sections menu" });
+  const links = within(menu).getAllByRole("link");
+  links[links.length - 1].focus();
+  fireEvent.keyDown(document, { key: "Tab" });
+  expect(toggle).toHaveFocus();
+  fireEvent.keyDown(document, { key: "Tab", shiftKey: true });
+  expect(links[links.length - 1]).toHaveFocus();
+
+  fireEvent.click(within(menu).getByRole("link", { name: /experience/i }));
+  expect(document.getElementById("experience")).toHaveFocus();
+});
+
 test("theme switch flips the theme and remembers it", () => {
   render(<App />);
   fireEvent.click(screen.getByRole("button", { name: "Switch to dark theme" }));

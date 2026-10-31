@@ -1,6 +1,6 @@
 const { test, expect } = require("@playwright/test");
 
-const WIDTHS = [320, 375, 768, 1024, 1440, 1920];
+const WIDTHS = [320, 344, 360, 375, 768, 1024, 1440, 1920];
 
 // Collect console errors and failed same-origin requests for every page a test opens
 let problems = [];

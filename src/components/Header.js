@@ -30,12 +30,12 @@ export default function Header({ name }) {
   const active = useActiveSection(ids);
   const toggleRef = useRef(null);
   const menuRef = useRef(null);
-  // Focus goes back to the Menu button when the menu is dismissed, but not when a link
-  // was chosen: then the browser moves focus to that section
-  const returnFocus = useRef(true);
+  // Where focus goes when the menu closes: the Menu button when it's dismissed, the chosen
+  // section when a link is picked (so focus never stays on a link that's now hidden)
+  const returnFocus = useRef("toggle");
 
-  const closeMenu = useCallback((refocus) => {
-    returnFocus.current = refocus;
+  const closeMenu = useCallback((target) => {
+    returnFocus.current = target;
     setOpen(false);
   }, []);
 
@@ -56,10 +56,24 @@ export default function Header({ name }) {
     menuRef.current?.querySelector("a")?.focus();
 
     const onKey = (e) => {
-      if (e.key === "Escape") closeMenu(true);
+      if (e.key === "Escape") closeMenu("toggle");
+      // The sheet covers the page, so Tab cycles between the Menu button and the menu links
+      if (e.key === "Tab") {
+        const stops = [toggleButton, ...menuRef.current.querySelectorAll("a")];
+        const first = stops[0];
+        const last = stops[stops.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
+    // Widening past the breakpoint hides the menu and its button; send focus to the content
     const wide = window.matchMedia?.("(min-width: 761px)");
-    const onWide = (e) => e.matches && closeMenu(false);
+    const onWide = (e) => e.matches && closeMenu("main");
 
     document.addEventListener("keydown", onKey);
     wide?.addEventListener?.("change", onWide);
@@ -67,14 +81,23 @@ export default function Header({ name }) {
       document.body.classList.remove("is-locked");
       document.removeEventListener("keydown", onKey);
       wide?.removeEventListener?.("change", onWide);
-      if (returnFocus.current) toggleButton?.focus();
+      const target = returnFocus.current;
+      if (target === "toggle") {
+        toggleButton?.focus();
+      } else {
+        const el = document.getElementById(target);
+        if (el) {
+          if (!el.hasAttribute("tabindex")) el.setAttribute("tabindex", "-1");
+          el.focus({ preventScroll: true });
+        }
+      }
     };
   }, [open, closeMenu]);
 
   return (
     <header className={`site-header${scrolled ? " is-scrolled" : ""}${open ? " is-open" : ""}`}>
       <div className="container site-header__bar">
-        <a href="#top" className="brand" onClick={() => closeMenu(false)}>
+        <a href="#top" className="brand" onClick={() => open && closeMenu("top")}>
           <span className="brand__mark" aria-hidden="true">
             SKK
           </span>
@@ -104,7 +127,7 @@ export default function Header({ name }) {
             className="menu-toggle"
             aria-expanded={open}
             aria-controls="mobile-menu"
-            onClick={() => (open ? closeMenu(true) : setOpen(true))}
+            onClick={() => (open ? closeMenu("toggle") : setOpen(true))}
           >
             <span className="menu-toggle__label">{open ? "Close" : "Menu"}</span>
             <span className="menu-toggle__lines" aria-hidden="true" />
@@ -117,7 +140,7 @@ export default function Header({ name }) {
           <ol>
             {SECTIONS.map((s, i) => (
               <li key={s.id} style={{ "--i": i }}>
-                <a href={`#${s.id}`} onClick={() => closeMenu(false)}>
+                <a href={`#${s.id}`} onClick={() => closeMenu(s.id)}>
                   <span className="label">{s.index}</span>
                   {s.label}
                 </a>

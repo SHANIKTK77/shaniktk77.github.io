@@ -50,7 +50,7 @@ export default function Hero({ profile, stats, games, resume, resumeName }) {
           </p>
           <p className="hero__status label">
             <span className="hero__dot" aria-hidden="true" />
-            Available for remote and contract work
+            {profile.status}
             {time && (
               <span className="hero__time">
                 {" "}· {time} there ({profile.utcOffset})
@@ -115,6 +115,7 @@ export default function Hero({ profile, stats, games, resume, resumeName }) {
                 <p className="readout__value">{s.value}</p>
                 <p className="readout__label">{s.label}</p>
                 <Meter name={s.name} before={s.before} after={s.after} unit={s.unit} />
+                {s.note && <p className="readout__note">{s.note}</p>}
               </div>
             ))}
           </aside>
