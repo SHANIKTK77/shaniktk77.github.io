@@ -18,6 +18,8 @@ export const profile = {
   role: "Senior Unity Developer",
   focus: ["Performance optimization", "Cross-platform porting", "Multiplayer"],
   location: "Nowshera, Pakistan",
+  timeZone: "Asia/Karachi",
+  utcOffset: "UTC+5",
   email: "shani.ktk77@gmail.com",
   phone: "+92 311 9029334",
   availability:
@@ -26,15 +28,13 @@ export const profile = {
   linkedin: "https://www.linkedin.com/in/shadman-khan-khattak-b6b834163/",
 };
 
+// `before`/`after` are the same numbers as in the label, used to draw the comparison bars
 export const stats = [
   { value: "325M+", label: "Combined downloads on games I've worked on" },
-  { value: "0.24%", label: "ANR rate, down from 0.45%" },
-  { value: "~5x", label: "Fewer draw calls (450 → 90)" },
+  { value: "0.24%", label: "ANR rate, down from 0.45%", name: "ANR rate", before: 0.45, after: 0.24, unit: "%" },
+  { value: "~5x", label: "Fewer draw calls (450 → 90)", name: "Draw calls", before: 450, after: 90, unit: "" },
   { value: "5+", label: "Years making games" },
 ];
-
-
-
 
 // Ordered by Google Play downloads. Add an `appStore` URL to any game to show an App Store link.
 // `personal` marks a game I built on my own

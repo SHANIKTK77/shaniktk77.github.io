@@ -4,7 +4,9 @@
   <meta charset="utf-8" />
   <link rel="icon" href="%PUBLIC_URL%/favicon.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#f7f5f0" />
+  <meta name="theme-color" content="#f4f2ed" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#111110" media="(prefers-color-scheme: dark)" />
+  <meta name="color-scheme" content="light dark" />
   <meta name="description" content="Senior Unity Developer with 5+ years in mobile games. Worked on titles with 325M+ downloads. Performance optimization, Photon multiplayer, Android→iOS porting. Open to remote and contract work." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://shadmankhan.vercel.app/" />
@@ -17,7 +19,31 @@
   <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" />
+  <script>
+    // Apply a theme the visitor picked on an earlier visit before anything paints (see src/hooks/useTheme.js)
+    try {
+      var theme = localStorage.getItem("theme");
+      if (theme === "light" || theme === "dark") document.documentElement.dataset.theme = theme;
+    } catch (e) {}
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Shadman Khan Khattak",
+      "jobTitle": "Senior Unity Developer",
+      "worksFor": { "@type": "Organization", "name": "Terafort" },
+      "address": { "@type": "PostalAddress", "addressLocality": "Nowshera", "addressCountry": "PK" },
+      "email": "mailto:shani.ktk77@gmail.com",
+      "url": "https://shadmankhan.vercel.app/",
+      "sameAs": [
+        "https://github.com/shaniktk77",
+        "https://www.linkedin.com/in/shadman-khan-khattak-b6b834163/"
+      ],
+      "knowsAbout": ["Unity", "C#", "Mobile game development", "Performance optimization", "Photon multiplayer", "iOS porting"]
+    }
+  </script>
   <title>Shadman Khan Khattak | Senior Unity Developer</title>
 </head>
 <body>

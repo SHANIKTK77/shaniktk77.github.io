@@ -1,0 +1,314 @@
+/*
+  The games ledger. One row per game, columns aligned like a table on wide screens,
+  folding into a thumbnail-plus-text block on narrow ones.
+*/
+
+.ledger {
+  --cols: 2.25rem 11.5rem minmax(0, 1fr) 7.5rem 8.5rem 9rem 1.25rem;
+}
+
+.ledger__head,
+.game {
+  display: grid;
+  grid-template-columns: var(--cols);
+  column-gap: var(--space-5);
+}
+
+.ledger__head {
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--ink);
+}
+
+.ledger__rows {
+  list-style: none;
+}
+
+.game {
+  position: relative;
+  isolation: isolate;
+  align-items: center;
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--rule);
+  transition: background-color var(--dur) ease;
+}
+
+.game::before {
+  /* Hover wash that extends a little past the text column */
+  content: "";
+  position: absolute;
+  inset: 0 calc(var(--space-3) * -1);
+  background: var(--paper-2);
+  opacity: 0;
+  transition: opacity var(--dur) ease;
+  z-index: -1;
+}
+
+.game:hover::before,
+.game:focus-within::before {
+  opacity: 1;
+}
+
+.game > p {
+  margin: 0;
+}
+
+.game__index {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  color: var(--ink-3);
+  align-self: start;
+  padding-top: 0.2rem;
+}
+
+.game__thumb .shot img {
+  transition: opacity 600ms ease, transform 700ms var(--ease-out);
+}
+
+.game:hover .game__thumb .shot img {
+  transform: scale(1.045);
+}
+
+.game__title {
+  font-size: var(--step-1);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.game__link {
+  text-decoration: none;
+}
+
+/* The title link covers the whole row */
+.game__link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.game__link:focus-visible {
+  outline: none;
+}
+
+.game__link:focus-visible::after {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+
+.game:hover .game__link {
+  color: var(--ink);
+}
+
+.game__meta-inline {
+  display: none;
+  margin: var(--space-1) 0 0;
+  font-size: 0.875rem;
+  color: var(--ink-3);
+}
+
+.game__note {
+  margin: var(--space-2) 0 0;
+  max-width: 34rem;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+.game__extra {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  margin-top: var(--space-2);
+  font-size: 0.875rem;
+}
+
+.game__col {
+  font-size: 0.9375rem;
+  color: var(--ink-2);
+}
+
+.game__installs {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.game__tier {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.game__track {
+  position: relative;
+  height: 4px;
+  background: var(--paper-3);
+}
+
+.game__fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 100%;
+  background: var(--ink);
+  transform-origin: left center;
+  transform: scaleX(var(--fill));
+  transition: transform 1s var(--ease-out) 150ms, background-color var(--dur-fast) ease;
+}
+
+.game:hover .game__fill {
+  background: var(--signal);
+}
+
+.reveal-ready .game:not(.is-visible) .game__fill {
+  transform: scaleX(0);
+}
+
+.game__arrow {
+  color: var(--ink-3);
+  transition: color var(--dur-fast) ease, transform var(--dur) var(--ease-out);
+}
+
+.game:hover .game__arrow {
+  color: var(--signal);
+  transform: translate(2px, -2px);
+}
+
+/* Laptop / tablet: genre and platforms move under the title */
+@media (max-width: 1100px) {
+  .ledger {
+    --cols: 2rem 10rem minmax(0, 1fr) 8rem 1.25rem;
+  }
+
+  .ledger__head span:nth-child(4),
+  .ledger__head span:nth-child(5),
+  .game__col {
+    display: none;
+  }
+
+  .game__meta-inline {
+    display: block;
+  }
+}
+
+/* Phone: thumbnail beside the text, installs underneath */
+@media (max-width: 640px) {
+  .ledger__head {
+    display: none;
+  }
+
+  .ledger__rows {
+    border-top: 1px solid var(--ink);
+  }
+
+  .game {
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    grid-template-areas:
+      "thumb main"
+      "thumb installs";
+    column-gap: var(--space-4);
+    row-gap: var(--space-2);
+    align-items: start;
+  }
+
+  .game__index,
+  .game__arrow {
+    display: none;
+  }
+
+  .game__thumb {
+    grid-area: thumb;
+  }
+
+  .game__main {
+    grid-area: main;
+  }
+
+  .game__installs {
+    grid-area: installs;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .game__title {
+    font-size: 1.125rem;
+  }
+
+  .game__note {
+    font-size: 0.875rem;
+  }
+
+  .game::before {
+    inset: 0 calc(var(--gutter) * -1);
+  }
+}
+
+/* Solo project: the one inverse panel on the page */
+
+.solo {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--space-5);
+  row-gap: var(--space-6);
+  align-items: center;
+  margin-top: clamp(4rem, 3rem + 4vw, 6.5rem);
+  padding: clamp(1.25rem, 0.5rem + 3vw, 3rem);
+  background: var(--inverse);
+  color: var(--inverse-ink);
+}
+
+.solo__media {
+  grid-column: 1 / span 7;
+}
+
+.solo__media .shot {
+  background: var(--inverse-rule);
+}
+
+.solo__body {
+  grid-column: 8 / -1;
+}
+
+.solo__label {
+  color: var(--signal);
+  margin-bottom: var(--space-4);
+}
+
+.solo h3 {
+  font-size: var(--step-3);
+  margin-bottom: var(--space-4);
+}
+
+.solo__text {
+  color: var(--inverse-ink-2);
+}
+
+.solo__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4) var(--space-7);
+  margin: var(--space-5) 0 var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--inverse-rule);
+}
+
+.solo__facts dt {
+  color: var(--inverse-ink-2);
+  margin-bottom: var(--space-1);
+}
+
+.button--inverse {
+  border-color: var(--inverse-ink);
+  color: var(--inverse-ink);
+}
+
+.button--inverse:hover {
+  background: var(--signal);
+  border-color: var(--signal);
+  color: var(--on-signal);
+}
+
+@media (max-width: 900px) {
+  .solo__media,
+  .solo__body {
+    grid-column: 1 / -1;
+  }
+}

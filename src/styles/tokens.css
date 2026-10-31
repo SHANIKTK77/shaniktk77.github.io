@@ -1,0 +1,109 @@
+/*
+  Design tokens. Every color, font, size and timing used by the site lives here.
+  Components read these variables; they never hard-code values.
+  The privacy policy and 404 pages (public/) copy this palette by hand, so keep them in step.
+*/
+
+:root {
+  /* Palette: light (default) */
+  --paper: #f4f2ed;
+  --paper-2: #ebe8e1;
+  --paper-3: #e1ddd4;
+  --ink: #161513;
+  --ink-2: #4f4b44;
+  --ink-3: #6d685f;
+  --rule: #d9d5cc;
+  --rule-strong: #b9b4a9;
+  --signal: #c2410c;
+  --signal-soft: rgba(194, 65, 12, 0.12);
+  --on-signal: #fff8f3;
+
+  /* Inverse surfaces (the solo-project panel) */
+  --inverse: #161513;
+  --inverse-ink: #ece8df;
+  --inverse-ink-2: #a9a399;
+  --inverse-rule: #34312d;
+
+  /* Type */
+  --font-display: "Newsreader", Georgia, "Times New Roman", serif;
+  --font-body: "IBM Plex Sans", -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --step--1: 0.8125rem;   /* 13px: mono labels */
+  --step-0: 1.0625rem;    /* 17px: body */
+  --step-1: 1.25rem;      /* 20px: card titles */
+  --step-2: clamp(1.4rem, 1.2rem + 0.8vw, 1.75rem);
+  --step-3: clamp(1.9rem, 1.5rem + 1.8vw, 2.75rem);
+  --step-4: clamp(2.5rem, 1.6rem + 4.2vw, 5.25rem);
+
+  --tracking-label: 0.08em;
+
+  /* Space: 4px base */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --section-y: clamp(4.5rem, 3rem + 6vw, 8rem);
+
+  /* Layout */
+  --container: 76rem;
+  --gutter: clamp(1rem, 0.5rem + 2.5vw, 2.5rem);
+  --header-h: 3.75rem;
+  --radius: 2px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 160ms;
+  --dur: 320ms;
+  --dur-slow: 900ms;
+
+  color-scheme: light;
+}
+
+/* Palette: dark. Applied when the visitor's system asks for it, unless they picked light. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #111110;
+    --paper-2: #1a1918;
+    --paper-3: #23221f;
+    --ink: #ece8df;
+    --ink-2: #b3ada2;
+    --ink-3: #8f897f;
+    --rule: #2a2826;
+    --rule-strong: #45423d;
+    --signal: #ff6a2b;
+    --signal-soft: rgba(255, 106, 43, 0.14);
+    --on-signal: #1a0a02;
+    --inverse: #ece8df;
+    --inverse-ink: #161513;
+    --inverse-ink-2: #4f4b44;
+    --inverse-rule: #cfcac0;
+    color-scheme: dark;
+  }
+}
+
+/* Same dark palette when the visitor picks it with the theme switch */
+:root[data-theme="dark"] {
+  --paper: #111110;
+  --paper-2: #1a1918;
+  --paper-3: #23221f;
+  --ink: #ece8df;
+  --ink-2: #b3ada2;
+  --ink-3: #8f897f;
+  --rule: #2a2826;
+  --rule-strong: #45423d;
+  --signal: #ff6a2b;
+  --signal-soft: rgba(255, 106, 43, 0.14);
+  --on-signal: #1a0a02;
+  --inverse: #ece8df;
+  --inverse-ink: #161513;
+  --inverse-ink-2: #4f4b44;
+  --inverse-rule: #cfcac0;
+  color-scheme: dark;
+}

@@ -1,0 +1,50 @@
+/* A spec sheet: group name on the left, the tools on the right */
+
+.spec {
+  border-top: 1px solid var(--ink);
+}
+
+.spec__row {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--space-5);
+  padding: var(--space-5) 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.spec__row dt {
+  grid-column: 1 / span 3;
+  padding-top: 0.3rem;
+}
+
+.spec__row dd {
+  grid-column: 4 / -1;
+}
+
+.spec__items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) 0;
+  list-style: none;
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 1rem + 0.6vw, 1.5rem);
+  line-height: 1.35;
+}
+
+.spec__items li:not(:last-child)::after {
+  content: "/";
+  margin: 0 0.6em;
+  color: var(--rule-strong);
+  font-family: var(--font-body);
+}
+
+@media (max-width: 900px) {
+  .spec__row dt,
+  .spec__row dd {
+    grid-column: 1 / -1;
+  }
+
+  .spec__row dt {
+    padding: 0 0 var(--space-2);
+  }
+}

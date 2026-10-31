@@ -1,0 +1,126 @@
+.timeline {
+  list-style: none;
+  border-top: 1px solid var(--ink);
+}
+
+.entry {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--space-5);
+  padding: clamp(1.75rem, 1.25rem + 2vw, 3rem) 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.entry__when {
+  grid-column: 1 / span 3;
+  margin: 0;
+  padding-top: 0.45rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.entry__body {
+  grid-column: 4 / -1;
+}
+
+.entry h3 {
+  font-size: var(--step-2);
+}
+
+.entry__where {
+  margin: var(--space-1) 0 0;
+  color: var(--ink-3);
+}
+
+.entry__summary {
+  max-width: 40rem;
+  margin: var(--space-4) 0 0;
+  color: var(--ink-2);
+}
+
+/* Promotion track */
+
+.track {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) 0;
+  margin-top: var(--space-4);
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+}
+
+.track li {
+  display: inline-flex;
+  align-items: center;
+  color: var(--ink-3);
+}
+
+.track li + li::before {
+  content: "";
+  width: 1.5rem;
+  height: 1px;
+  margin: 0 var(--space-2);
+  background: var(--rule-strong);
+}
+
+.track li.is-current {
+  color: var(--ink);
+}
+
+/* Highlights: a numbered grid of what I actually did */
+
+.points {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 var(--space-6);
+  margin-top: var(--space-6);
+  list-style: none;
+}
+
+.point {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  align-content: start;
+  padding: var(--space-5) 0;
+  border-top: 1px solid var(--rule);
+}
+
+.point__index {
+  grid-row: 1 / span 2;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  color: var(--signal);
+  padding-top: 0.15rem;
+}
+
+.point h4 {
+  margin: 0 0 var(--space-2);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.point p {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+@media (max-width: 900px) {
+  .entry__when,
+  .entry__body {
+    grid-column: 1 / -1;
+  }
+
+  .entry__when {
+    padding: 0;
+    margin-bottom: var(--space-3);
+  }
+}
+
+@media (max-width: 640px) {
+  .points {
+    grid-template-columns: 1fr;
+  }
+}
