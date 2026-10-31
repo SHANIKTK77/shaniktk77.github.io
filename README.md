@@ -9,10 +9,14 @@ A simple single-page portfolio: who I am, the games I've worked on, my experienc
 
 ## Built With
 
-- React
-- Plain CSS (no UI framework), with light and dark themes that follow the visitor's system setting
-- Google Fonts: Newsreader and IBM Plex Sans
+- React 17 (Create React App), no runtime dependencies beyond React
+- Plain CSS with design tokens, light and dark themes (follows the system, with a switch)
+- Google Fonts: Newsreader, IBM Plex Sans and IBM Plex Mono
+- Jest + Testing Library for component tests, Playwright for browser tests
 - GitHub Pages and Vercel
+
+The design system and the reasoning behind it are in [`docs/DESIGN.md`](docs/DESIGN.md).
+Notes for coding agents are in [`AGENTS.md`](AGENTS.md).
 
 ## Running Locally
 
@@ -34,8 +38,19 @@ The app runs at [http://localhost:3000](http://localhost:3000) and reloads as yo
 | Personal project shown on its own below the games | the game marked `personal: true` in `src/data.js` |
 | Game screenshots | `src/Assets/Projects/` |
 | Resume PDF | `src/Assets/Resume.pdf` |
-| Page sections and intro text | `src/App.js` |
-| Styles, colors and fonts | `src/App.css` (colors are CSS variables at the top) |
+| Intro paragraphs | `src/components/Hero.js` |
+| Section order and nav labels | `src/sections.js` |
+| Colors, fonts, spacing | `src/styles/tokens.css` (also copy color changes into `public/privacy-policy/index.html` and `public/404.html`) |
+| A section's layout | `src/components/<Section>.js` and its `.css` |
+
+## Testing
+
+```bash
+CI=true npm test          # component and unit tests
+npx playwright install chromium   # once
+npm run test:e2e          # real-browser tests on desktop and phone sizes
+CI=true npm run build     # same build the deploy runs; fails on any lint warning
+```
 
 ## Deploying
 

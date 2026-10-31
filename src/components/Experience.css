@@ -123,4 +123,30 @@
   .points {
     grid-template-columns: 1fr;
   }
+
+  /* Steps stack vertically so a wrap never leaves a connector dangling */
+  .track {
+    flex-direction: column;
+    gap: 0;
+    padding-left: var(--space-4);
+    border-left: 1px solid var(--rule-strong);
+  }
+
+  .track li {
+    position: relative;
+    padding: 0.15rem 0;
+  }
+
+  .track li + li::before {
+    content: none;
+  }
+
+  .track li.is-current::before {
+    content: "";
+    position: absolute;
+    left: calc(var(--space-4) * -1 - 3px);
+    width: 5px;
+    height: 5px;
+    background: var(--signal);
+  }
 }

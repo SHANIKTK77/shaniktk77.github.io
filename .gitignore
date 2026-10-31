@@ -6,3 +6,7 @@ node_modules
 
 # Production build (deployed to gh-pages via `npm run deploy`)
 build
+
+# Playwright
+/e2e/.results
+/playwright-report
