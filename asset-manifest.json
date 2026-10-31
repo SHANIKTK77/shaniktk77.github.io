@@ -1,10 +1,8 @@
 {
   "files": {
-    "main.css": "/static/css/main.e2639a83.css",
-    "main.js": "/static/js/main.1c149226.js",
-    "static/js/467.dcaaed55.chunk.js": "/static/js/467.dcaaed55.chunk.js",
+    "main.css": "/static/css/main.47e2c152.css",
+    "main.js": "/static/js/main.413e23c0.js",
     "static/js/787.1ed0c42c.chunk.js": "/static/js/787.1ed0c42c.chunk.js",
-    "static/js/66.93992ddb.chunk.js": "/static/js/66.93992ddb.chunk.js",
     "static/media/MCR.jpg": "/static/media/MCR.6d7fd6904501446e5185.jpg",
     "static/media/gungames.jpg": "/static/media/gungames.231b84c53bd87e848e4c.jpg",
     "static/media/crazycar.jpg": "/static/media/crazycar.be772386dfd470fc9674.jpg",
@@ -18,14 +16,12 @@
     "static/media/bikemaster.jpg": "/static/media/bikemaster.c6f5511f1b7e7c38605c.jpg",
     "static/media/Resume.pdf": "/static/media/Resume.321ccbc234700d64d640.pdf",
     "index.html": "/index.html",
-    "main.e2639a83.css.map": "/static/css/main.e2639a83.css.map",
-    "main.1c149226.js.map": "/static/js/main.1c149226.js.map",
-    "467.dcaaed55.chunk.js.map": "/static/js/467.dcaaed55.chunk.js.map",
-    "787.1ed0c42c.chunk.js.map": "/static/js/787.1ed0c42c.chunk.js.map",
-    "66.93992ddb.chunk.js.map": "/static/js/66.93992ddb.chunk.js.map"
+    "main.47e2c152.css.map": "/static/css/main.47e2c152.css.map",
+    "main.413e23c0.js.map": "/static/js/main.413e23c0.js.map",
+    "787.1ed0c42c.chunk.js.map": "/static/js/787.1ed0c42c.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.e2639a83.css",
-    "static/js/main.1c149226.js"
+    "static/css/main.47e2c152.css",
+    "static/js/main.413e23c0.js"
   ]
 }
