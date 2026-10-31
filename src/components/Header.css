@@ -1,15 +1,49 @@
 .site-header {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 50;
-  background: var(--paper);
   border-bottom: 1px solid transparent;
-  transition: border-color var(--dur) ease;
+  transition: border-color var(--dur) ease, background-color var(--dur) ease;
 }
 
+/* Over the hero the bar floats on the scene; once scrolled it gets a plate behind it */
 .site-header.is-scrolled,
 .site-header.is-open {
+  background: var(--scrim);
   border-bottom-color: var(--rule);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
+}
+
+.site-header.is-open {
+  background: var(--paper);
+}
+
+/* Reading progress: a 2px signal line that fills as the page scrolls (CSS only, where supported) */
+.site-header__progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--signal);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+@supports (animation-timeline: scroll()) {
+  .site-header__progress {
+    animation: progress linear both;
+    animation-timeline: scroll(root);
+  }
+}
+
+@keyframes progress {
+  to {
+    transform: scaleX(1);
+  }
 }
 
 .site-header__bar {
@@ -54,7 +88,8 @@
 
 .brand__name {
   font-family: var(--font-display);
-  font-size: 1.125rem;
+  font-size: 1.3125rem;
+  line-height: 1;
 }
 
 /* Desktop nav */
@@ -71,7 +106,10 @@
   align-items: baseline;
   gap: 0.4rem;
   padding: var(--space-2) 0;
-  font-size: 0.9375rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--ink-2);
   text-decoration: none;
 }
@@ -81,6 +119,7 @@
   font-size: 0.6875rem;
   color: var(--ink-3);
   transition: color var(--dur-fast) ease;
+  letter-spacing: 0;
 }
 
 .site-nav a::after {
@@ -236,8 +275,9 @@
   gap: var(--space-4);
   padding: var(--space-5) 0;
   font-family: var(--font-display);
-  font-size: 2.25rem;
+  font-size: clamp(2.75rem, 12vw, 4.5rem);
   line-height: 1;
+  letter-spacing: -0.02em;
   text-decoration: none;
 }
 

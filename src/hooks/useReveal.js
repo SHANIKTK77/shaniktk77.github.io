@@ -12,11 +12,20 @@ export default function useReveal() {
       return undefined;
     }
 
+    // A "wipe" element starts fully clipped, and Chrome counts the target's own clip-path,
+    // so it would never intersect. Watch its parent instead and reveal it from there.
+    const watched = new Map();
+    targets.forEach((el) => {
+      const anchor = el.dataset.reveal === "wipe" && el.parentElement ? el.parentElement : el;
+      if (!watched.has(anchor)) watched.set(anchor, []);
+      watched.get(anchor).push(el);
+    });
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
+            watched.get(entry.target).forEach((el) => el.classList.add("is-visible"));
             observer.unobserve(entry.target);
           }
         });
@@ -24,7 +33,7 @@ export default function useReveal() {
       { rootMargin: "0px 0px -8% 0px", threshold: 0.12 }
     );
 
-    targets.forEach((el) => observer.observe(el));
+    watched.forEach((_, anchor) => observer.observe(anchor));
     root.classList.add("reveal-ready");
 
     return () => observer.disconnect();

@@ -2,7 +2,9 @@
 
 My personal portfolio website, live at **[shaniktk77.github.io](https://shaniktk77.github.io)** and **[shadmankhan.vercel.app](https://shadmankhan.vercel.app)**.
 
-A simple single-page portfolio: who I am, the games I've worked on, my experience, my skills and my resume.
+A single-page portfolio: who I am, the games I've worked on, my experience, my skills and my resume.
+Behind the intro runs a small real-time WebGL scene that shows its own frame rate and draw calls,
+and lowers its resolution if your device can't keep up.
 
 - GitHub: [@shaniktk77](https://github.com/shaniktk77)
 - LinkedIn: [Shadman Khan Khattak](https://www.linkedin.com/in/shadman-khan-khattak-b6b834163/)
@@ -11,7 +13,8 @@ A simple single-page portfolio: who I am, the games I've worked on, my experienc
 
 - React 17 (Create React App), no runtime dependencies beyond React
 - Plain CSS with design tokens, light and dark themes (follows the system, with a switch)
-- Google Fonts: Newsreader, IBM Plex Sans and IBM Plex Mono
+- Hand-written WebGL 1 shaders for the scene (no Three.js), one draw call
+- Google Fonts: Instrument Serif, Geist and Geist Mono
 - Jest + Testing Library for component tests, Playwright for browser tests
 - GitHub Pages and Vercel
 

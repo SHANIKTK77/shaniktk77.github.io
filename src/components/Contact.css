@@ -1,26 +1,46 @@
-.contact {
-  border-top-color: var(--ink);
+/* The finale. The plate above gives way and the live scene comes back behind the contact
+   details, so the page ends where it started. */
+
+.contact.section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  /* Paper fades out from the top, and a scrim holds on the left where the copy sits */
+  background:
+    linear-gradient(to bottom, var(--paper) 0, transparent 22rem),
+    linear-gradient(to right, var(--scrim) 0, var(--scrim) 25%, transparent 70%);
 }
 
 .contact__index {
   display: flex;
+  align-items: center;
   gap: var(--space-3);
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-6);
 }
 
-.contact__index span {
+.contact__index span:first-child {
   color: var(--signal);
 }
 
+.contact__rule {
+  flex: 1;
+  height: 1px;
+  background: var(--rule-strong);
+}
+
 .contact__title {
-  font-size: var(--step-4);
-  line-height: 1;
-  letter-spacing: -0.025em;
-  margin-bottom: var(--space-5);
+  font-size: var(--step-5);
+  line-height: 0.85;
+  letter-spacing: -0.045em;
+  margin-bottom: var(--space-6);
 }
 
 .contact__lede {
-  max-width: 36rem;
+  max-width: 38rem;
+  font-size: var(--step-1);
+  line-height: 1.45;
   color: var(--ink-2);
 }
 
@@ -31,33 +51,38 @@
   gap: var(--space-4) var(--space-5);
   margin: clamp(2rem, 1rem + 3vw, 3.5rem) 0;
   padding: clamp(1.25rem, 1rem + 1.5vw, 2rem) 0;
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
 }
 
 .contact__email > a {
   font-family: var(--font-display);
-  font-size: clamp(1.6rem, 0.9rem + 3.6vw, 3.75rem);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  font-size: clamp(1.75rem, 0.8rem + 4.6vw, 5rem);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
   text-decoration-thickness: 1px;
-  text-underline-offset: 0.15em;
+  text-underline-offset: 0.12em;
   overflow-wrap: anywhere;
 }
 
 .copy {
-  min-width: 10.5rem;
+  min-width: 11rem;
   justify-content: center;
+  background: var(--scrim);
 }
 
 .copy:hover svg {
   transform: none;
 }
 
+/* Details sit on a plate so they stay readable over the scene */
 .contact__grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--space-6) var(--space-5);
+  padding: var(--space-5);
+  background: var(--scrim);
+  border: 1px solid var(--rule-strong);
 }
 
 .contact__grid dt {
@@ -81,6 +106,10 @@
 }
 
 @media (max-width: 480px) {
+  .contact__end {
+    display: none;
+  }
+
   .contact__grid {
     grid-template-columns: 1fr;
   }

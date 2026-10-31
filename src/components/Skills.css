@@ -1,4 +1,5 @@
-/* A spec sheet: group name on the left, the tools on the right */
+/* Spec sheet: a mono group label and its count on the left, the items set large in the
+   display face on the right, run together like a line of credits. */
 
 .spec {
   border-top: 1px solid var(--ink);
@@ -8,34 +9,51 @@
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   column-gap: var(--space-5);
-  padding: var(--space-5) 0;
+  padding: var(--space-5) 0 var(--space-6);
   border-bottom: 1px solid var(--rule);
 }
 
 .spec__row dt {
   grid-column: 1 / span 3;
-  padding-top: 0.3rem;
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-top: 0.7rem;
+}
+
+.spec__count {
+  color: var(--signal);
+  font-variant-numeric: tabular-nums;
 }
 
 .spec__row dd {
-  grid-column: 4 / -1;
+  grid-column: 5 / -1;
 }
 
 .spec__items {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-1) 0;
+  gap: 0 var(--space-4);
   list-style: none;
   font-family: var(--font-display);
-  font-size: clamp(1.15rem, 1rem + 0.6vw, 1.5rem);
-  line-height: 1.35;
+  font-size: var(--step-3);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
 }
 
+.spec__items li {
+  transition: color var(--dur-fast) ease;
+}
+
+/* A thin slash between items, drawn so it never wraps onto its own line */
 .spec__items li:not(:last-child)::after {
   content: "/";
-  margin: 0 0.6em;
+  margin-left: var(--space-4);
   color: var(--rule-strong);
-  font-family: var(--font-body);
+}
+
+.spec__items li:hover {
+  color: var(--signal);
 }
 
 @media (max-width: 900px) {
@@ -45,6 +63,10 @@
   }
 
   .spec__row dt {
-    padding: 0 0 var(--space-2);
+    padding: 0 0 var(--space-3);
+  }
+
+  .spec__items {
+    font-size: var(--step-2);
   }
 }

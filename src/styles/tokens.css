@@ -1,41 +1,55 @@
 /*
   Design tokens. Every color, font, size and timing used by the site lives here.
   Components read these variables; they never hard-code values.
+  The WebGL scene reads the --scene-* colors (and --signal) at runtime, so they must stay hex.
   The privacy policy and 404 pages (public/) copy this palette by hand, so keep them in step.
 */
 
 :root {
-  /* Palette: light (default) */
-  --paper: #f4f2ed;
-  --paper-2: #ebe8e1;
-  --paper-3: #e1ddd4;
-  --ink: #161513;
-  --ink-2: #4f4b44;
-  --ink-3: #6d685f;
-  --rule: #d9d5cc;
-  --rule-strong: #b9b4a9;
-  --signal: #c2410c;
-  --signal-soft: rgba(194, 65, 12, 0.12);
+  /* Palette: light ("plate": ink on warm paper, like a printed engineering plot) */
+  --paper: #eeebe3;
+  --paper-2: #e5e1d6;
+  --paper-3: #d9d4c7;
+  --ink: #121314;
+  --ink-2: #45474b;
+  --ink-3: #5f6267;
+  --rule: #d2cdc1;
+  --rule-strong: #aaa598;
+  --signal: #b33a0a;
+  --signal-soft: rgba(179, 58, 10, 0.12);
   --on-signal: #fff8f3;
 
+  /* The live scene behind the hero and contact */
+  --scene-line: #121314;
+  --scene-light: #e2550f;
+  --scene-fog: #eeebe3;
+  --scene-strength: 0.55;
+  --scrim: rgba(238, 235, 227, 0.88);
+
+  /* The engine's missing-texture magenta: only where an image failed to load, and on 404 */
+  --missing: #ff00ff;
+  --missing-dark: #000000;
+
   /* Inverse surfaces (the solo-project panel) */
-  --inverse: #161513;
-  --inverse-ink: #ece8df;
-  --inverse-ink-2: #a9a399;
-  --inverse-rule: #34312d;
-  --inverse-signal: #ff6a2b;
+  --inverse: #0c0d0f;
+  --inverse-ink: #ecebe6;
+  --inverse-ink-2: #a9abae;
+  --inverse-rule: #2b2e33;
+  --inverse-signal: #ff7a1a;
 
   /* Type */
-  --font-display: "Newsreader", Georgia, "Times New Roman", serif;
-  --font-body: "IBM Plex Sans", -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --font-body: "Geist", -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 
+  --step--2: 0.6875rem;   /* 11px: HUD micro labels */
   --step--1: 0.8125rem;   /* 13px: mono labels */
   --step-0: 1.0625rem;    /* 17px: body */
-  --step-1: 1.25rem;      /* 20px: card titles */
-  --step-2: clamp(1.4rem, 1.2rem + 0.8vw, 1.75rem);
-  --step-3: clamp(1.9rem, 1.5rem + 1.8vw, 2.75rem);
-  --step-4: clamp(2.5rem, 1.6rem + 4.2vw, 5.25rem);
+  --step-1: 1.3125rem;    /* 21px */
+  --step-2: clamp(1.5rem, 1.25rem + 1vw, 2rem);
+  --step-3: clamp(2.25rem, 1.6rem + 2.6vw, 3.75rem);
+  --step-4: clamp(2.75rem, 1.4rem + 5.6vw, 7rem);
+  --step-5: clamp(3.5rem, 1rem + 10vw, 11rem);
 
   --tracking-label: 0.08em;
 
@@ -49,42 +63,48 @@
   --space-7: 3rem;
   --space-8: 4rem;
   --space-9: 6rem;
-  --section-y: clamp(4.5rem, 3rem + 6vw, 8rem);
+  --section-y: clamp(5rem, 3rem + 8vw, 10rem);
 
   /* Layout */
-  --container: 76rem;
-  --gutter: clamp(1rem, 0.5rem + 2.5vw, 2.5rem);
-  --header-h: 3.75rem;
-  --radius: 2px;
+  --container: 90rem;
+  --gutter: clamp(1rem, 0.25rem + 3vw, 3rem);
+  --header-h: 3.5rem;
+  --radius: 0;
 
   /* Motion */
-  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
   --dur-fast: 160ms;
-  --dur: 320ms;
-  --dur-slow: 900ms;
+  --dur: 360ms;
+  --dur-slow: 1100ms;
 
   color-scheme: light;
 }
 
-/* Palette: dark. Applied when the visitor's system asks for it, unless they picked light. */
+/* Palette: dark ("night render": sodium light over a cool black). Applied when the visitor's
+   system asks for it, unless they picked light. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --paper: #111110;
-    --paper-2: #1a1918;
-    --paper-3: #23221f;
-    --ink: #ece8df;
-    --ink-2: #b3ada2;
-    --ink-3: #8f897f;
-    --rule: #2a2826;
-    --rule-strong: #45423d;
-    --signal: #ff6a2b;
-    --signal-soft: rgba(255, 106, 43, 0.14);
-    --on-signal: #1a0a02;
-    --inverse: #ece8df;
-    --inverse-ink: #161513;
-    --inverse-ink-2: #4f4b44;
-    --inverse-rule: #cfcac0;
+    --paper: #0c0d0f;
+    --paper-2: #14161a;
+    --paper-3: #1e2126;
+    --ink: #ecebe6;
+    --ink-2: #b2b4b8;
+    --ink-3: #8a8e94;
+    --rule: #23262b;
+    --rule-strong: #3d4148;
+    --signal: #ff7a1a;
+    --signal-soft: rgba(255, 122, 26, 0.14);
+    --on-signal: #170a00;
+    --scene-line: #8fa3c0;
+    --scene-light: #ff7a1a;
+    --scene-fog: #0c0d0f;
+    --scene-strength: 0.7;
+    --scrim: rgba(12, 13, 15, 0.86);
+    --inverse: #ecebe6;
+    --inverse-ink: #121314;
+    --inverse-ink-2: #45474b;
+    --inverse-rule: #c9c5ba;
     --inverse-signal: #b3390a;
     color-scheme: dark;
   }
@@ -92,21 +112,26 @@
 
 /* Same dark palette when the visitor picks it with the theme switch */
 :root[data-theme="dark"] {
-  --paper: #111110;
-  --paper-2: #1a1918;
-  --paper-3: #23221f;
-  --ink: #ece8df;
-  --ink-2: #b3ada2;
-  --ink-3: #8f897f;
-  --rule: #2a2826;
-  --rule-strong: #45423d;
-  --signal: #ff6a2b;
-  --signal-soft: rgba(255, 106, 43, 0.14);
-  --on-signal: #1a0a02;
-  --inverse: #ece8df;
-  --inverse-ink: #161513;
-  --inverse-ink-2: #4f4b44;
-  --inverse-rule: #cfcac0;
+  --paper: #0c0d0f;
+  --paper-2: #14161a;
+  --paper-3: #1e2126;
+  --ink: #ecebe6;
+  --ink-2: #b2b4b8;
+  --ink-3: #8a8e94;
+  --rule: #23262b;
+  --rule-strong: #3d4148;
+  --signal: #ff7a1a;
+  --signal-soft: rgba(255, 122, 26, 0.14);
+  --on-signal: #170a00;
+  --scene-line: #8fa3c0;
+  --scene-light: #ff7a1a;
+  --scene-fog: #0c0d0f;
+  --scene-strength: 0.7;
+  --scrim: rgba(12, 13, 15, 0.86);
+  --inverse: #ecebe6;
+  --inverse-ink: #121314;
+  --inverse-ink-2: #45474b;
+  --inverse-rule: #c9c5ba;
   --inverse-signal: #b3390a;
   color-scheme: dark;
 }

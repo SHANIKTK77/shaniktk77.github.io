@@ -1,6 +1,19 @@
+/* The hero is a window onto the live scene: no background of its own until the brief,
+   where the scene fades into paper so the copy reads cleanly. */
+
 .hero {
-  padding-top: clamp(2.5rem, 1.5rem + 4vw, 5rem);
-  padding-bottom: var(--section-y);
+  position: relative;
+}
+
+.hero__stage {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-7);
+  min-height: 100vh;
+  min-height: 100svh;
+  padding-top: calc(var(--header-h) + var(--space-5));
+  padding-bottom: var(--space-6);
 }
 
 .hero__meta {
@@ -8,8 +21,9 @@
   flex-wrap: wrap;
   justify-content: space-between;
   gap: var(--space-2) var(--space-5);
-  padding-bottom: var(--space-4);
-  border-bottom: 1px solid var(--rule);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--rule-strong);
+  animation: hud-in 900ms var(--ease-out) both 100ms;
 }
 
 .hero__meta p {
@@ -27,6 +41,7 @@
   margin-right: var(--space-2);
   vertical-align: 0.05em;
   background: var(--signal);
+  animation: blink 2.4s steps(1) infinite;
 }
 
 .hero__time {
@@ -34,17 +49,137 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* Headline: oversized, set tight, each word rising out of a mask */
+
 .hero__title {
-  max-width: 17ch;
-  margin: clamp(2rem, 1rem + 4vw, 4.5rem) 0 clamp(2.5rem, 1.5rem + 3vw, 4rem);
-  font-size: var(--step-4);
-  line-height: 1.02;
-  letter-spacing: -0.025em;
+  max-width: 13.5ch;
+  /* Larger floor than --step-4: on a phone this line is the whole first screen */
+  font-size: clamp(3rem, 0.6rem + 7vw, 7rem);
+  line-height: 0.92;
+  letter-spacing: -0.03em;
 }
 
 .hero__title em {
   font-style: italic;
   color: var(--signal);
+}
+
+.hero__word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  /* Room for descenders and the italic overhang inside the mask */
+  padding: 0 0.06em 0.12em 0;
+  margin: 0 -0.06em -0.12em 0;
+}
+
+.hero__word > span {
+  display: inline-block;
+  animation: rise 1.2s var(--ease-out) both;
+  animation-delay: calc(250ms + var(--i) * 55ms);
+}
+
+/* Bottom of the first screen: scroll cue and the live render readout */
+
+.hero__hud {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-6);
+  animation: hud-in 900ms var(--ease-out) both 1200ms;
+}
+
+.hero__cue {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  text-decoration: none;
+}
+
+.hero__cue-line {
+  position: relative;
+  width: 1px;
+  height: 3rem;
+  background: var(--rule-strong);
+  overflow: hidden;
+}
+
+.hero__cue-line::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 1px;
+  height: 40%;
+  background: var(--signal);
+  animation: fall 2.2s var(--ease-in-out) infinite;
+}
+
+.frame {
+  width: min(100%, 22rem);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--rule-strong);
+  background: var(--scrim);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  letter-spacing: 0.04em;
+  color: var(--ink-2);
+}
+
+.frame p {
+  margin: 0;
+}
+
+.frame__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding-bottom: var(--space-2);
+  margin-bottom: var(--space-2) !important;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+}
+
+.frame__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--signal);
+  animation: blink 1.2s steps(1) infinite;
+}
+
+.frame__grid {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: var(--space-2) var(--space-4);
+}
+
+.frame__grid dt {
+  color: var(--ink-3);
+  text-transform: uppercase;
+}
+
+.frame__grid dd {
+  color: var(--ink);
+  font-size: var(--step--1);
+  font-variant-numeric: tabular-nums;
+}
+
+.frame__note {
+  margin-top: var(--space-3) !important;
+  color: var(--ink-3);
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+
+/* The brief: intro and key numbers, where the scene gives way to paper */
+
+.hero__brief {
+  position: relative;
+  padding-top: var(--space-9);
+  padding-bottom: var(--section-y);
+  background: linear-gradient(to bottom, transparent, var(--paper) 9rem);
 }
 
 .hero__grid {
@@ -57,8 +192,16 @@
 
 .hero__body {
   grid-column: 1 / span 6;
-  max-width: 36rem;
+  max-width: 38rem;
   color: var(--ink-2);
+}
+
+.hero__lede {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--ink);
 }
 
 .hero__actions {
@@ -73,45 +216,59 @@
   flex-wrap: wrap;
   gap: var(--space-2) var(--space-5);
   margin: var(--space-5) 0 0;
-  font-size: 0.9375rem;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
-/* Readouts: the three numbers, laid out like an instrument panel */
+/* Readouts: the three headline numbers as an instrument cluster */
 
 .readouts {
   grid-column: 8 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   border-top: 1px solid var(--ink);
 }
 
 .readout {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  column-gap: var(--space-4);
-  padding: var(--space-5) 0;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-5) var(--space-5) var(--space-5) 0;
   border-bottom: 1px solid var(--rule);
+}
+
+.readout + .readout + .readout {
+  padding-left: var(--space-5);
+  padding-right: 0;
+  border-left: 1px solid var(--rule);
+}
+
+.readout--wide {
+  grid-column: 1 / -1;
+  padding-right: 0;
 }
 
 .readout p {
   margin: 0;
 }
 
-.readout__name {
-  grid-column: 1;
-  align-self: center;
-}
-
 .readout__value {
-  grid-column: 2;
-  grid-row: 1 / span 2;
+  order: -1;
+  margin-bottom: var(--space-2) !important;
   font-family: var(--font-display);
-  font-size: clamp(2rem, 1.6rem + 1.5vw, 2.75rem);
-  line-height: 1;
-  letter-spacing: -0.02em;
+  font-size: var(--step-3);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
   font-variant-numeric: lining-nums tabular-nums;
 }
 
+.readout--wide .readout__value {
+  font-size: var(--step-4);
+  color: var(--signal);
+}
+
 .readout__label {
-  grid-column: 1;
   font-size: 0.9375rem;
   color: var(--ink-2);
   line-height: 1.45;
@@ -120,12 +277,10 @@
 
 .readout .meter,
 .readout .split {
-  grid-column: 1 / -1;
   margin-top: var(--space-4);
 }
 
 .readout__note {
-  grid-column: 1 / -1;
   margin-top: var(--space-3) !important;
   font-family: var(--font-mono);
   font-size: 0.75rem;
@@ -141,7 +296,7 @@
 .split__bar {
   display: flex;
   gap: 2px;
-  height: 10px;
+  height: 12px;
 }
 
 .split__segment {
@@ -150,12 +305,10 @@
   background: var(--ink);
   transform-origin: left center;
   transition: background-color var(--dur-fast) ease, transform 1s var(--ease-out);
+  transition-delay: 0ms, calc(var(--i) * 60ms);
 }
 
-.split__segment:first-child {
-  background: var(--signal);
-}
-
+.split__segment:first-child,
 .split__segment:hover {
   background: var(--signal);
 }
@@ -168,17 +321,64 @@
 }
 
 .reveal-ready [data-reveal]:not(.is-visible) .split__segment {
-  transform: scaleX(0);
+  transform: scaleY(0);
 }
 
-@media (max-width: 900px) {
+@keyframes rise {
+  from {
+    transform: translateY(105%);
+  }
+}
+
+@keyframes hud-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0.2;
+  }
+}
+
+@keyframes fall {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(250%);
+  }
+}
+
+@media (max-width: 1000px) {
   .hero__body,
   .readouts {
     grid-column: 1 / -1;
   }
+}
 
-  .hero__body {
-    max-width: 40rem;
+@media (max-width: 640px) {
+  .hero__hud {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: var(--space-5);
+  }
+
+  .frame {
+    width: 100%;
+  }
+
+  .readouts {
+    grid-template-columns: 1fr;
+  }
+
+  .readout,
+  .readout + .readout + .readout {
+    padding-left: 0;
+    padding-right: 0;
+    border-left: 0;
   }
 }
 

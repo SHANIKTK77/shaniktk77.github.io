@@ -1,9 +1,25 @@
 .site-footer {
-  border-top: 1px solid var(--rule);
+  background: var(--paper);
+  border-top: 1px solid var(--ink);
   font-family: var(--font-mono);
   font-size: 0.75rem;
   letter-spacing: 0.04em;
   color: var(--ink-3);
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+/* Sized in vw so the name spans the page at every width */
+.site-footer__name {
+  padding-top: var(--space-6);
+  font-family: var(--font-display);
+  font-size: min(10.4vw, 9.6rem);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+  white-space: nowrap;
 }
 
 .site-footer__bar {
@@ -12,10 +28,8 @@
   justify-content: space-between;
   gap: var(--space-3) var(--space-5);
   padding-block: var(--space-6) var(--space-7);
-}
-
-.site-footer p {
-  margin: 0;
+  margin-top: var(--space-5);
+  border-top: 1px solid var(--rule);
 }
 
 .site-footer nav {

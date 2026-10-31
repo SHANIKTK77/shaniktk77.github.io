@@ -28,7 +28,9 @@ test("home page renders every section with no console errors", async ({ page }) 
 
 test("all game screenshots load", async ({ page }) => {
   await page.goto("/");
-  const images = page.locator(".shot img");
+  // Wide screens show the screenshots in the game view, narrow ones in each row; either
+  // way the 10 team games plus the solo project are on screen
+  const images = page.locator(".shot img:visible");
   const count = await images.count();
   expect(count).toBe(11);
   for (let i = 0; i < count; i++) {
@@ -78,13 +80,13 @@ test("theme choice persists across reloads and onto the privacy page", async ({ 
   await page.goto("/");
   await page.getByRole("button", { name: "Switch to dark theme" }).click();
   const bg = () => page.evaluate(() => getComputedStyle(document.body).backgroundColor);
-  expect(await bg()).toBe("rgb(17, 17, 16)");
+  expect(await bg()).toBe("rgb(12, 13, 15)");
 
   await page.reload();
-  expect(await bg()).toBe("rgb(17, 17, 16)");
+  expect(await bg()).toBe("rgb(12, 13, 15)");
 
   await page.goto("/privacy-policy/");
-  expect(await bg()).toBe("rgb(17, 17, 16)");
+  expect(await bg()).toBe("rgb(12, 13, 15)");
 });
 
 test("keyboard: skip link moves focus to the content", async ({ page, isMobile }) => {
@@ -117,6 +119,35 @@ test("respects reduced motion", async ({ page }) => {
     .locator(".hero__title")
     .evaluate((el) => getComputedStyle(el).transitionDuration);
   expect(parseFloat(duration)).toBeLessThanOrEqual(0.001);
+});
+
+test("the live scene renders and reports real frame numbers", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator(".scene")).toHaveClass(/is-ready/);
+  const readout = page.locator(".frame");
+  await expect(readout).toContainText("draw calls");
+  // A non-zero frame rate means the render loop is actually running
+  await expect
+    .poll(async () => Number(await readout.locator("dt:text-is('fps') + dd").textContent()))
+    .toBeGreaterThan(0);
+  // The canvas has pixels drawn into it
+  const drawn = await page.evaluate(() => {
+    const c = document.querySelector(".scene__canvas");
+    return c.width > 0 && c.height > 0;
+  });
+  expect(drawn).toBe(true);
+});
+
+test("reduced motion gets one still frame instead of an animation", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await expect(page.locator(".frame")).toContainText("still frame");
+});
+
+test("the profiler draws one bar per role", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator(".profiler__bar")).toHaveCount(4);
+  await expect(page.locator(".profiler__bar.is-current")).toHaveCount(1);
 });
 
 test("full-page screenshots", async ({ page }, testInfo) => {

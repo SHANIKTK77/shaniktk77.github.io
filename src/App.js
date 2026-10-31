@@ -4,6 +4,7 @@ import "./styles/base.css";
 import resume from "./Assets/Resume.pdf";
 import { profile, stats, games, experience, experienceIntro, education, skills } from "./data";
 import useReveal from "./hooks/useReveal";
+import Scene from "./components/Scene";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import Work from "./components/Work";
@@ -22,6 +23,7 @@ function App() {
       <a className="skip-link" href="#main">
         Skip to content
       </a>
+      <Scene />
       <Header name={profile.name} />
       <main id="main" tabIndex="-1">
         <Hero

@@ -10,15 +10,18 @@
   height: 100%;
   object-fit: cover;
   opacity: 0;
-  transform: scale(1.001);
-  transition: opacity 600ms ease, transform 700ms var(--ease-out);
+  filter: blur(8px);
+  transform: scale(1.02);
+  transition: opacity 600ms ease, filter 900ms var(--ease-out), transform 900ms var(--ease-out);
 }
 
+/* Streams in like a texture: soft first, then sharp */
 .shot--loaded img {
   opacity: 1;
+  filter: none;
+  transform: none;
 }
 
-/* A slow sweep while the image is on its way */
 .shot--loading::after {
   content: "";
   position: absolute;
@@ -34,6 +37,18 @@
   }
 }
 
+/* A broken image gets the engine's missing-texture checkerboard, with the title on it */
+.shot--error {
+  background-color: var(--missing);
+  background-image: conic-gradient(
+    var(--missing-dark) 25%,
+    transparent 0 50%,
+    var(--missing-dark) 0 75%,
+    transparent 0
+  );
+  background-size: 24px 24px;
+}
+
 .shot__fallback {
   position: absolute;
   inset: 0;
@@ -42,6 +57,11 @@
   padding: var(--space-3);
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  color: var(--ink-2);
   text-align: center;
+}
+
+.shot__fallback span {
+  padding: 2px 6px;
+  background: var(--inverse);
+  color: var(--inverse-ink);
 }

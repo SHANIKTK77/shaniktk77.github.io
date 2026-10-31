@@ -1,54 +1,168 @@
-/*
-  The games ledger. One row per game, columns aligned like a table on wide screens,
-  folding into a thumbnail-plus-text block on narrow ones.
-*/
+/* Games: a list of oversized titles beside a sticky "game view", the way an engine shows
+   the game window next to the hierarchy. Under 1000px the view goes and each row carries
+   its own screenshot. */
 
 .ledger {
-  --cols: 2.25rem 11.5rem minmax(0, 1fr) 7.5rem 8.5rem 9rem 1.25rem;
-}
-
-.ledger__head,
-.game {
   display: grid;
-  grid-template-columns: var(--cols);
-  column-gap: var(--space-5);
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--space-6);
+  align-items: start;
 }
 
-.ledger__head {
-  padding-bottom: var(--space-3);
-  border-bottom: 1px solid var(--ink);
+/* The game view */
+
+.viewport {
+  grid-column: 1 / span 6;
+  position: sticky;
+  top: calc(var(--header-h) + var(--space-5));
 }
+
+.viewport__bar {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--rule-strong);
+  border-bottom: 0;
+  font-size: var(--step--2);
+}
+
+.viewport__live {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: var(--space-1);
+  border-radius: 50%;
+  background: var(--signal);
+  vertical-align: 0.1em;
+}
+
+.viewport__stage {
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--rule-strong);
+  background: var(--paper-3);
+}
+
+.viewport__shot {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: scale(1.04);
+  transition: opacity 500ms ease, transform 1.2s var(--ease-out);
+}
+
+.viewport__shot.is-active {
+  opacity: 1;
+  transform: none;
+}
+
+.viewport__shot .shot {
+  height: 100%;
+}
+
+.viewport__count {
+  position: absolute;
+  right: var(--space-3);
+  bottom: var(--space-3);
+  z-index: 1;
+  padding: 2px 6px;
+  background: var(--inverse);
+  color: var(--inverse-ink);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  letter-spacing: 0.06em;
+}
+
+.viewport__info {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-2) var(--space-5);
+  padding-top: var(--space-5);
+  animation: info-in 600ms var(--ease-out) both;
+}
+
+.viewport__info p {
+  margin: 0;
+}
+
+.viewport__title {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  line-height: 1.05;
+}
+
+.viewport__installs {
+  grid-row: span 2;
+  display: grid;
+  justify-items: end;
+  gap: var(--space-1);
+  min-width: 9rem;
+}
+
+.viewport__tier {
+  font-family: var(--font-display);
+  font-size: var(--step-3);
+  line-height: 0.9;
+  color: var(--signal);
+}
+
+.viewport__installs .installs__track {
+  width: 100%;
+}
+
+.viewport__note {
+  grid-column: 1 / -1;
+  max-width: 34rem;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--rule);
+  font-size: 0.9375rem;
+  color: var(--ink-2);
+}
+
+@keyframes info-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/* The list */
 
 .ledger__rows {
+  grid-column: 7 / -1;
   list-style: none;
+  border-top: 1px solid var(--ink);
 }
 
 .game {
   position: relative;
   isolation: isolate;
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr) 7.5rem 1.25rem;
   align-items: center;
+  column-gap: var(--space-4);
   padding: var(--space-4) 0;
   border-bottom: 1px solid var(--rule);
-  transition: background-color var(--dur) ease;
 }
 
+/* The highlight slides in from the left behind the active row */
 .game::before {
-  /* Hover wash that extends a little past the text column */
   content: "";
   position: absolute;
   inset: 0 calc(var(--space-3) * -1);
-  background: var(--paper-2);
-  opacity: 0;
-  transition: opacity var(--dur) ease;
   z-index: -1;
+  background: var(--paper-2);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur) var(--ease-out);
 }
 
-.game:hover::before,
-.game:focus-within::before {
-  opacity: 1;
+.game.is-active::before {
+  transform: none;
 }
 
-.game > p {
+.game p {
   margin: 0;
 }
 
@@ -56,225 +170,159 @@
   font-family: var(--font-mono);
   font-size: var(--step--1);
   color: var(--ink-3);
-  align-self: start;
-  padding-top: 0.2rem;
+  font-variant-numeric: tabular-nums;
+  transition: color var(--dur-fast) ease;
 }
 
-.game__thumb .shot img {
-  transition: opacity 600ms ease, transform 700ms var(--ease-out);
+.game.is-active .game__index {
+  color: var(--signal);
 }
 
-.game:hover .game__thumb .shot img {
-  transform: scale(1.045);
+.game__thumb {
+  display: none;
 }
 
 .game__title {
-  font-size: var(--step-1);
-  line-height: 1.25;
-  letter-spacing: -0.01em;
+  font-size: clamp(1.75rem, 1.2rem + 1.6vw, 2.75rem);
+  line-height: 1;
+  letter-spacing: -0.025em;
 }
 
 .game__link {
   text-decoration: none;
 }
 
-/* The title link covers the whole row */
+/* Stretched link: the whole row is the click target */
 .game__link::after {
   content: "";
   position: absolute;
   inset: 0;
 }
 
+.game__link:hover {
+  color: inherit;
+}
+
 .game__link:focus-visible {
   outline: none;
 }
 
-.game__link:focus-visible::after {
+.game:focus-within {
   outline: 2px solid var(--signal);
   outline-offset: 2px;
 }
 
-.game:hover .game__link {
-  color: var(--ink);
-}
-
-.game__meta-inline {
-  display: none;
-  margin: var(--space-1) 0 0;
-  font-size: 0.875rem;
+.game__meta {
+  margin-top: var(--space-1) !important;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   color: var(--ink-3);
 }
 
+/* On wide screens the note shows in the game view; it stays here for screen readers */
 .game__note {
-  margin: var(--space-2) 0 0;
-  max-width: 34rem;
-  font-size: 0.9375rem;
-  line-height: 1.55;
-  color: var(--ink-2);
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
 
 .game__extra {
   position: relative;
   z-index: 1;
-  display: inline-block;
-  margin-top: var(--space-2);
   font-size: 0.875rem;
-}
-
-.game__col {
-  font-size: 0.9375rem;
-  color: var(--ink-2);
 }
 
 .game__installs {
   display: grid;
-  gap: var(--space-2);
+  gap: var(--space-1);
+  justify-items: end;
 }
 
 .game__tier {
   font-family: var(--font-mono);
-  font-size: 0.875rem;
+  font-size: var(--step--1);
   font-variant-numeric: tabular-nums;
 }
 
-.game__track {
-  position: relative;
-  height: 4px;
-  background: var(--paper-3);
-}
-
-.game__fill {
-  position: absolute;
-  inset: 0 auto 0 0;
+.game__installs .installs__track {
   width: 100%;
-  background: var(--ink);
-  transform-origin: left center;
-  transform: scaleX(var(--fill));
-  transition: transform 1s var(--ease-out) 150ms, background-color var(--dur-fast) ease;
-}
-
-.game:hover .game__fill {
-  background: var(--signal);
-}
-
-.reveal-ready .game:not(.is-visible) .game__fill {
-  transform: scaleX(0);
 }
 
 .game__arrow {
   color: var(--ink-3);
-  transition: color var(--dur-fast) ease, transform var(--dur) var(--ease-out);
+  transition: transform var(--dur) var(--ease-out), color var(--dur-fast) ease;
 }
 
-.game:hover .game__arrow {
+.game.is-active .game__arrow {
   color: var(--signal);
   transform: translate(2px, -2px);
 }
 
-/* Laptop / tablet: genre and platforms move under the title */
-@media (max-width: 1100px) {
-  .ledger {
-    --cols: 2rem 10rem minmax(0, 1fr) 8rem 1.25rem;
-  }
+/* Log-scale install bar, shared by the rows and the view */
 
-  .ledger__head span:nth-child(4),
-  .ledger__head span:nth-child(5),
-  .game__col {
-    display: none;
-  }
-
-  .game__meta-inline {
-    display: block;
-  }
+.installs__track {
+  position: relative;
+  display: block;
+  height: 4px;
+  background: var(--paper-3);
 }
 
-/* Phone: thumbnail beside the text, installs underneath */
-@media (max-width: 640px) {
-  .ledger__head {
-    display: none;
-  }
-
-  .ledger__rows {
-    border-top: 1px solid var(--ink);
-  }
-
-  .game {
-    grid-template-columns: 7.5rem minmax(0, 1fr);
-    grid-template-areas:
-      "thumb main"
-      "thumb installs";
-    column-gap: var(--space-4);
-    row-gap: var(--space-2);
-    align-items: start;
-  }
-
-  .game__index,
-  .game__arrow {
-    display: none;
-  }
-
-  .game__thumb {
-    grid-area: thumb;
-  }
-
-  .game__main {
-    grid-area: main;
-  }
-
-  .game__installs {
-    grid-area: installs;
-    grid-template-columns: auto 1fr;
-    align-items: center;
-    gap: var(--space-3);
-  }
-
-  .game__title {
-    font-size: 1.125rem;
-  }
-
-  .game__note {
-    font-size: 0.875rem;
-  }
-
-  .game::before {
-    inset: 0 calc(var(--gutter) * -1);
-  }
+.installs__fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 100%;
+  background: var(--ink);
+  transform-origin: left;
+  transform: scaleX(var(--fill));
+  transition: transform 1s var(--ease-out);
 }
 
-/* Solo project: the one inverse panel on the page */
+.is-active .installs__fill,
+.viewport .installs__fill {
+  background: var(--signal);
+}
+
+/* Solo project: a full-width still with the details on an inverse plate */
 
 .solo {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  column-gap: var(--space-5);
-  row-gap: var(--space-6);
-  align-items: center;
-  margin-top: clamp(4rem, 3rem + 4vw, 6.5rem);
-  padding: clamp(1.25rem, 0.5rem + 3vw, 3rem);
+  margin-top: clamp(4rem, 2rem + 8vw, 9rem);
+  margin-bottom: var(--space-8);
+}
+
+.solo__media {
+  grid-column: 1 / -1;
+  grid-row: 1;
+}
+
+.solo__media .shot {
+  aspect-ratio: 21 / 9;
+}
+
+.solo__body {
+  grid-column: 7 / -1;
+  grid-row: 1;
+  align-self: end;
+  margin: 0 var(--space-6) calc(var(--space-8) * -1) 0;
+  padding: clamp(1.5rem, 1rem + 2vw, 3rem);
   background: var(--inverse);
   color: var(--inverse-ink);
 }
 
-.solo__media {
-  grid-column: 1 / span 7;
-}
-
-.solo__media .shot {
-  background: var(--inverse-rule);
-}
-
-.solo__body {
-  grid-column: 8 / -1;
-}
-
 .solo__label {
   color: var(--inverse-signal);
-  margin-bottom: var(--space-4);
 }
 
 .solo h3 {
+  margin: var(--space-3) 0 var(--space-4);
   font-size: var(--step-3);
-  margin-bottom: var(--space-4);
 }
 
 .solo__text {
@@ -284,7 +332,7 @@
 .solo__facts {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-4) var(--space-7);
+  gap: var(--space-3) var(--space-7);
   margin: var(--space-5) 0 var(--space-6);
   padding-top: var(--space-4);
   border-top: 1px solid var(--inverse-rule);
@@ -292,27 +340,112 @@
 
 .solo__facts dt {
   color: var(--inverse-ink-2);
-  margin-bottom: var(--space-1);
 }
 
-.button--inverse {
+.solo .button--inverse {
   border-color: var(--inverse-ink);
-  color: var(--inverse-ink);
+  color: var(--inverse);
+}
+
+.solo .button--inverse::before {
+  background: var(--inverse-ink);
+  transform: none;
+}
+
+.solo .button--inverse:hover {
+  border-color: var(--inverse-signal);
+  color: var(--inverse);
+}
+
+.solo .button--inverse:hover::before {
+  background: var(--inverse-signal);
 }
 
 .solo :focus-visible {
   outline-color: var(--inverse-signal);
 }
 
-.button--inverse:hover {
-  background: var(--signal);
-  border-color: var(--signal);
-  color: var(--on-signal);
+/* Narrower screens: no game view; rows carry a thumbnail and their note */
+
+@media (max-width: 1000px) {
+  /* Eleven column gaps alone are wider than a small phone */
+  .ledger {
+    display: block;
+  }
+
+  .viewport {
+    display: none;
+  }
+
+  .ledger__rows {
+    grid-column: 1 / -1;
+  }
+
+  .game {
+    grid-template-columns: 2.25rem 9rem minmax(0, 1fr) 7rem;
+    align-items: start;
+    padding: var(--space-5) 0;
+  }
+
+  .game__thumb {
+    display: block;
+  }
+
+  .game__note {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+    margin-top: var(--space-3) !important;
+    max-width: 34rem;
+    font-size: 0.9375rem;
+    color: var(--ink-2);
+  }
+
+  .game__arrow {
+    display: none;
+  }
+
+  .solo__body {
+    grid-column: 4 / -1;
+  }
 }
 
-@media (max-width: 900px) {
-  .solo__media,
-  .solo__body {
+@media (max-width: 640px) {
+  .game {
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: var(--space-3);
+  }
+
+  .game__index {
+    display: none;
+  }
+
+  .game__thumb {
     grid-column: 1 / -1;
+  }
+
+  .game__main {
+    grid-column: 1;
+  }
+
+  .game__installs {
+    grid-column: 2;
+    min-width: 5rem;
+  }
+
+  .solo {
+    display: block;
+    margin-bottom: 0;
+  }
+
+  .solo__media .shot {
+    aspect-ratio: 16 / 9;
+  }
+
+  .solo__body {
+    margin: 0;
   }
 }

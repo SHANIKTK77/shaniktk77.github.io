@@ -1,3 +1,153 @@
+/* Profiler: thread names on the left, bars on a shared time axis, like a capture in the
+   Unity Profiler or Perfetto */
+
+.profiler {
+  margin: 0 0 clamp(3rem, 2rem + 4vw, 6rem);
+  border: 1px solid var(--rule-strong);
+  background: var(--paper);
+}
+
+.profiler__head {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--rule-strong);
+  font-size: var(--step--2);
+}
+
+.profiler__body {
+  padding: var(--space-3) var(--space-4) var(--space-5);
+  /* Faint year gridlines behind the tracks */
+  --names: clamp(6rem, 4rem + 8vw, 12rem);
+}
+
+.profiler__row {
+  display: grid;
+  grid-template-columns: var(--names) minmax(0, 1fr);
+  align-items: center;
+  min-height: 2.75rem;
+  border-bottom: 1px dashed var(--rule);
+}
+
+.profiler__row:last-child {
+  border-bottom: 0;
+}
+
+.profiler__row--axis {
+  min-height: 2rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.profiler__name {
+  padding-right: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  line-height: 1.25;
+  color: var(--ink-2);
+}
+
+.profiler__lane {
+  position: relative;
+  height: 100%;
+  min-height: inherit;
+  /* Year gridlines */
+  background-image: linear-gradient(to right, var(--rule) 1px, transparent 1px);
+  background-size: calc(100% / var(--years, 10)) 100%;
+}
+
+.profiler__row--axis .profiler__lane {
+  background: none;
+}
+
+.profiler__tick {
+  position: absolute;
+  bottom: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+  transform: translateX(-50%);
+}
+
+.profiler__tick:first-child {
+  transform: none;
+}
+
+.profiler__tick:last-child {
+  transform: translateX(-100%);
+}
+
+.profiler__bar {
+  position: absolute;
+  top: 50%;
+  height: 14px;
+  margin-top: -7px;
+  background: var(--ink);
+  transform-origin: left;
+  transition: transform 1.4s var(--ease-out);
+  transition-delay: calc(200ms + var(--i) * 140ms);
+}
+
+.profiler__bar.is-current {
+  background: var(--signal);
+}
+
+/* The current role is still recording */
+.profiler__bar.is-current::after {
+  content: "";
+  position: absolute;
+  top: -5px;
+  right: -1px;
+  bottom: -5px;
+  width: 2px;
+  background: var(--signal);
+  animation: recording 1.2s steps(1) infinite;
+}
+
+.profiler__span {
+  position: absolute;
+  top: 50%;
+  padding-left: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--ink-2);
+  white-space: nowrap;
+  transform: translateY(-50%);
+  transition: opacity var(--dur) ease;
+  transition-delay: calc(900ms + var(--i, 0) * 140ms);
+}
+
+.profiler__span.is-inside {
+  padding: 0 var(--space-2) 0 0;
+  color: var(--on-signal);
+  transform: translate(-100%, -50%);
+}
+
+.reveal-ready .profiler:not(.is-visible) .profiler__bar {
+  transform: scaleX(0);
+}
+
+.reveal-ready .profiler:not(.is-visible) .profiler__span {
+  opacity: 0;
+}
+
+.profiler__caption {
+  padding: var(--space-2) var(--space-4);
+  border-top: 1px solid var(--rule);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ink-3);
+}
+
+@keyframes recording {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Entries */
+
 .timeline {
   list-style: none;
   border-top: 1px solid var(--ink);
@@ -7,15 +157,26 @@
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   column-gap: var(--space-5);
-  padding: clamp(1.75rem, 1.25rem + 2vw, 3rem) 0;
+  padding: clamp(2rem, 1.25rem + 3vw, 4rem) 0;
   border-bottom: 1px solid var(--rule);
 }
 
 .entry__when {
   grid-column: 1 / span 3;
+  padding-top: 0.6rem;
+}
+
+.entry__when p {
   margin: 0;
-  padding-top: 0.45rem;
   font-variant-numeric: tabular-nums;
+}
+
+.entry__span {
+  margin-top: var(--space-1) !important;
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  line-height: 1;
+  color: var(--ink-3);
 }
 
 .entry__body {
@@ -23,17 +184,24 @@
 }
 
 .entry h3 {
-  font-size: var(--step-2);
+  font-size: var(--step-3);
+  line-height: 0.95;
 }
 
 .entry__where {
-  margin: var(--space-1) 0 0;
-  color: var(--ink-3);
+  margin: var(--space-2) 0 0;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--signal);
 }
 
 .entry__summary {
-  max-width: 40rem;
-  margin: var(--space-4) 0 0;
+  max-width: 44rem;
+  margin: var(--space-5) 0 0;
+  font-size: var(--step-1);
+  line-height: 1.5;
   color: var(--ink-2);
 }
 
@@ -43,7 +211,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2) 0;
-  margin-top: var(--space-4);
+  margin-top: var(--space-5);
   list-style: none;
   font-family: var(--font-mono);
   font-size: 0.75rem;
@@ -68,36 +236,28 @@
   color: var(--ink);
 }
 
-/* Highlights: a numbered grid of what I actually did */
+/* Highlights: numbered like profiler markers */
 
 .points {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0 var(--space-6);
-  margin-top: var(--space-6);
+  margin-top: var(--space-7);
   list-style: none;
 }
 
 .point {
   display: grid;
-  grid-template-columns: 2rem 1fr;
   align-content: start;
+  gap: var(--space-2);
   padding: var(--space-5) 0;
-  border-top: 1px solid var(--rule);
+  border-top: 1px solid var(--ink);
 }
 
 .point__index {
-  grid-row: 1 / span 2;
   font-family: var(--font-mono);
   font-size: var(--step--1);
   color: var(--signal);
-  padding-top: 0.15rem;
-}
-
-.point h4 {
-  margin: 0 0 var(--space-2);
-  font-size: 1rem;
-  font-weight: 600;
 }
 
 .point p {
@@ -107,6 +267,12 @@
   color: var(--ink-2);
 }
 
+@media (max-width: 1100px) {
+  .points {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 900px) {
   .entry__when,
   .entry__body {
@@ -114,8 +280,11 @@
   }
 
   .entry__when {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-4);
     padding: 0;
-    margin-bottom: var(--space-3);
+    margin-bottom: var(--space-4);
   }
 }
 
@@ -124,29 +293,11 @@
     grid-template-columns: 1fr;
   }
 
-  /* Steps stack vertically so a wrap never leaves a connector dangling */
-  .track {
-    flex-direction: column;
-    gap: 0;
-    padding-left: var(--space-4);
-    border-left: 1px solid var(--rule-strong);
+  .profiler__body {
+    padding-inline: var(--space-3);
   }
 
-  .track li {
-    position: relative;
-    padding: 0.15rem 0;
-  }
-
-  .track li + li::before {
-    content: none;
-  }
-
-  .track li.is-current::before {
-    content: "";
-    position: absolute;
-    left: calc(var(--space-4) * -1 - 3px);
-    width: 5px;
-    height: 5px;
-    background: var(--signal);
+  .profiler__tick:nth-child(even) span {
+    visibility: hidden;
   }
 }

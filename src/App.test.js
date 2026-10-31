@@ -66,6 +66,15 @@ test("shows all experience and skills", () => {
   });
 });
 
+test("the career timeline lists every role and the degree with their periods", () => {
+  render(<App />);
+  const profiler = document.querySelector(".profiler");
+  experience.forEach((job) =>
+    expect(within(profiler).getByText(new RegExp(`${escape(job.role)}.*${escape(job.period)}`))).toBeInTheDocument()
+  );
+  expect(within(profiler).getByText(/B.Sc. Computer Science/)).toBeInTheDocument();
+});
+
 test("contact details link correctly and the resume downloads", () => {
   render(<App />);
   screen

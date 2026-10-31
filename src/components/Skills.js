@@ -12,7 +12,12 @@ export default function Skills({ skills }) {
         <dl className="spec">
           {skills.map((group) => (
             <div className="spec__row" key={group.group} data-reveal>
-              <dt className="label">{group.group}</dt>
+              <dt className="label">
+                <span>{group.group}</span>
+                <span className="spec__count" aria-hidden="true">
+                  {String(group.items.length).padStart(2, "0")}
+                </span>
+              </dt>
               <dd>
                 <ul className="spec__items">
                   {group.items.map((item) => (

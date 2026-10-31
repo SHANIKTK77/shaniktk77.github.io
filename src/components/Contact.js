@@ -42,8 +42,10 @@ export default function Contact({ profile, resume, resumeName }) {
       <div className="container">
         <p className="contact__index label" data-reveal>
           <span>{index}</span> {label}
+          <span className="contact__rule" aria-hidden="true" />
+          <span className="contact__end" aria-hidden="true">End of capture</span>
         </p>
-        <h2 id="contact-title" className="contact__title" data-reveal>
+        <h2 id="contact-title" className="contact__title" data-reveal="wipe">
           Get in touch
         </h2>
         <p className="contact__lede" data-reveal>

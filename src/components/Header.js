@@ -134,6 +134,7 @@ export default function Header({ name }) {
           </button>
         </div>
       </div>
+      <span className="site-header__progress" aria-hidden="true" />
 
       <div id="mobile-menu" className="mobile-menu" ref={menuRef}>
         <nav className="container" aria-label="Sections menu">
