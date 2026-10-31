@@ -3,5 +3,5 @@ import App from "./App";
 
 test("renders the games section", () => {
   render(<App />);
-  expect(screen.getByText(/games i've worked on/i)).toBeInTheDocument();
+  expect(screen.getByRole("heading", { name: /games i.ve worked on/i })).toBeInTheDocument();
 });

@@ -33,34 +33,11 @@ export const stats = [
   { value: "5+", label: "Years making games" },
 ];
 
-// Character-sheet ratings (0–100) shown on the radar chart in the profile section
-export const attributes = [
-  { label: "Optimization", value: 96 },
-  { label: "Porting", value: 92 },
-  { label: "Gameplay", value: 88 },
-  { label: "Multiplayer", value: 84 },
-  { label: "Live ops", value: 82 },
-  { label: "UI systems", value: 86 },
-];
 
-// Shown at random on the loading screen
-export const tips = [
-  "Combining meshes and atlasing textures took draw calls from ~450 down to ~90.",
-  "Moving ad and scene loading off the main thread cut ANR from 0.45% to 0.24%.",
-  "The games I've worked on have 325M+ combined downloads on Google Play.",
-  "Prado Car Parking, one of the games I've worked on, has passed 100 million downloads.",
-  "Enter ↑ ↑ ↓ ↓ ← → ← → B A anywhere on the page for a surprise.",
-  "Press Enter on the title screen to drive through the portfolio in real-time 3D.",
-  "Type IDDQD anywhere for god mode.",
-  "Hit the stunt ramp with nitro for big air.",
-  "Turn on sound in the top bar for UI effects.",
-];
 
-// The game shown large at the top of the page
-export const featuredTitle = "Prado Car Parking";
 
-// Ordered by Google Play downloads. Add an `appStore` URL to any game to turn its iOS badge
-// into a link; `wide` gives a game a double-width tile in the full library
+// Ordered by Google Play downloads. Add an `appStore` URL to any game to show an App Store link.
+// `personal` marks a game I built on my own
 export const games = [
   {
     title: "Prado Car Parking",
@@ -77,7 +54,6 @@ export const games = [
     genre: "Fighting",
     badge: "100M+ downloads",
     image: kungFu,
-    description: "Worked on development as part of the Unity team.",
     platforms: ["Android", "iOS"],
     playStore: playStore("com.gzl.superhero.karatefighting.game"),
   },
@@ -86,7 +62,6 @@ export const games = [
     genre: "Shooter",
     badge: "50M+ downloads",
     image: gunGames,
-    description: "Worked on development as part of the Unity team.",
     platforms: ["Android"],
     playStore: playStore("com.lf.frontline.elite.war.free.apps"),
   },
@@ -95,7 +70,6 @@ export const games = [
     genre: "Racing",
     badge: "50M+ downloads",
     image: crazyCar,
-    description: "Worked on development as part of the Unity team.",
     platforms: ["Android"],
     playStore: playStore("com.fungames.highway.traffic.race"),
   },
@@ -104,8 +78,7 @@ export const games = [
     genre: "Racing",
     badge: "10M+ downloads",
     image: motoMax,
-    description:
-      "Formerly Moto Max. Worked on development as part of the Unity team.",
+    description: "Formerly Moto Max.",
     platforms: ["Android", "iOS"],
     playStore: playStore(
       "com.offline.racing.motorcyclegame.motomax.bikerace.bike.games"
@@ -116,7 +89,6 @@ export const games = [
     genre: "Simulation",
     badge: "10M+ downloads",
     image: offroadJeep,
-    description: "Worked on development as part of the Unity team.",
     platforms: ["Android"],
     playStore: playStore("com.doit.fun.games.offroad.rally.truck.apps"),
   },
@@ -137,8 +109,7 @@ export const games = [
     genre: "Endless runner",
     badge: "1M+ downloads",
     image: mcr,
-    description:
-      "Formerly Mini Car Rush. Worked on development as part of the Unity team.",
+    description: "Formerly Mini Car Rush.",
     platforms: ["Android", "iOS"],
     playStore: playStore("com.tb.minicar.rush.racing.drivinggames"),
   },
@@ -147,7 +118,6 @@ export const games = [
     genre: "Racing",
     badge: "500K+ downloads",
     image: bikeMaster,
-    description: "Worked on development as part of the Unity team.",
     platforms: ["Android"],
     playStore: playStore("com.tf.ride.master.bike.race.game"),
   },
@@ -156,15 +126,14 @@ export const games = [
     genre: "Simulation",
     badge: "100K+ downloads",
     image: carWash,
-    description: "Worked on development as part of the Unity team.",
     platforms: ["Android"],
     playStore: playStore("com.car.wash.asmr.makeover.game"),
   },
   {
     title: "Commando Shooting Stars",
     genre: "FPS",
-    badge: "Original · Solo-built",
-    wide: true,
+    badge: "Personal project",
+    personal: true,
     image: csm,
     description:
       "My own personal project, built solo from the ground up. I made the shooting, weapon upgrades and loot, plus the Firebase backend behind player data and live config.",
