@@ -85,6 +85,7 @@ test("contact details link correctly and the resume downloads", () => {
     .getAllByRole("link", { name: /resume/i })
     .forEach((link) => expect(link).toHaveAttribute("download", "Shadman-Khan-Khattak-Resume.pdf"));
   expect(screen.getByRole("link", { name: "Privacy policy" })).toHaveAttribute("href", "/privacy-policy");
+  expect(screen.getByRole("link", { name: "Terms of service" })).toHaveAttribute("href", "/terms-of-service");
 });
 
 test("mobile menu opens, closes on Escape and returns focus", () => {

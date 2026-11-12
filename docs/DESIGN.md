@@ -123,7 +123,7 @@ computes fog, lighting and centre-line dashes. The fragment shader only mixes tw
 
 ## Static pages
 
-`public/privacy-policy/index.html` (palette and type only; the policy text is legal copy
-and stays untouched) and `public/404.html` (missing-asset page on a scrolling magenta
+`public/privacy-policy/index.html` and `public/terms-of-service/index.html` (palette and
+type only; the text is legal copy and stays untouched) and `public/404.html` (missing-asset page on a scrolling magenta
 checkerboard) copy the palette by hand and honour the saved theme. Keep them in step with
 `tokens.css`.

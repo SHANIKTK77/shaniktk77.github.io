@@ -100,10 +100,14 @@ test("keyboard: skip link moves focus to the content", async ({ page, isMobile }
   await expect(page.locator("#main")).toBeFocused();
 });
 
-test("privacy policy and resume are reachable", async ({ page, request }) => {
+test("privacy policy, terms of service and resume are reachable", async ({ page, request }) => {
   await page.goto("/");
   await page.getByRole("link", { name: "Privacy policy" }).click();
   await expect(page.getByRole("heading", { level: 1, name: "Privacy Policy" })).toBeVisible();
+
+  await page.goto("/");
+  await page.getByRole("link", { name: "Terms of service" }).click();
+  await expect(page.getByRole("heading", { level: 1, name: "Terms of Service" })).toBeVisible();
 
   await page.goto("/");
   const href = await page.locator("a[download]").first().getAttribute("href");

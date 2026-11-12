@@ -43,7 +43,7 @@ The app runs at [http://localhost:3000](http://localhost:3000) and reloads as yo
 | Resume PDF | `src/Assets/Resume.pdf` |
 | Intro paragraphs | `src/components/Hero.js` |
 | Section order and nav labels | `src/sections.js` |
-| Colors, fonts, spacing | `src/styles/tokens.css` (also copy color changes into `public/privacy-policy/index.html` and `public/404.html`) |
+| Colors, fonts, spacing | `src/styles/tokens.css` (also copy color changes into `public/privacy-policy/index.html`, `public/terms-of-service/index.html` and `public/404.html`) |
 | A section's layout | `src/components/<Section>.js` and its `.css` |
 
 ## Testing

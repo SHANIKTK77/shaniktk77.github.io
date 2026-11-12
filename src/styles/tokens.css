@@ -2,7 +2,7 @@
   Design tokens. Every color, font, size and timing used by the site lives here.
   Components read these variables; they never hard-code values.
   The WebGL scene reads the --scene-* colors (and --signal) at runtime, so they must stay hex.
-  The privacy policy and 404 pages (public/) copy this palette by hand, so keep them in step.
+  The privacy policy, terms of service and 404 pages (public/) copy this palette by hand, so keep them in step.
 */
 
 :root {

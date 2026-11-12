@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#eeebe3" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0c0d0f" media="(prefers-color-scheme: dark)" />
+  <title>Terms of Service | Sk_Tech Games</title>
+  <meta name="description" content="Terms of Service for mobile games published by Sk_Tech, covering your licence to play, acceptable use, advertising, intellectual property, disclaimers, your consumer rights and how to contact us." />
+  <link rel="canonical" href="https://shadmankhan.vercel.app/terms-of-service" />
+  <link rel="icon" href="/favicon.png" />
+  <script>
+    // Use the theme picked on the portfolio, if any
+    try {
+      var theme = localStorage.getItem("theme");
+      if (theme === "light" || theme === "dark") document.documentElement.dataset.theme = theme;
+    } catch (e) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Geist:wght@400;600&family=Instrument+Serif&display=swap" rel="stylesheet" />
+  <style>
+    /* Same palette and type as src/styles/tokens.css; keep the two in step */
+    :root {
+      --paper: #eeebe3;
+      --paper-2: #e5e1d6;
+      --ink: #121314;
+      --ink-2: #45474b;
+      --ink-3: #5f6267;
+      --rule: #d2cdc1;
+      --rule-strong: #aaa598;
+      --signal: #b33a0a;
+      --on-signal: #fff8f3;
+      --font-display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+      --font-body: "Geist", -apple-system, "Segoe UI", Roboto, sans-serif;
+      --font-mono: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+      color-scheme: light;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --paper: #0c0d0f;
+        --paper-2: #14161a;
+        --ink: #ecebe6;
+        --ink-2: #b2b4b8;
+        --ink-3: #8a8e94;
+        --rule: #23262b;
+        --rule-strong: #3d4148;
+        --signal: #ff7a1a;
+        --on-signal: #170a00;
+        color-scheme: dark;
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --paper: #0c0d0f;
+      --paper-2: #14161a;
+      --ink: #ecebe6;
+      --ink-2: #b2b4b8;
+      --ink-3: #8a8e94;
+      --rule: #23262b;
+      --rule-strong: #3d4148;
+      --signal: #ff7a1a;
+      --on-signal: #170a00;
+      color-scheme: dark;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection {
+      background: var(--signal);
+      color: var(--on-signal);
+    }
+
+    a {
+      color: inherit;
+      text-decoration-color: var(--rule-strong);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 0.22em;
+    }
+
+    a:hover {
+      color: var(--signal);
+      text-decoration-color: currentColor;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--signal);
+      outline-offset: 3px;
+    }
+
+    .skip {
+      position: absolute;
+      left: -9999px;
+    }
+
+    .skip:focus {
+      left: 16px;
+      top: 12px;
+      padding: 8px 14px;
+      background: var(--ink);
+      color: var(--paper);
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      z-index: 10;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 46rem;
+      margin: 0 auto;
+      padding: 0 clamp(1rem, 0.5rem + 2.5vw, 2.5rem);
+    }
+
+    .topbar {
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .topbar .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 3.75rem;
+    }
+
+    .brand {
+      font-family: var(--font-display);
+      font-size: 1.125rem;
+      text-decoration: none;
+    }
+
+    .back {
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      text-decoration: none;
+    }
+
+    main {
+      padding: clamp(2.5rem, 1.5rem + 4vw, 5rem) 0 5rem;
+    }
+
+    .kicker {
+      margin: 0 0 16px;
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--signal);
+    }
+
+    h1,
+    h2 {
+      font-family: var(--font-display);
+      font-weight: 400;
+      letter-spacing: -0.015em;
+    }
+
+    h1 {
+      margin: 0 0 16px;
+      font-size: clamp(3rem, 1.6rem + 6vw, 6rem);
+      line-height: 0.92;
+      letter-spacing: -0.035em;
+    }
+
+    .meta {
+      margin: 0 0 40px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--ink);
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      color: var(--ink-3);
+    }
+
+    h2 {
+      margin: 56px 0 12px;
+      padding-top: 24px;
+      border-top: 1px solid var(--rule);
+      font-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.25rem);
+      line-height: 1.05;
+    }
+
+    h3 {
+      margin: 28px 0 8px;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    p,
+    li {
+      color: var(--ink-2);
+    }
+
+    strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    ul {
+      padding-left: 1.25rem;
+    }
+
+    li + li {
+      margin-top: 6px;
+    }
+
+    li::marker {
+      color: var(--ink-3);
+    }
+
+    .summary {
+      margin: 0 0 8px;
+      padding: 20px 24px;
+      background: var(--paper-2);
+      border-left: 2px solid var(--signal);
+    }
+
+    .summary p {
+      margin: 0;
+      color: var(--ink);
+    }
+
+    .toc {
+      margin: 32px 0 0;
+      padding: 20px 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .toc h2 {
+      margin: 0 0 12px;
+      padding: 0;
+      border: 0;
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+
+    .toc ol {
+      margin: 0;
+      padding-left: 1.25rem;
+      columns: 2;
+      column-gap: 32px;
+    }
+
+    .toc li {
+      margin: 0 0 4px;
+      break-inside: avoid;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin: 16px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9375rem;
+    }
+
+    th,
+    td {
+      padding: 12px 14px 12px 0;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    th {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      border-bottom-color: var(--ink);
+    }
+
+    td {
+      color: var(--ink-2);
+    }
+
+    address {
+      font-style: normal;
+    }
+
+    footer {
+      border-top: 1px solid var(--rule);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--ink-3);
+    }
+
+    footer .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 32px;
+      padding-bottom: 48px;
+    }
+
+    @media (max-width: 600px) {
+      .toc ol {
+        columns: 1;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#content">Skip to content</a>
+
+  <header class="topbar">
+    <div class="container">
+      <a class="brand" href="/">Sk_Tech</a>
+      <a class="back" href="/">&larr; Back to portfolio</a>
+    </div>
+  </header>
+
+  <main id="content">
+    <article class="container">
+      <p class="kicker">Sk_Tech &middot; Mobile games</p>
+      <h1>Terms of Service</h1>
+      <p class="meta">Effective date: 12 November 2026 &middot; Last updated: 12 November 2026</p>
+
+      <div class="summary">
+        <p>
+          These Terms of Service are an agreement between you and <strong>Sk_Tech</strong> ("we", "us", "our") about
+          the mobile games we publish. In short: our games are free to play and supported by advertising, you may
+          play them for your own personal enjoyment, and you agree not to misuse them. Nothing in these terms takes
+          away rights you have under the consumer protection laws of your country. Questions? Email
+          <a href="mailto:shani.ktk77@gmail.com">shani.ktk77@gmail.com</a>.
+        </p>
+      </div>
+
+      <nav class="toc" aria-labelledby="toc-title">
+        <h2 id="toc-title">Contents</h2>
+        <ol>
+          <li><a href="#agreement">Agreement to these terms</a></li>
+          <li><a href="#licence">Your licence to play</a></li>
+          <li><a href="#use">Acceptable use</a></li>
+          <li><a href="#ads">Advertising and third-party services</a></li>
+          <li><a href="#privacy">Privacy</a></li>
+          <li><a href="#ip">Intellectual property</a></li>
+          <li><a href="#availability">Updates and availability</a></li>
+          <li><a href="#disclaimer">Disclaimer</a></li>
+          <li><a href="#liability">Limitation of liability</a></li>
+          <li><a href="#consumer">Your consumer rights</a></li>
+          <li><a href="#ending">Ending these terms</a></li>
+          <li><a href="#changes">Changes to these terms</a></li>
+          <li><a href="#contact">Contact us</a></li>
+        </ol>
+      </nav>
+
+      <section aria-labelledby="agreement">
+        <h2 id="agreement">1. Agreement to these terms</h2>
+        <p>
+          Sk_Tech is an independent game developer. These terms apply to the mobile games that Sk_Tech publishes
+          (for example on <a href="https://play.google.com/" rel="noopener">Google Play</a>) and that link to this page
+          from their store listing or from within the game (each a "Game").
+        </p>
+        <p>
+          By downloading, installing or playing a Game, you agree to these terms. If you do not agree, please do not
+          install or play the Game.
+        </p>
+        <p>
+          If you are under the age at which you can enter into a binding agreement where you live, a parent or
+          guardian must read and agree to these terms on your behalf.
+        </p>
+        <p>
+          Your use of the store you downloaded the Game from is also governed by that store's own terms, such as the
+          <a href="https://play.google.com/about/play-terms/" rel="noopener">Google Play Terms of Service</a>.
+        </p>
+      </section>
+
+      <section aria-labelledby="licence">
+        <h2 id="licence">2. Your licence to play</h2>
+        <p>
+          As long as you follow these terms, we give you a personal, non-exclusive, non-transferable, revocable
+          licence to install and play the Game on devices that you own or control, for your own non-commercial
+          entertainment.
+        </p>
+        <p>
+          The Game is licensed to you, not sold. This licence does not give you ownership of the Game or of anything
+          in it.
+        </p>
+      </section>
+
+      <section aria-labelledby="use">
+        <h2 id="use">3. Acceptable use</h2>
+        <p>You agree not to:</p>
+        <ul>
+          <li>copy, sell, rent, sublicense or redistribute the Game, or publish modified versions of it;</li>
+          <li>
+            decompile, reverse engineer or disassemble the Game, except where the law in your country expressly
+            allows it;
+          </li>
+          <li>use cheats, bots, automation or other unauthorised software to interact with the Game;</li>
+          <li>
+            interfere with the advertising in the Game, for example by generating artificial ad impressions or
+            clicks;
+          </li>
+          <li>remove or alter any copyright, trademark or other notices in the Game; or</li>
+          <li>use the Game in any way that breaks the law or harms other people.</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="ads">
+        <h2 id="ads">4. Advertising and third-party services</h2>
+        <p>
+          Our Games are free to play and may show advertisements provided through Google AdMob. Ads are supplied by
+          third parties, and we do not control or endorse the products, services, websites or apps they promote. If
+          you follow an ad, your dealings with that advertiser are between you and them.
+        </p>
+        <p>
+          Our Games may also use services provided by Google Firebase, such as analytics, crash reporting and remote
+          configuration. These services are described in our <a href="/privacy-policy">Privacy Policy</a>.
+        </p>
+      </section>
+
+      <section aria-labelledby="privacy">
+        <h2 id="privacy">5. Privacy</h2>
+        <p>
+          Our <a href="/privacy-policy">Privacy Policy</a> explains what information may be processed when you play a
+          Game, how it is used and the choices you have. Please read it together with these terms.
+        </p>
+      </section>
+
+      <section aria-labelledby="ip">
+        <h2 id="ip">6. Intellectual property</h2>
+        <p>
+          The Games, including their code, artwork, audio, text, names and logos, are owned by Sk_Tech or its
+          licensors and are protected by copyright and other intellectual property laws. All rights that are not
+          expressly given to you in these terms are reserved.
+        </p>
+        <p>
+          If you send us feedback or suggestions about a Game, you agree that we may use them to improve our Games
+          without any obligation to you.
+        </p>
+      </section>
+
+      <section aria-labelledby="availability">
+        <h2 id="availability">7. Updates and availability</h2>
+        <p>
+          We may update a Game from time to time, for example to fix problems, add or remove features, or keep it
+          compatible with new devices and operating system versions. Some updates may be needed for the Game to keep
+          working.
+        </p>
+        <p>
+          We do not promise that a Game will always be available, or that it will work on every device. We may change,
+          suspend or stop offering a Game at any time.
+        </p>
+      </section>
+
+      <section aria-labelledby="disclaimer">
+        <h2 id="disclaimer">8. Disclaimer</h2>
+        <p>
+          To the extent the law allows, the Games are provided "as is" and "as available", without warranties of any
+          kind, whether express or implied, including implied warranties of merchantability, fitness for a particular
+          purpose and non-infringement. We do not promise that a Game will be uninterrupted, error-free or free of
+          harmful components.
+        </p>
+      </section>
+
+      <section aria-labelledby="liability">
+        <h2 id="liability">9. Limitation of liability</h2>
+        <p>
+          To the extent the law allows, Sk_Tech is not liable for any indirect, incidental, special or consequential
+          loss, or for any loss of data, arising from your use of, or inability to use, a Game.
+        </p>
+        <p>
+          Nothing in these terms excludes or limits liability that cannot be excluded or limited by law, such as
+          liability for death or personal injury caused by negligence, or for fraud.
+        </p>
+      </section>
+
+      <section aria-labelledby="consumer">
+        <h2 id="consumer">10. Your consumer rights</h2>
+        <p>
+          Depending on where you live (for example, in the European Economic Area or the United Kingdom), you may have
+          rights under consumer protection law that cannot be removed or limited by an agreement. Nothing in these
+          terms affects those rights. Where a part of these terms conflicts with a right you have under the law of the
+          country where you live, that right applies instead.
+        </p>
+      </section>
+
+      <section aria-labelledby="ending">
+        <h2 id="ending">11. Ending these terms</h2>
+        <p>
+          You can end this agreement at any time by uninstalling the Game. Your licence to play a Game ends
+          automatically if you break these terms, and you must then stop using the Game and remove it from your
+          devices.
+        </p>
+        <p>
+          Sections 6, 8, 9 and 10 continue to apply after this agreement ends.
+        </p>
+      </section>
+
+      <section aria-labelledby="changes">
+        <h2 id="changes">12. Changes to these terms</h2>
+        <p>
+          We may update these Terms of Service from time to time, for example when a Game changes or when the law
+          changes. When we do, we will update the "Last updated" date at the top of this page. If the changes are
+          significant, we will take reasonable steps to let you know, such as through the Game or its store listing.
+          If you keep playing a Game after the terms change, the updated terms apply to you.
+        </p>
+      </section>
+
+      <section aria-labelledby="contact">
+        <h2 id="contact">13. Contact us</h2>
+        <p>If you have questions about these Terms of Service, please contact:</p>
+        <address>
+          <p>
+            <strong>Sk_Tech</strong><br />
+            Email: <a href="mailto:shani.ktk77@gmail.com">shani.ktk77@gmail.com</a><br />
+            Website: <a href="https://shadmankhan.vercel.app/">shadmankhan.vercel.app</a>
+          </p>
+        </address>
+        <p>Please include the name of the Game in your message so we can help you faster.</p>
+      </section>
+    </article>
+  </main>
+
+  <footer>
+    <div class="container">
+      <span>&copy; 2026 Sk_Tech</span>
+      <a href="/privacy-policy">Privacy Policy</a>
+      <a href="/">Back to portfolio</a>
+    </div>
+  </footer>
+</body>
+</html>

@@ -15,6 +15,7 @@ export default function Footer({ name }) {
           <p className="site-footer__build">Built with React and a hand-written WebGL shader</p>
           <nav aria-label="Footer">
             <a href="/privacy-policy">Privacy policy</a>
+            <a href="/terms-of-service">Terms of service</a>
             <a href="#top">Back to top</a>
           </nav>
         </div>

@@ -32,6 +32,7 @@ Both deploy automatically from `main`.
 public/
   index.html            Shell: fonts, meta/OG tags, JSON-LD, pre-paint theme script
   privacy-policy/       Static legal page for the mobile games (hand-written HTML + CSS)
+  terms-of-service/     Static Terms of Service for the mobile games (same styles as the policy)
   404.html              Static not-found page (served by GitHub Pages / Vercel)
   app-ads.txt           AdMob verification. Do not edit or remove.
 src/
@@ -60,11 +61,12 @@ e2e/site.spec.js        Playwright tests
   paragraphs in `components/Hero.js` are the only hand-written copy in components.
 - **Use tokens.** Components read `var(--…)` from `styles/tokens.css`; don't hard-code colors,
   fonts or durations. A new color means a new token with both light and dark values.
-- **Keep the static pages in step.** `public/privacy-policy/index.html` and `public/404.html`
+- **Keep the static pages in step.** `public/privacy-policy/index.html`,
+  `public/terms-of-service/index.html` and `public/404.html`
   copy the palette by hand (they can't import the React CSS). If you change a token, change it
   there too.
-- **Don't edit the privacy policy text** unless the owner asks; it's a legal document tied to
-  published apps. Styling changes are fine.
+- **Don't edit the privacy policy or terms of service text** unless the owner asks; they're
+  legal documents tied to published apps (both URLs are registered in Play Console). Styling changes are fine.
 - **Stack is deliberate.** React 17 + Create React App + plain CSS + raw WebGL. No UI kit, no
   CSS-in-JS, no router (one page), no Three.js/GSAP. Don't add runtime dependencies without a
   strong reason; the JS bundle is ~61 kB gzip (the whole scene is ~6 kB of it) and should stay small.
