@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#eeebe3" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#0c0d0f" media="(prefers-color-scheme: dark)" />
   <title>Privacy Policy | Sk_Tech Games</title>
-  <meta name="description" content="Privacy Policy for mobile games published by Sk_Tech, covering Google AdMob, Firebase Analytics and Firebase Crashlytics, children's privacy, your choices and how to contact us." />
+  <meta name="description" content="Privacy Policy for mobile games published by Sk_Tech, covering Google AdMob, Firebase Analytics, Firebase Crashlytics and Firebase Remote Config, children's privacy, your choices and how to contact us." />
   <link rel="canonical" href="https://shadmankhan.vercel.app/privacy-policy" />
   <link rel="icon" href="/favicon.png" />
   <script>
@@ -349,14 +349,16 @@
     <article class="container">
       <p class="kicker">Sk_Tech &middot; Mobile games</p>
       <h1>Privacy Policy</h1>
-      <p class="meta">Effective date: 17 October 2026 &middot; Last updated: 17 October 2026</p>
+      <p class="meta">Effective date: 17 October 2026 &middot; Last updated: 12 November 2026</p>
 
       <div class="summary">
         <p>
           This Privacy Policy explains how mobile games published by <strong>Sk_Tech</strong> ("we", "us", "our")
           may collect, use and share information when you play them. Our games may use
-          <strong>Google AdMob</strong> to show banner ads, <strong>Firebase Analytics</strong> to understand how the
-          games are played, and <strong>Firebase Crashlytics</strong> to find and fix crashes. These services can
+          <strong>Google AdMob</strong> to show ads in all of its ad formats (banner, interstitial, rewarded,
+          rewarded interstitial, native and app open ads), <strong>Firebase Analytics</strong> to understand how the
+          games are played, <strong>Firebase Crashlytics</strong> to find and fix crashes, and
+          <strong>Firebase Remote Config</strong> to update game settings remotely. These services can
           process information about your device and how you use the game, including device identifiers. Questions?
           Email <a href="mailto:shani.ktk77@gmail.com">shani.ktk77@gmail.com</a>.
         </p>
@@ -467,7 +469,7 @@
             <tbody>
               <tr>
                 <td data-label="Service"><strong>Google AdMob</strong></td>
-                <td data-label="What it does">Shows banner advertisements. We do not currently use ad mediation (other ad networks through AdMob).</td>
+                <td data-label="What it does">Shows advertisements in all AdMob ad formats: banner, interstitial, rewarded, rewarded interstitial, native and app open ads. We do not currently use ad mediation (other ad networks through AdMob).</td>
                 <td data-label="Information">Advertising ID and other device identifiers, IP address and approximate location, device and app information, ad interactions, and diagnostic information.</td>
               </tr>
               <tr>
@@ -480,11 +482,25 @@
                 <td data-label="What it does">Reports crashes and errors so we can find and fix them.</td>
                 <td data-label="Information">Crash and error reports, stack traces, device state at the time of a crash, device and app information, and Crashlytics installation identifiers.</td>
               </tr>
+              <tr>
+                <td data-label="Service"><strong>Firebase Remote Config</strong></td>
+                <td data-label="What it does">Lets us manage and update certain game settings and features remotely, without requiring a new version of the Game.</td>
+                <td data-label="Information">Firebase installation identifiers, and app and device information.</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
         <h3>Advertising</h3>
+        <p>
+          Our Games may use any of the ad formats that AdMob offers: <strong>banner</strong> ads,
+          <strong>interstitial</strong> (full-screen) ads, <strong>rewarded</strong> and
+          <strong>rewarded interstitial</strong> ads that give an in-game reward for watching,
+          <strong>native</strong> ads that are shown as part of the Game's own screens, and
+          <strong>app open</strong> ads that appear when the Game is opened or brought back to the foreground. The
+          formats used vary from Game to Game, and the same categories of information described in this policy may
+          be processed whichever format is shown.
+        </p>
         <p>
           Depending on your device settings, your location and how a Game is configured, the ads you see may be
           personalized (based on information associated with your device's advertising ID) or non-personalized
@@ -529,6 +545,7 @@
           <li>measure ad delivery and performance, and detect and prevent ad fraud and abuse;</li>
           <li>understand how players use the Game, for example which levels are played and where players stop;</li>
           <li>detect, diagnose and fix crashes, errors and performance problems;</li>
+          <li>update game settings and features remotely, without requiring a new version of the Game;</li>
           <li>maintain, improve and develop our Games;</li>
           <li>respond to messages you send us; and</li>
           <li>comply with legal obligations and enforce our rights.</li>
@@ -540,8 +557,8 @@
         <p>We do not sell your personal information. Information may be shared:</p>
         <ul>
           <li>
-            <strong>with Google</strong>, as the provider of AdMob, Firebase Analytics and Firebase Crashlytics, when a
-            Game uses those services (see section 3);
+            <strong>with Google</strong>, as the provider of AdMob, Firebase Analytics, Firebase Crashlytics and
+            Firebase Remote Config, when a Game uses those services (see section 3);
           </li>
           <li>
             <strong>when required by law</strong>, for example in response to a valid legal request, or to protect
@@ -557,8 +574,8 @@
       <section aria-labelledby="retention">
         <h2 id="retention">6. Data retention</h2>
         <p>
-          Information collected by AdMob, Firebase Analytics and Firebase Crashlytics is retained by Google for the
-          periods described in Google's and Firebase's documentation, and in some cases according to retention
+          Information collected by AdMob, Firebase Analytics, Firebase Crashlytics and Firebase Remote Config is
+          retained by Google for the periods described in Google's and Firebase's documentation, and in some cases according to retention
           settings available to us as the developer. See
           <a href="https://firebase.google.com/support/privacy" rel="noopener">Firebase Privacy and Security</a> and the
           <a href="https://policies.google.com/privacy" rel="noopener">Google Privacy Policy</a> for details.
@@ -689,6 +706,7 @@
   <footer>
     <div class="container">
       <span>&copy; 2026 Sk_Tech</span>
+      <a href="/terms-of-service">Terms of Service</a>
       <a href="/">Back to portfolio</a>
     </div>
   </footer>
